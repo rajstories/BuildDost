@@ -11,30 +11,31 @@ interface TemplateActionsProps {
 export default function TemplateActions({ templateId, templateName }: TemplateActionsProps) {
   return (
     <>
-      {/* Top Action Bar - Account for Replit banner */}
-      <div className="fixed top-12 left-4 right-4 z-50">
+      {/* Top Action Bar - Compact design */}
+      <div className="fixed top-12 left-2 right-2 z-50">
         <div className="flex items-center justify-between">
-          {/* Back Button */}
+          {/* Back Button - Smaller */}
           <Link href="/templates">
             <Button 
               variant="outline" 
-              className="bg-white/95 backdrop-blur-sm border-gray-200 hover:bg-white shadow-lg hover:shadow-xl transition-all"
+              size="sm"
+              className="bg-white/95 backdrop-blur-sm border-gray-200 hover:bg-white shadow-md text-xs"
               data-testid="button-back-templates"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Templates
+              <ArrowLeft className="h-3 w-3 mr-1" />
+              Back
             </Button>
           </Link>
 
-          {/* Template Info & Actions */}
-          <div className="flex items-center space-x-3">
-            {/* Template Info */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
-              <h2 className="font-semibold text-gray-900">{templateName} Template</h2>
-              <p className="text-sm text-gray-600">Live Preview & Code Export</p>
+          {/* Template Info & Actions - Compact */}
+          <div className="flex items-center space-x-2">
+            {/* Template Info - Smaller */}
+            <div className="bg-white/95 backdrop-blur-sm rounded-md px-3 py-1 shadow-md border border-gray-200">
+              <h2 className="font-medium text-gray-900 text-xs">{templateName}</h2>
+              <p className="text-xs text-gray-600">Live Preview</p>
             </div>
 
-            {/* Code Export Component - More Prominent */}
+            {/* Code Export Component - Compact */}
             <CodeExport 
               templateId={templateId} 
               templateName={templateName}
