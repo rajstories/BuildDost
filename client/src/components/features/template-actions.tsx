@@ -11,8 +11,8 @@ interface TemplateActionsProps {
 export default function TemplateActions({ templateId, templateName }: TemplateActionsProps) {
   return (
     <>
-      {/* Top Action Bar - Fixed positioning issue */}
-      <div className="fixed top-4 left-4 right-4 z-50 pt-2">
+      {/* Top Action Bar - Account for Replit banner */}
+      <div className="fixed top-12 left-4 right-4 z-50">
         <div className="flex items-center justify-between">
           {/* Back Button */}
           <Link href="/templates">
