@@ -143,7 +143,7 @@ export default function HomePage() {
               <Button 
                 variant="ghost" 
                 className="font-medium text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors" 
-                onClick={() => window.location.href = '/api/login'}
+                onClick={() => showToast("Sign In", "Authentication coming soon! For now, enjoy full access to BuildDost's AI-powered app builder.")}
                 data-testid="button-signin"
               >
                 Sign In
