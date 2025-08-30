@@ -44,7 +44,7 @@ export default function Header() {
           <Link href="/">
             <div className="flex items-center cursor-pointer group" data-testid="logo-builddost">
               <div className="relative flex items-center">
-                {/* Replit-Style Clean Geometric Logo */}
+                {/* BuildDost Professional Logo - Force Update */}
                 <div className="relative w-10 h-10 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                   {/* Clean Geometric Building Blocks */}
                   <div className="relative flex flex-col items-center justify-center space-y-0.5">
