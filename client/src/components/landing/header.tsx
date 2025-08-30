@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Box, Moon, RotateCcw, User, LogOut, Settings } from "lucide-react";
+import { Moon, RotateCcw, User, LogOut, Settings, Zap, Code2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -38,11 +38,39 @@ export default function Header() {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/">
-            <div className="flex items-center space-x-3 cursor-pointer" data-testid="logo-builddost">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Box className="text-primary-foreground text-sm" size={16} />
+            <div className="flex items-center cursor-pointer group" data-testid="logo-builddost">
+              <div className="relative flex items-center">
+                {/* Professional Logo Symbol */}
+                <div className="relative w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-xl shadow-lg flex items-center justify-center overflow-hidden transform group-hover:scale-105 transition-all duration-300">
+                  {/* Geometric Pattern Background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_35%,rgba(255,255,255,0.1)_50%,transparent_65%)] transform -skew-x-12"></div>
+                  
+                  {/* Main Symbol - Creative combination of Code and Building */}
+                  <div className="relative z-10 flex items-center justify-center">
+                    <Code2 className="w-5 h-5 text-white absolute transform -rotate-12 opacity-80" />
+                    <Zap className="w-4 h-4 text-yellow-300 absolute transform rotate-12 translate-x-0.5 translate-y-0.5" />
+                  </div>
+                  
+                  {/* Glowing effect */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/30 to-purple-400/30 blur-sm transform scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                
+                {/* Professional Typography */}
+                <div className="ml-3 flex flex-col justify-center leading-none">
+                  <div className="flex items-baseline">
+                    <span className="text-2xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent tracking-tight">
+                      Build
+                    </span>
+                    <span className="text-2xl font-black bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent tracking-tight">
+                      Dost
+                    </span>
+                  </div>
+                  <div className="text-[10px] font-semibold text-muted-foreground/70 tracking-[0.15em] uppercase mt-0.5">
+                    AI Website Builder
+                  </div>
+                </div>
               </div>
-              <span className="text-xl font-bold text-foreground">BuildDost</span>
             </div>
           </Link>
           
