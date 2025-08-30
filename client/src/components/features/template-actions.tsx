@@ -15,7 +15,24 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
   const [isCodeEditorOpen, setIsCodeEditorOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState("blue");
+  const [selectedLayout, setSelectedLayout] = useState("wide");
   const { toast } = useToast();
+
+  const colorThemes = [
+    { name: "blue", color: "bg-blue-500", primary: "#2563eb", secondary: "#dbeafe" },
+    { name: "purple", color: "bg-purple-500", primary: "#7c3aed", secondary: "#ede9fe" },
+    { name: "green", color: "bg-green-500", primary: "#059669", secondary: "#d1fae5" },
+    { name: "red", color: "bg-red-500", primary: "#dc2626", secondary: "#fee2e2" },
+    { name: "orange", color: "bg-orange-500", primary: "#ea580c", secondary: "#fed7aa" },
+    { name: "pink", color: "bg-pink-500", primary: "#ec4899", secondary: "#fce7f3" }
+  ];
+
+  const layoutOptions = [
+    { id: "wide", name: "Wide Layout", description: "Full width content" },
+    { id: "compact", name: "Compact Layout", description: "Centered with margins" },
+    { id: "custom", name: "Custom Layout", description: "Flexible grid system" }
+  ];
 
   const handleCustomizeDesign = () => {
     setIsCustomizeOpen(true);
@@ -38,6 +55,75 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
 
   const handleSettings = () => {
     setIsSettingsOpen(true);
+  };
+
+  const applyDesignChanges = (theme: string, layout: string) => {
+    // Get the selected theme colors
+    const selectedThemeData = colorThemes.find(t => t.name === theme);
+    if (!selectedThemeData) return;
+
+    // Create a style element for theme-specific CSS
+    let themeStyleEl = document.getElementById('template-theme-styles');
+    if (!themeStyleEl) {
+      themeStyleEl = document.createElement('style');
+      themeStyleEl.id = 'template-theme-styles';
+      document.head.appendChild(themeStyleEl);
+    }
+
+    // Generate CSS for the selected theme
+    const themeCss = `
+      .theme-${theme} .bg-blue-600,
+      .theme-${theme} .hover\\:bg-blue-600:hover,
+      .theme-${theme} .bg-blue-700,
+      .theme-${theme} .hover\\:bg-blue-700:hover {
+        background-color: ${selectedThemeData.primary} !important;
+      }
+      
+      .theme-${theme} .text-blue-600,
+      .theme-${theme} .hover\\:text-blue-600:hover {
+        color: ${selectedThemeData.primary} !important;
+      }
+      
+      .theme-${theme} .border-blue-600 {
+        border-color: ${selectedThemeData.primary} !important;
+      }
+      
+      .theme-${theme} .focus\\:ring-blue-600:focus {
+        --tw-ring-color: ${selectedThemeData.primary} !important;
+      }
+
+      .theme-${theme} .from-blue-600 {
+        --tw-gradient-from: ${selectedThemeData.primary} !important;
+      }
+
+      .layout-compact .max-w-7xl {
+        max-width: 56rem !important;
+        margin: 0 auto !important;
+        padding: 0 2rem !important;
+      }
+
+      .layout-wide .max-w-7xl {
+        max-width: 100% !important;
+        padding: 0 1rem !important;
+      }
+
+      .layout-custom .max-w-7xl {
+        max-width: 72rem !important;
+        display: grid !important;
+        grid-template-columns: 1fr 3fr 1fr !important;
+        gap: 2rem !important;
+      }
+    `;
+
+    themeStyleEl.textContent = themeCss;
+    
+    // Apply theme class to body for consistent theming
+    document.body.className = document.body.className.replace(/theme-\w+/g, '');
+    document.body.classList.add(`theme-${theme}`);
+
+    // Apply layout changes
+    document.body.className = document.body.className.replace(/layout-\w+/g, '');
+    document.body.classList.add(`layout-${layout}`);
   };
 
   return (
@@ -125,29 +211,42 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
               <div className="space-y-3">
                 <h3 className="font-semibold">Color Themes</h3>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="w-full h-12 bg-blue-500 rounded cursor-pointer hover:shadow-md" title="Blue Theme"></div>
-                  <div className="w-full h-12 bg-purple-500 rounded cursor-pointer hover:shadow-md" title="Purple Theme"></div>
-                  <div className="w-full h-12 bg-green-500 rounded cursor-pointer hover:shadow-md" title="Green Theme"></div>
-                  <div className="w-full h-12 bg-red-500 rounded cursor-pointer hover:shadow-md" title="Red Theme"></div>
-                  <div className="w-full h-12 bg-orange-500 rounded cursor-pointer hover:shadow-md" title="Orange Theme"></div>
-                  <div className="w-full h-12 bg-pink-500 rounded cursor-pointer hover:shadow-md" title="Pink Theme"></div>
+                  {colorThemes.map((theme) => (
+                    <div
+                      key={theme.name}
+                      onClick={() => setSelectedTheme(theme.name)}
+                      className={`w-full h-12 ${theme.color} rounded cursor-pointer hover:shadow-md transition-all relative ${
+                        selectedTheme === theme.name ? 'ring-2 ring-gray-900 ring-offset-2' : ''
+                      }`}
+                      title={`${theme.name.charAt(0).toUpperCase() + theme.name.slice(1)} Theme`}
+                    >
+                      {selectedTheme === theme.name && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+                            <div className="w-2 h-2 bg-gray-900 rounded-full"></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="space-y-3">
                 <h3 className="font-semibold">Layout Options</h3>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Monitor className="h-4 w-4 mr-2" />
-                    Wide Layout
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Sliders className="h-4 w-4 mr-2" />
-                    Compact Layout
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Custom Layout
-                  </Button>
+                  {layoutOptions.map((layout) => (
+                    <Button
+                      key={layout.id}
+                      variant={selectedLayout === layout.id ? "default" : "outline"}
+                      className="w-full justify-start"
+                      onClick={() => setSelectedLayout(layout.id)}
+                    >
+                      {layout.id === "wide" && <Monitor className="h-4 w-4 mr-2" />}
+                      {layout.id === "compact" && <Sliders className="h-4 w-4 mr-2" />}
+                      {layout.id === "custom" && <Settings className="h-4 w-4 mr-2" />}
+                      {layout.name}
+                    </Button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -156,7 +255,11 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
                 Cancel
               </Button>
               <Button onClick={() => {
-                toast({ title: "Design Updated", description: "Your template design has been customized!" });
+                applyDesignChanges(selectedTheme, selectedLayout);
+                toast({ 
+                  title: "Design Updated!", 
+                  description: `Applied ${selectedTheme} theme with ${selectedLayout} layout` 
+                });
                 setIsCustomizeOpen(false);
               }}>
                 Apply Changes
