@@ -1,23 +1,45 @@
 import OpenAI from "openai";
 
-// Use OpenRouter for dynamic AI generation with multiple models
+// Prefer Gemini API for best educational platform understanding, then OpenRouter, then OpenAI
+const useGemini = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== '';
 const useOpenRouter = process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_API_KEY !== '';
 
-export const openai = useOpenRouter 
-  ? new OpenAI({
-      apiKey: process.env.OPENROUTER_API_KEY,
-      baseURL: "https://openrouter.ai/api/v1",
-      defaultHeaders: {
-        "HTTP-Referer": "https://builddost.com",
-        "X-Title": "BuildDost AI Website Builder",
-      }
-    })
-  : process.env.OPENAI_API_KEY 
-    ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    : null;
+export const openai = useGemini
+  ? null // Gemini will be handled separately
+  : useOpenRouter 
+    ? new OpenAI({
+        apiKey: process.env.OPENROUTER_API_KEY,
+        baseURL: "https://openrouter.ai/api/v1",
+        defaultHeaders: {
+          "HTTP-Referer": "https://builddost.com",
+          "X-Title": "BuildDost AI Website Builder",
+        }
+      })
+    : process.env.OPENAI_API_KEY 
+      ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+      : null;
 
-// Choose the best model for each task
+// Function to get Gemini client when needed
+async function getGeminiClient() {
+  if (!useGemini) return null;
+  
+  try {
+    const { GoogleGenAI } = await import("@google/genai");
+    const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+    console.log("✅ Gemini AI configured for intelligent educational platform generation");
+    return client;
+  } catch (error) {
+    console.error("Failed to initialize Gemini:", error);
+    return null;
+  }
+}
+
+// Choose the best model for each task - Gemini 2.5 Flash is excellent for educational platforms
 const getModelForTask = (task: 'analysis' | 'generation' | 'optimization') => {
+  if (useGemini) {
+    return "gemini-2.5-flash"; // Gemini 2.5 Flash for intelligent context understanding
+  }
+  
   if (!useOpenRouter) return "gpt-5"; // fallback to GPT-5 if using OpenAI directly
   
   switch (task) {
@@ -136,8 +158,47 @@ Return a JSON object with this exact structure:
 IMPORTANT: Generate REAL, FUNCTIONAL code that works immediately. Include realistic data, not placeholders.`;
 
   try {
+    // Use Gemini for superior educational platform understanding
+    if (useGemini) {
+      const gemini = await getGeminiClient();
+      if (gemini) {
+        const response = await gemini.models.generateContent({
+        model: getModelForTask('generation'),
+        config: {
+          systemInstruction: "You are BuildDost AI - an expert full-stack developer who creates complete, production-ready applications. You excel at understanding educational platforms, learning management systems, and course structures. Always respond with valid JSON containing functional React code.",
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              name: { type: "string" },
+              description: { type: "string" },
+              appType: { type: "string" },
+              files: { type: "object" },
+              preview: { type: "object" },
+              structure: { type: "object" }
+            },
+            required: ["name", "description", "appType", "files"]
+          }
+        },
+        contents: prompt,
+      });
+
+      const result = JSON.parse(response.text || "{}");
+      
+      // Add generated ID if not provided
+      if (!result.id) {
+        result.id = `app_${Date.now()}`;
+      }
+      
+      console.log(`✅ Gemini generated ${result.appType} app: ${result.name}`);
+      return result as GeneratedApp;
+      }
+    }
+
+    // Fallback to OpenAI/OpenRouter
     if (!openai) {
-      throw new Error("OpenAI API not configured");
+      throw new Error("No AI API configured");
     }
 
     const response = await openai.chat.completions.create({
