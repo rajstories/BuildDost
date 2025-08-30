@@ -11,14 +11,14 @@ interface TemplateActionsProps {
 export default function TemplateActions({ templateId, templateName }: TemplateActionsProps) {
   return (
     <>
-      {/* Top Action Bar */}
-      <div className="fixed top-6 left-6 right-6 z-50">
+      {/* Top Action Bar - Fixed positioning issue */}
+      <div className="fixed top-4 left-4 right-4 z-50 pt-2">
         <div className="flex items-center justify-between">
           {/* Back Button */}
           <Link href="/templates">
             <Button 
               variant="outline" 
-              className="bg-white/95 backdrop-blur-sm border-gray-200 hover:bg-white shadow-xl hover:shadow-2xl transition-all"
+              className="bg-white/95 backdrop-blur-sm border-gray-200 hover:bg-white shadow-lg hover:shadow-xl transition-all"
               data-testid="button-back-templates"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -29,7 +29,7 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
           {/* Template Info & Actions */}
           <div className="flex items-center space-x-3">
             {/* Template Info */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-xl border border-gray-200">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-2 shadow-lg border border-gray-200">
               <h2 className="font-semibold text-gray-900">{templateName} Template</h2>
               <p className="text-sm text-gray-600">Live Preview & Code Export</p>
             </div>
@@ -43,43 +43,43 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
         </div>
       </div>
 
-      {/* Floating Action Panel - More Visible */}
+      {/* Floating Action Panel - Fixed text visibility */}
       <div className="fixed bottom-6 right-6 z-50">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200 p-4">
+        <div className="bg-white border border-gray-300 rounded-2xl shadow-2xl p-4 min-w-[200px]">
           <div className="text-center mb-3">
-            <h3 className="font-semibold text-gray-900 text-sm">Template Actions</h3>
-            <p className="text-xs text-gray-600">Customize and export your app</p>
+            <h3 className="font-bold text-gray-900 text-sm">Template Actions</h3>
+            <p className="text-xs text-gray-700 font-medium">Customize and export your app</p>
           </div>
           
           <div className="flex flex-col space-y-2">
             <Button 
               variant="outline"
               size="sm"
-              className="w-full justify-start bg-white border-gray-200 hover:bg-gray-50 shadow-sm"
+              className="w-full justify-start bg-white text-gray-900 border-gray-300 hover:bg-gray-50 shadow-sm font-medium"
               data-testid="button-customize"
             >
-              <Palette className="h-4 w-4 mr-2" />
-              Customize Design
+              <Palette className="h-4 w-4 mr-2 text-gray-700" />
+              <span className="text-gray-900">Customize Design</span>
             </Button>
             
             <Button 
               variant="outline"
               size="sm"
-              className="w-full justify-start bg-white border-gray-200 hover:bg-gray-50 shadow-sm"
+              className="w-full justify-start bg-white text-gray-900 border-gray-300 hover:bg-gray-50 shadow-sm font-medium"
               data-testid="button-edit-code"
             >
-              <Edit className="h-4 w-4 mr-2" />
-              Edit Code
+              <Edit className="h-4 w-4 mr-2 text-gray-700" />
+              <span className="text-gray-900">Edit Code</span>
             </Button>
 
             <Button 
               variant="outline"
               size="sm"
-              className="w-full justify-start bg-white border-gray-200 hover:bg-gray-50 shadow-sm"
+              className="w-full justify-start bg-white text-gray-900 border-gray-300 hover:bg-gray-50 shadow-sm font-medium"
               data-testid="button-settings"
             >
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
+              <Settings className="h-4 w-4 mr-2 text-gray-700" />
+              <span className="text-gray-900">Settings</span>
             </Button>
           </div>
         </div>
