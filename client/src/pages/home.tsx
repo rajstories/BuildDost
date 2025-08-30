@@ -114,80 +114,123 @@ export default function HomePage() {
       </header>
 
       {/* Main Hero Section */}
-      <main className="relative z-10 flex-1 flex items-center justify-center min-h-[80vh]">
+      <main className="relative z-10 flex-1 flex items-center justify-center min-h-[85vh] py-16">
         <div className="container mx-auto px-6 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black text-foreground mb-6 leading-tight tracking-tight whitespace-nowrap" data-testid="hero-title">
-              What should we build today?
-            </h1>
-            <p className="text-lg lg:text-xl text-muted-foreground/80 mb-12 max-w-2xl mx-auto font-medium" data-testid="hero-description">
-              Create stunning apps & websites by chatting with AI.
-            </p>
+          <div className="max-w-5xl mx-auto">
             
-            {/* Large Input Field */}
-            <div className="max-w-3xl mx-auto mb-8">
-              <div className="relative">
-                <Input
-                  placeholder="Describe your app idea (e.g., Food delivery website with login and cart)"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="h-20 text-lg font-medium pl-8 pr-32 rounded-2xl border-border/40 bg-white/95 backdrop-blur-md text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 hover:border-border/60 hover:bg-white hover:shadow-xl shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.99]"
-                  data-testid="input-build-prompt"
-                />
-                <Button
-                  onClick={handleStartBuilding}
-                  className="group absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
-                  data-testid="button-start-building"
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Sparkles className="relative mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                  <span className="relative">Build</span>
-                </Button>
+            {/* Hackathon Badge */}
+            <div className="mb-12">
+              <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Sparkles className="mr-2 h-4 w-4" />
+                🏆 Hackathon Submission
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex justify-center space-x-6 mb-8">
-              <Link href="/templates">
-                <Button 
-                  variant="outline" 
-                  className="group relative text-lg px-10 py-5 rounded-2xl border-2 border-white/80 bg-white backdrop-blur-xl text-gray-800 font-semibold shadow-2xl hover:shadow-3xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0 transform -translate-y-0.5"
-                  data-testid="button-choose-templates"
-                  style={{
-                    boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                  }}
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/30 to-purple-50/30 opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Grid3X3 className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                  <span className="relative">Choose Templates</span>
-                </Button>
-              </Link>
+            {/* Main Title */}
+            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-black text-foreground mb-8 leading-tight tracking-tight" data-testid="hero-title">
+              <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent">
+                BuildDost
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <h2 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-slate-700 mb-6 leading-tight" data-testid="hero-subtitle">
+              AI-Powered Full-Stack Website & Backend Builder
+            </h2>
+            
+            {/* Description */}
+            <p className="text-lg lg:text-xl text-slate-600 mb-16 max-w-4xl mx-auto font-medium leading-relaxed" data-testid="hero-description">
+              The only platform that enables non-technical founders to create and deploy production-ready full-stack applications with zero coding knowledge
+            </p>
+            
+            {/* Main Action Buttons */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-20">
               <Link href="/showcase">
                 <Button 
-                  className="group relative text-lg px-10 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-600 to-blue-600 hover:from-purple-500 hover:via-purple-500 hover:to-blue-500 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0"
-                  data-testid="button-hackathon-demo"
+                  className="group relative text-lg px-12 py-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 min-w-[200px]"
+                  data-testid="button-try-demo"
                 >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <Sparkles className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                  <span className="relative">🏆 Hackathon Demo</span>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
+                  <span className="relative">✨ Try Live Demo</span>
+                </Button>
+              </Link>
+              
+              <Link href="/builder">
+                <Button 
+                  variant="outline" 
+                  className="group relative text-lg px-12 py-6 rounded-2xl border-2 border-slate-800 bg-transparent text-slate-800 font-bold shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1 hover:bg-slate-800 hover:text-white active:scale-[0.98] active:translate-y-0 min-w-[200px]"
+                  data-testid="button-build-app"
+                >
+                  <Box className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative">🚀 Build Custom App</span>
                 </Button>
               </Link>
             </div>
 
-            {/* Import Options */}
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground/60">
-              <span className="font-medium">or import from</span>
-              <div className="flex items-center space-x-6">
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-figma">
-                  <FileText className="h-4 w-4" />
-                  <span>Figma</span>
-                </button>
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-github">
-                  <Github className="h-4 w-4" />
-                  <span>GitHub</span>
-                </button>
+            {/* Stats Section */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-20 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-4xl lg:text-5xl font-black text-purple-600 mb-2">5</div>
+                <div className="text-sm lg:text-base font-semibold text-slate-600">Game-Changing Features</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl lg:text-5xl font-black text-blue-600 mb-2">0</div>
+                <div className="text-sm lg:text-base font-semibold text-slate-600">Code Required</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl lg:text-5xl font-black text-green-600 mb-2">1-Click</div>
+                <div className="text-sm lg:text-base font-semibold text-slate-600">Deployment</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl lg:text-5xl font-black text-orange-600 mb-2">Full</div>
+                <div className="text-sm lg:text-base font-semibold text-slate-600">Code Ownership</div>
+              </div>
+            </div>
+
+            {/* Hackathon Features Section */}
+            <div className="max-w-4xl mx-auto">
+              <h3 className="text-3xl lg:text-4xl font-black text-slate-800 mb-8">
+                Hackathon-Winning Features
+              </h3>
+              <p className="text-lg text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Five breakthrough innovations that set BuildDost apart from all competitors
+              </p>
+              
+              {/* Quick Start Input */}
+              <div className="max-w-3xl mx-auto mb-8">
+                <div className="relative">
+                  <Input
+                    placeholder="Describe your app idea (e.g., Food delivery website with login and cart)"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="h-16 text-lg font-medium pl-6 pr-32 rounded-2xl border-2 border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 hover:border-slate-300 hover:shadow-lg shadow-md transition-all duration-300"
+                    data-testid="input-build-prompt"
+                  />
+                  <Button
+                    onClick={handleStartBuilding}
+                    className="group absolute right-2 top-2 h-12 px-6 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105 active:scale-[0.98]"
+                    data-testid="button-start-building"
+                  >
+                    <Sparkles className="relative mr-2 h-4 w-4" />
+                    <span className="relative">Build</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Template Access */}
+              <div className="flex justify-center">
+                <Link href="/templates">
+                  <Button 
+                    variant="ghost" 
+                    className="text-slate-600 hover:text-slate-800 font-semibold text-base"
+                    data-testid="button-browse-templates"
+                  >
+                    <Grid3X3 className="mr-2 h-4 w-4" />
+                    or browse our professional templates
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
