@@ -145,12 +145,12 @@ export default function AIAssistant({ currentProject, onCodeSuggestion, onCompon
         {!isOpen && (
           <Button
             onClick={() => setIsOpen(true)}
-            size="lg"
-            className="group relative rounded-full w-16 h-16 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105 active:scale-95"
+            size="sm"
+            className="group relative rounded-full w-12 h-12 bg-blue-600 hover:bg-blue-700 border-2 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105 active:scale-95"
             data-testid="button-open-chat"
           >
-            <MessageCircle className="h-7 w-7 text-white transition-transform duration-300 group-hover:scale-110" />
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+            <MessageCircle className="h-5 w-5 text-white transition-transform duration-300 group-hover:scale-110" />
+            <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
           </Button>
         )}
       </div>
