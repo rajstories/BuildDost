@@ -25,31 +25,31 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen text-foreground overflow-hidden">
-      {/* Professional Mixed Gradient Background */}
+      {/* Synchronized Patch Background */}
       <div className="fixed inset-0 -z-10">
-        {/* Base dark gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800"></div>
+        {/* Base dark background */}
+        <div className="absolute inset-0 bg-slate-950"></div>
         
-        {/* Subtle white gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/5 via-transparent to-white/10"></div>
+        {/* Strategic color patches */}
+        {/* Top-right blue patch */}
+        <div className="absolute top-0 right-0 w-96 h-64 bg-gradient-to-br from-blue-600/20 to-transparent rounded-bl-[100px] blur-2xl"></div>
         
-        {/* Radial highlights */}
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-white/10 via-transparent to-transparent opacity-40"></div>
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-radial from-blue-500/20 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-gradient-radial from-slate-400/15 to-transparent rounded-full blur-2xl"></div>
+        {/* Top-left white patch */}
+        <div className="absolute top-20 left-0 w-80 h-40 bg-gradient-to-r from-white/8 to-transparent rounded-r-[80px] blur-xl"></div>
         
-        {/* Subtle mesh pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" 
-             style={{
-               backgroundImage: `radial-gradient(circle at 20% 80%, white 1px, transparent 1px),
-                                radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
-                                radial-gradient(circle at 40% 40%, white 1px, transparent 1px)`,
-               backgroundSize: '100px 100px, 80px 80px, 120px 120px'
-             }}>
-        </div>
+        {/* Center-right slate patch */}
+        <div className="absolute top-1/2 right-20 w-72 h-48 bg-gradient-to-l from-slate-600/15 to-transparent rounded-l-[60px] blur-lg"></div>
         
-        {/* Bottom atmospheric glow */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-600/20 to-transparent"></div>
+        {/* Bottom-left blue patch */}
+        <div className="absolute bottom-32 left-0 w-64 h-56 bg-gradient-to-tr from-blue-500/15 to-transparent rounded-tr-[80px] blur-2xl"></div>
+        
+        {/* Bottom-center white patch */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-32 bg-gradient-to-t from-white/6 to-transparent rounded-t-[100px] blur-xl"></div>
+        
+        {/* Synchronized geometric highlights */}
+        <div className="absolute top-1/4 left-1/4 w-2 h-20 bg-white/20 rounded-full blur-sm transform rotate-45"></div>
+        <div className="absolute top-1/3 right-1/3 w-2 h-16 bg-blue-400/30 rounded-full blur-sm transform -rotate-12"></div>
+        <div className="absolute bottom-1/3 left-1/2 w-1 h-12 bg-slate-300/25 rounded-full blur-sm transform rotate-30"></div>
       </div>
       
       {/* Header */}
