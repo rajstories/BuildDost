@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import TemplateActions from "@/components/features/template-actions";
 import { 
   BarChart3,
   TrendingUp,
@@ -83,6 +84,7 @@ export default function DashboardTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TemplateActions templateId="dashboard" templateName="Admin Dashboard" />
       {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
         <div className="flex items-center h-16 px-6 border-b border-gray-200">

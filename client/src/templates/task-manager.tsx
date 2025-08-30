@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import TemplateActions from "@/components/features/template-actions";
 import { 
   Plus,
   Search,
@@ -143,6 +144,7 @@ export default function TaskManagerTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TemplateActions templateId="todo" templateName="Task Manager" />
       {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
         <div className="flex items-center h-16 px-6 border-b border-gray-200">

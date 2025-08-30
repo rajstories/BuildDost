@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema, insertUserSchema, insertTemplateSchema, insertComponentSchema } from "@shared/schema";
 import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, analyzeWebsiteRequirements, generateAdaptiveProject, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest, type WebsiteAnalysisRequest } from "./services/openai";
+import { templateExportService } from "./services/template-export";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // User routes
@@ -120,6 +121,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(template);
     } catch (error) {
       res.status(400).json({ message: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Template export routes
+  app.get("/api/templates/:id/export/zip", async (req, res) => {
+    try {
+      const templateId = req.params.id;
+      const zipBuffer = await templateExportService.exportAsZip(templateId);
+      
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', `attachment; filename="${templateId}-template.zip"`);
+      res.send(zipBuffer);
+    } catch (error) {
+      res.status(500).json({ message: error instanceof Error ? error.message : "Export failed" });
+    }
+  });
+
+  app.post("/api/templates/:id/export/github", async (req, res) => {
+    try {
+      const templateId = req.params.id;
+      const { repository } = req.body;
+      
+      if (!repository || typeof repository !== 'string') {
+        return res.status(400).json({ message: "Repository name is required" });
+      }
+      
+      const result = await templateExportService.exportToGitHub(templateId, repository);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ message: error instanceof Error ? error.message : "GitHub export failed" });
+    }
+  });
+
+  app.get("/api/templates/:id/source", async (req, res) => {
+    try {
+      const templateId = req.params.id;
+      const sourceCode = await templateExportService.getTemplateSource(templateId);
+      res.json({ source: sourceCode });
+    } catch (error) {
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to get template source" });
+    }
+  });
+
+  app.get("/api/templates/:id/project", async (req, res) => {
+    try {
+      const templateId = req.params.id;
+      const projectStructure = await templateExportService.createTemplateProject(templateId);
+      res.json({ project: JSON.parse(projectStructure) });
+    } catch (error) {
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to create project structure" });
     }
   });
 

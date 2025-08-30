@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import TemplateActions from "@/components/features/template-actions";
 import { 
   ShoppingCart, 
   Heart, 
@@ -110,6 +111,7 @@ export default function EcommerceTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TemplateActions templateId="ecommerce" templateName="E-commerce Store" />
       {/* Top Bar */}
       <div className="bg-blue-600 text-white text-center py-2 text-sm">
         🚚 Free shipping on orders over $50 | 🎉 Use code SAVE20 for 20% off

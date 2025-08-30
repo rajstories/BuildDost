@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import TemplateActions from "@/components/features/template-actions";
 import { 
   Search,
   Calendar,
@@ -107,6 +108,7 @@ export default function BlogTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TemplateActions templateId="blog" templateName="Blog" />
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
