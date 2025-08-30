@@ -131,7 +131,7 @@ export default function HomePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-20 text-lg font-medium pl-8 pr-32 rounded-2xl border-border/30 bg-card/70 backdrop-blur-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 shadow-lg transition-all duration-200"
+                  className="h-20 text-lg font-medium pl-8 pr-32 rounded-2xl border-border/40 bg-white/95 backdrop-blur-md text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 hover:border-border/60 hover:bg-white hover:shadow-xl shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.99]"
                   data-testid="input-build-prompt"
                 />
                 <Button
