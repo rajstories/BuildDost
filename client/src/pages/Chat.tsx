@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Sparkles, Send, User, Bot, Code, Palette, Database } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, Sparkles, Send, User, Bot, Code, Palette, Database, Eye, FileCode, Monitor } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "wouter";
 
 interface ChatMessage {
   id: string;
@@ -15,12 +17,26 @@ interface ChatMessage {
   timestamp: Date;
   suggestions?: string[];
   quickActions?: Array<{ label: string; action: string; icon?: string }>;
+  project?: {
+    id: string;
+    name: string;
+    files: Record<string, string>;
+    previewUrl?: string;
+  };
+  buildStatus?: 'starting' | 'generating' | 'completed' | 'error';
 }
 
 interface ChatResponse {
   response: string;
   suggestions: string[];
   quickActions: Array<{ label: string; action: string; icon?: string }>;
+  project?: {
+    id: string;
+    name: string;
+    files: Record<string, string>;
+    previewUrl?: string;
+  };
+  buildStatus?: 'starting' | 'generating' | 'completed' | 'error';
 }
 
 export default function Chat() {
@@ -30,7 +46,7 @@ export default function Chat() {
 
   const chatMutation = useMutation({
     mutationFn: async (message: string): Promise<ChatResponse> => {
-      const response = await apiRequest("POST", "/api/chat", { message });
+      const response = await apiRequest("POST", "/api/chat/build", { message });
       return response.json();
     },
     onSuccess: (data) => {
@@ -40,14 +56,23 @@ export default function Chat() {
         content: data.response,
         timestamp: new Date(),
         suggestions: data.suggestions,
-        quickActions: data.quickActions
+        quickActions: data.quickActions,
+        project: data.project,
+        buildStatus: data.buildStatus
       };
       setMessages(prev => [...prev, assistantMessage]);
+
+      if (data.project) {
+        toast({
+          title: "Project Generated!",
+          description: `Created ${data.project.name} - Click to view preview`,
+        });
+      }
     },
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to get AI response. Please try again.",
+        description: "Failed to build project. Please try again.",
         variant: "destructive",
       });
       console.error("Chat error:", error);
@@ -243,6 +268,110 @@ export default function Chat() {
                               </div>
                             </div>
                           )}
+
+                          {/* Project Preview & Code Display */}
+                          {message.project && (
+                            <Card className="mt-4 border-2 border-primary/20">
+                              <CardHeader className="pb-3">
+                                <CardTitle className="flex items-center gap-2 text-lg">
+                                  <Monitor className="w-5 h-5 text-primary" />
+                                  Generated Project: {message.project.name}
+                                  {message.buildStatus === 'generating' && (
+                                    <Loader2 className="w-4 h-4 animate-spin ml-2" />
+                                  )}
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent>
+                                <Tabs defaultValue="preview" className="w-full">
+                                  <TabsList className="grid w-full grid-cols-3">
+                                    <TabsTrigger value="preview" className="flex items-center gap-2">
+                                      <Eye className="w-4 h-4" />
+                                      Preview
+                                    </TabsTrigger>
+                                    <TabsTrigger value="code" className="flex items-center gap-2">
+                                      <FileCode className="w-4 h-4" />
+                                      Code
+                                    </TabsTrigger>
+                                    <TabsTrigger value="files" className="flex items-center gap-2">
+                                      <Code className="w-4 h-4" />
+                                      Files
+                                    </TabsTrigger>
+                                  </TabsList>
+                                  
+                                  <TabsContent value="preview" className="mt-4">
+                                    <div className="border rounded-lg bg-background">
+                                      {message.project.previewUrl ? (
+                                        <iframe
+                                          src={message.project.previewUrl}
+                                          className="w-full h-96 rounded-lg"
+                                          title={`Preview of ${message.project.name}`}
+                                        />
+                                      ) : (
+                                        <div className="flex items-center justify-center h-96 text-muted-foreground">
+                                          <div className="text-center space-y-2">
+                                            <Monitor className="w-12 h-12 mx-auto opacity-50" />
+                                            <p>Building preview...</p>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="flex justify-between items-center mt-4">
+                                      <div className="text-sm text-muted-foreground">
+                                        Status: {message.buildStatus || 'completed'}
+                                      </div>
+                                      <div className="space-x-2">
+                                        <Link href={`/builder/${message.project.id}`}>
+                                          <Button size="sm" variant="outline">
+                                            <Code className="w-4 h-4 mr-2" />
+                                            Edit in Builder
+                                          </Button>
+                                        </Link>
+                                        {message.project.previewUrl && (
+                                          <Button size="sm">
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            Full Preview
+                                          </Button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </TabsContent>
+                                  
+                                  <TabsContent value="code" className="mt-4">
+                                    <ScrollArea className="h-96 w-full rounded-md border bg-muted p-4">
+                                      <pre className="text-sm">
+                                        <code>
+                                          {Object.entries(message.project.files).map(([filename, content]) => (
+                                            <div key={filename} className="mb-6">
+                                              <div className="font-bold text-primary mb-2">
+                                                📄 {filename}
+                                              </div>
+                                              <div className="pl-4 text-muted-foreground whitespace-pre-wrap">
+                                                {content}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </code>
+                                      </pre>
+                                    </ScrollArea>
+                                  </TabsContent>
+                                  
+                                  <TabsContent value="files" className="mt-4">
+                                    <div className="space-y-2">
+                                      {Object.keys(message.project.files).map((filename) => (
+                                        <div key={filename} className="flex items-center gap-2 p-2 border rounded">
+                                          <FileCode className="w-4 h-4 text-primary" />
+                                          <span className="font-mono text-sm">{filename}</span>
+                                          <div className="ml-auto text-xs text-muted-foreground">
+                                            {Math.round(message.project!.files[filename].length / 1024 * 10) / 10} KB
+                                          </div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </TabsContent>
+                                </Tabs>
+                              </CardContent>
+                            </Card>
+                          )}
                         </div>
 
                         {message.role === 'user' && (
@@ -261,7 +390,11 @@ export default function Chat() {
                         <div className="bg-muted p-4 rounded-2xl">
                           <div className="flex items-center gap-2">
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            <span className="text-sm text-muted-foreground">AI is thinking...</span>
+                            <span className="text-sm text-muted-foreground">
+                              {input.includes('build') || input.includes('create') || input.includes('make') 
+                                ? 'Building your project...' 
+                                : 'AI is thinking...'}
+                            </span>
                           </div>
                         </div>
                       </div>
