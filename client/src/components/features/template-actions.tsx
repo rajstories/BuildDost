@@ -23,7 +23,7 @@ export default function TemplateActions({ templateId, templateName }: TemplateAc
               data-testid="button-back-templates"
               title="Back to Templates"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 text-black" />
             </Button>
           </Link>
 
