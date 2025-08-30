@@ -1,35 +1,55 @@
 import { Box } from "lucide-react";
 import { SiX, SiGithub, SiLinkedin, SiDiscord } from "react-icons/si";
+import { useToast } from "@/hooks/use-toast";
 
 const footerSections = [
   {
     title: "Product",
     links: [
-      { name: "Features", href: "#features" },
-      { name: "Templates", href: "#templates" },
-      { name: "Pricing", href: "#pricing" },
-      { name: "Changelog", href: "#" },
+      { name: "Features", href: "#features", internal: true },
+      { name: "Templates", href: "#templates", internal: true },
+      { name: "Pricing", href: "#pricing", internal: true },
+      { name: "Changelog", href: "https://github.com/rajstories/builddost/releases", internal: false },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Documentation", href: "#" },
-      { name: "Help Center", href: "#" },
-      { name: "Community", href: "#" },
-      { name: "Contact", href: "#" },
+      { name: "Documentation", href: "https://docs.builddost.com", internal: false },
+      { name: "Help Center", href: "https://help.builddost.com", internal: false },
+      { name: "Community", href: "https://discord.gg/builddost", internal: false },
+      { name: "Contact", href: "#contact", internal: true },
     ],
   },
 ];
 
 const socialLinks = [
-  { icon: SiX, href: "#", name: "X" },
-  { icon: SiGithub, href: "#", name: "GitHub" },
-  { icon: SiLinkedin, href: "#", name: "LinkedIn" },
-  { icon: SiDiscord, href: "#", name: "Discord" },
+  { icon: SiX, href: "https://x.com/rajstories", name: "X" },
+  { icon: SiGithub, href: "https://github.com/rajstories", name: "GitHub" },
+  { icon: SiLinkedin, href: "https://linkedin.com/in/rajstories", name: "LinkedIn" },
+  { icon: SiDiscord, href: "https://discord.gg/builddost", name: "Discord" },
 ];
 
 export default function Footer() {
+  const { toast } = useToast();
+
+  const handleLinkClick = (linkName: string, href: string, isInternal: boolean) => {
+    if (isInternal && href.startsWith('#')) {
+      // Smooth scroll to section
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      toast({ title: "Navigation", description: `Scrolled to ${linkName} section` });
+    } else {
+      toast({ title: "Navigation", description: `Opening ${linkName}` });
+    }
+  };
+
+  const handleSocialClick = (socialName: string) => {
+    toast({ title: "Social Media", description: `Opening ${socialName} profile` });
+  };
+
   return (
     <footer className="relative z-10 border-t border-border/30 bg-background/80 backdrop-blur-sm py-16">
       <div className="container mx-auto px-6">
@@ -77,8 +97,16 @@ export default function Footer() {
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <a 
-                      href={link.href} 
-                      className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors font-medium"
+                      href={link.href}
+                      target={link.internal ? undefined : "_blank"}
+                      rel={link.internal ? undefined : "noopener noreferrer"}
+                      onClick={(e) => {
+                        if (link.internal && link.href.startsWith('#')) {
+                          e.preventDefault();
+                        }
+                        handleLinkClick(link.name, link.href, link.internal);
+                      }}
+                      className="text-sm text-muted-foreground/70 hover:text-foreground hover:text-primary transition-all duration-200 font-medium cursor-pointer hover:underline hover:underline-offset-4"
                       data-testid={`footer-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {link.name}
@@ -97,8 +125,11 @@ export default function Footer() {
                 return (
                   <a 
                     key={index}
-                    href={social.href} 
-                    className="text-muted-foreground/60 hover:text-foreground transition-all duration-200 hover:scale-110 p-2 rounded-lg hover:bg-muted/20"
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleSocialClick(social.name)}
+                    className="text-muted-foreground/60 hover:text-foreground hover:text-primary transition-all duration-300 hover:scale-125 p-2 rounded-lg hover:bg-muted/30 hover:shadow-lg cursor-pointer"
                     data-testid={`social-link-${social.name.toLowerCase()}`}
                   >
                     <Icon size={18} />
