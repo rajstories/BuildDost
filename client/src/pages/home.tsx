@@ -28,31 +28,35 @@ export default function HomePage() {
       {/* Bolt.new Style Orbital Background */}
       <div className="fixed inset-0 -z-10">
         {/* Dark space background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"></div>
+        <div className="absolute inset-0 bg-[#0A0E17]"></div>
         
-        {/* Orbital planetary curve effect */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[300vw] h-[150vh]">
-          {/* Outer atmospheric glow */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-full rounded-t-full bg-gradient-to-t from-blue-600/20 via-blue-500/10 to-transparent blur-3xl"></div>
+        {/* Planetary orbital effect */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
+          {/* Main orbital curve with intense glow */}
+          <div className="w-[400vw] h-[400vw] rounded-full border-t-[6px] border-[#3B82F6] 
+                        shadow-[0_0_100px_#3B82F6,0_0_200px_#3B82F6,0_0_300px_rgba(59,130,246,0.4)] 
+                        transform translate-y-[95%]"></div>
           
-          {/* Main bright orbital line */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[90%] rounded-t-full border-t-[3px] border-blue-400/80"></div>
+          {/* Bright white core line */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[95%]
+                        w-[380vw] h-[380vw] rounded-full border-t-[3px] border-white
+                        shadow-[0_0_50px_white,0_0_100px_rgba(255,255,255,0.8)]"></div>
           
-          {/* Bright inner glow */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[85%] h-[85%] rounded-t-full border-t-[2px] border-blue-300/90"></div>
-          
-          {/* Core bright white line */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[80%] rounded-t-full border-t border-white/95"></div>
-          
-          {/* Intense glow effect */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[90%] rounded-t-full bg-gradient-to-t from-blue-400/30 via-blue-300/20 to-transparent blur-2xl"></div>
+          {/* Inner blue glow */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[95%]
+                        w-[360vw] h-[360vw] rounded-full border-t-[2px] border-[#60A5FA]
+                        shadow-[0_0_30px_#60A5FA]"></div>
         </div>
         
-        {/* Additional bright atmospheric glow at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-blue-500/25 via-blue-400/15 to-transparent"></div>
+        {/* Atmospheric glow at horizon */}
+        <div className="absolute bottom-0 left-0 right-0 h-48 
+                      bg-gradient-to-t from-[#3B82F6]/30 via-[#3B82F6]/10 to-transparent
+                      blur-xl"></div>
         
-        {/* Extra bright center glow */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-32 bg-gradient-to-t from-white/20 via-blue-200/30 to-transparent blur-xl"></div>
+        {/* Center bright spot */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 
+                      w-[600px] h-24 bg-gradient-to-t from-white/40 to-transparent 
+                      blur-2xl"></div>
       </div>
       
       {/* Header */}
@@ -118,7 +122,7 @@ export default function HomePage() {
       <main className="relative z-10 flex-1 flex items-center justify-center min-h-[80vh]">
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black text-foreground mb-6 leading-tight tracking-tight" data-testid="hero-title">
+            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black text-foreground mb-6 leading-tight tracking-tight whitespace-nowrap" data-testid="hero-title">
               What should we build today?
             </h1>
             <p className="text-lg lg:text-xl text-muted-foreground/80 mb-12 max-w-2xl mx-auto font-medium" data-testid="hero-description">
