@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   ArrowRight, 
@@ -16,8 +17,73 @@ import {
   Linkedin,
   Instagram
 } from "lucide-react";
+import { useState } from "react";
 
 export default function LandingPageTemplate() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: ""
+  });
+  const { toast } = useToast();
+
+  const handleScrollTo = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    toast({ title: "Navigation", description: `Scrolled to ${sectionId} section` });
+  };
+
+  const handleGetStarted = () => {
+    toast({ title: "Get Started", description: "Redirecting to registration page..." });
+  };
+
+  const handleStartTrial = () => {
+    toast({ title: "Free Trial", description: "Starting your 14-day free trial..." });
+  };
+
+  const handleWatchDemo = () => {
+    toast({ title: "Demo", description: "Opening product demo video..." });
+  };
+
+  const handleFeatureClick = (featureTitle: string) => {
+    toast({ title: "Feature Details", description: `Learn more about ${featureTitle}` });
+  };
+
+  const handlePlanSelect = (planName: string, price: string) => {
+    toast({ title: "Plan Selected", description: `Selected ${planName} plan at ${price}/month` });
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.firstName || !formData.email || !formData.message) {
+      toast({ title: "Form Error", description: "Please fill in all required fields", variant: "destructive" });
+      return;
+    }
+    toast({ title: "Message Sent", description: "Thank you! We'll get back to you within 24 hours." });
+    setFormData({ firstName: "", lastName: "", email: "", message: "" });
+  };
+
+  const handleContactInfo = (type: string, value: string) => {
+    if (type === 'phone') {
+      window.open(`tel:${value}`, '_self');
+    } else if (type === 'email') {
+      window.open(`mailto:${value}`, '_self');
+    } else if (type === 'address') {
+      window.open(`https://maps.google.com/?q=${encodeURIComponent(value)}`, '_blank');
+    }
+    toast({ title: "Contact", description: `Opening ${type}: ${value}` });
+  };
+
+  const handleSocialClick = (platform: string) => {
+    toast({ title: "Social Media", description: `Opening ${platform} profile` });
+  };
+
+  const handleFooterLink = (linkName: string) => {
+    toast({ title: "Navigation", description: `Opening ${linkName} page` });
+  };
   return (
     <div className="min-h-screen bg-white">
       <TemplateActions templateId="landing" templateName="Landing Page" />
@@ -32,12 +98,12 @@ export default function LandingPageTemplate() {
               <span className="ml-2 text-xl font-bold text-gray-900">BusinessPro</span>
             </div>
             <div className="hidden md:flex space-x-8">
-              <a href="#features" className="text-gray-700 hover:text-blue-600 transition-colors">Features</a>
-              <a href="#pricing" className="text-gray-700 hover:text-blue-600 transition-colors">Pricing</a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">About</a>
-              <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+              <button onClick={() => handleScrollTo('features')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-features">Features</button>
+              <button onClick={() => handleScrollTo('pricing')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-pricing">Pricing</button>
+              <button onClick={() => handleScrollTo('about')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-about">About</button>
+              <button onClick={() => handleScrollTo('contact')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-contact">Contact</button>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleGetStarted} className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-nav-get-started">
               Get Started
             </Button>
           </div>
@@ -61,12 +127,12 @@ export default function LandingPageTemplate() {
                 boost productivity, and drive growth with cutting-edge technology.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-4">
+                <Button size="lg" onClick={handleStartTrial} className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-4" data-testid="button-start-trial">
                   <Zap className="h-5 w-5 mr-2" />
                   Start Free Trial
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4">
+                <Button size="lg" onClick={handleWatchDemo} variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4" data-testid="button-watch-demo">
                   Watch Demo
                 </Button>
               </div>
@@ -116,13 +182,13 @@ export default function LandingPageTemplate() {
             ].map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+                <button key={index} onClick={() => handleFeatureClick(feature.title)} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow text-left w-full" data-testid={`feature-${feature.title.toLowerCase().replace(' ', '-')}`}>
                   <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
                     <IconComponent className="h-6 w-6 text-blue-600" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">{feature.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -237,7 +303,7 @@ export default function LandingPageTemplate() {
                     </li>
                   ))}
                 </ul>
-                <Button className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-800 hover:bg-gray-900'}`}>
+                <Button onClick={() => handlePlanSelect(plan.name, plan.price)} className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-800 hover:bg-gray-900'}`} data-testid={`button-plan-${plan.name.toLowerCase()}`}>
                   Get Started
                 </Button>
               </div>
@@ -257,50 +323,76 @@ export default function LandingPageTemplate() {
               </p>
               
               <div className="space-y-4">
-                <div className="flex items-center">
+                <button onClick={() => handleContactInfo('phone', '+1 (555) 123-4567')} className="flex items-center hover:text-blue-600 transition-colors" data-testid="contact-phone">
                   <Phone className="h-5 w-5 text-blue-600 mr-3" />
                   <span className="text-gray-700">+1 (555) 123-4567</span>
-                </div>
-                <div className="flex items-center">
+                </button>
+                <button onClick={() => handleContactInfo('email', 'hello@businesspro.com')} className="flex items-center hover:text-blue-600 transition-colors" data-testid="contact-email">
                   <Mail className="h-5 w-5 text-blue-600 mr-3" />
                   <span className="text-gray-700">hello@businesspro.com</span>
-                </div>
-                <div className="flex items-center">
+                </button>
+                <button onClick={() => handleContactInfo('address', '123 Business Ave, Suite 100, NY 10001')} className="flex items-center hover:text-blue-600 transition-colors" data-testid="contact-address">
                   <MapPin className="h-5 w-5 text-blue-600 mr-3" />
                   <span className="text-gray-700">123 Business Ave, Suite 100, NY 10001</span>
-                </div>
+                </button>
               </div>
 
               <div className="flex space-x-4 mt-8">
-                {[Facebook, Twitter, Linkedin, Instagram].map((Icon, index) => (
-                  <a key={index} href="#" className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+                {[{Icon: Facebook, name: 'Facebook'}, {Icon: Twitter, name: 'Twitter'}, {Icon: Linkedin, name: 'LinkedIn'}, {Icon: Instagram, name: 'Instagram'}].map(({Icon, name}, index) => (
+                  <button key={index} onClick={() => handleSocialClick(name)} className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors" data-testid={`social-${name.toLowerCase()}`}>
                     <Icon className="h-5 w-5" />
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>
 
             <div className="bg-gray-50 rounded-2xl p-8">
-              <form className="space-y-6">
+              <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                    <input type="text" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                    <input 
+                      type="text" 
+                      value={formData.firstName}
+                      onChange={(e) => setFormData(prev => ({...prev, firstName: e.target.value}))}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" 
+                      data-testid="input-first-name"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                    <input type="text" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                    <input 
+                      type="text" 
+                      value={formData.lastName}
+                      onChange={(e) => setFormData(prev => ({...prev, lastName: e.target.value}))}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" 
+                      data-testid="input-last-name"
+                    />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                  <input type="email" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                  <input 
+                    type="email" 
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" 
+                    data-testid="input-email"
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                  <textarea rows={4} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"></textarea>
+                  <textarea 
+                    rows={4} 
+                    value={formData.message}
+                    onChange={(e) => setFormData(prev => ({...prev, message: e.target.value}))}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    data-testid="input-message"
+                    required
+                  ></textarea>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3">
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3" data-testid="button-send-message">
                   Send Message
                 </Button>
               </form>
@@ -344,7 +436,7 @@ export default function LandingPageTemplate() {
                 <ul className="space-y-2">
                   {section.links.map((link, i) => (
                     <li key={i}>
-                      <a href="#" className="text-gray-400 hover:text-white transition-colors">{link}</a>
+                      <button onClick={() => handleFooterLink(link)} className="text-gray-400 hover:text-white transition-colors" data-testid={`footer-${link.toLowerCase().replace(' ', '-')}`}>{link}</button>
                     </li>
                   ))}
                 </ul>

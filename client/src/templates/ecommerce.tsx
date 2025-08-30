@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   ShoppingCart, 
@@ -14,13 +15,21 @@ import {
   RotateCcw,
   CreditCard,
   User,
-  Menu
+  Menu,
+  X,
+  Check
 } from "lucide-react";
 import { useState } from "react";
 
 export default function EcommerceTemplate() {
   const [cartItems, setCartItems] = useState(2);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [wishlistItems, setWishlistItems] = useState<Set<number>>(new Set());
+  const [showQuickView, setShowQuickView] = useState<number | null>(null);
+  const [email, setEmail] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const { toast } = useToast();
 
   const categories = ["All", "Electronics", "Clothing", "Home", "Sports", "Books"];
 
@@ -105,9 +114,72 @@ export default function EcommerceTemplate() {
     }
   ];
 
-  const filteredProducts = selectedCategory === "All" 
-    ? products 
-    : products.filter(product => product.category === selectedCategory);
+  // Enhanced filtering with search
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleAddToCart = (product: any) => {
+    if (!product.inStock) return;
+    setCartItems(prev => prev + 1);
+    toast({ 
+      title: "Added to Cart!", 
+      description: `${product.name} has been added to your cart` 
+    });
+  };
+
+  const handleWishlist = (productId: number, productName: string) => {
+    const newWishlist = new Set(wishlistItems);
+    if (newWishlist.has(productId)) {
+      newWishlist.delete(productId);
+      toast({ title: "Removed from Wishlist", description: `${productName} removed from your wishlist` });
+    } else {
+      newWishlist.add(productId);
+      toast({ title: "Added to Wishlist!", description: `${productName} added to your wishlist` });
+    }
+    setWishlistItems(newWishlist);
+  };
+
+  const handleQuickView = (productId: number) => {
+    setShowQuickView(productId);
+    const product = products.find(p => p.id === productId);
+    toast({ title: "Quick View", description: `Viewing details for ${product?.name}` });
+  };
+
+  const handleSubscribe = () => {
+    if (!email) {
+      toast({ title: "Please enter your email address", variant: "destructive" });
+      return;
+    }
+    toast({ title: "Subscribed!", description: "You've been subscribed to our newsletter!" });
+    setEmail("");
+  };
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+    toast({ title: `Category: ${category}`, description: `Viewing ${category.toLowerCase()} products` });
+  };
+
+  const handleSocialClick = (platform: string) => {
+    toast({ title: `Opening ${platform}`, description: `Redirecting to ${platform} page...` });
+  };
+
+  const handleViewCart = () => {
+    toast({ 
+      title: "Shopping Cart", 
+      description: `You have ${cartItems} items in your cart` 
+    });
+  };
+
+  const handleViewWishlist = () => {
+    toast({ 
+      title: "Wishlist", 
+      description: `You have ${wishlistItems.size} items in your wishlist` 
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -136,26 +208,29 @@ export default function EcommerceTemplate() {
                 <input 
                   type="text" 
                   placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  data-testid="input-search-products"
                 />
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="relative p-2">
-                <Heart className="h-6 w-6" />
+              <Button variant="ghost" onClick={handleViewWishlist} className="relative p-2" data-testid="button-wishlist">
+                <Heart className={`h-6 w-6 ${wishlistItems.size > 0 ? 'fill-current text-red-500' : ''}`} />
                 <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  3
+                  {wishlistItems.size}
                 </Badge>
               </Button>
-              <Button variant="ghost" className="relative p-2">
+              <Button variant="ghost" onClick={handleViewCart} className="relative p-2" data-testid="button-cart">
                 <ShoppingCart className="h-6 w-6" />
                 <Badge className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {cartItems}
                 </Badge>
               </Button>
-              <Button variant="ghost" className="p-2">
+              <Button variant="ghost" onClick={() => toast({ title: "Account", description: "User account features would be here" })} className="p-2" data-testid="button-account">
                 <User className="h-6 w-6" />
               </Button>
             </div>
@@ -172,9 +247,9 @@ export default function EcommerceTemplate() {
               <span>Categories</span>
             </Button>
             {categories.slice(1).map((category) => (
-              <a key={category} href="#" className="text-sm text-gray-700 hover:text-blue-600 transition-colors">
+              <button key={category} onClick={() => handleCategoryClick(category)} className="text-sm text-gray-700 hover:text-blue-600 transition-colors" data-testid={`nav-category-${category.toLowerCase()}`}>
                 {category}
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -195,7 +270,7 @@ export default function EcommerceTemplate() {
               <p className="text-xl mb-8 text-blue-100">
                 Shop the latest products with up to 50% off. Free shipping on all orders over $50.
               </p>
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-4">
+              <Button size="lg" onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })} className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-4" data-testid="button-shop-now">
                 Shop Now
                 <ShoppingCart className="h-5 w-5 ml-2" />
               </Button>
@@ -237,12 +312,12 @@ export default function EcommerceTemplate() {
       </section>
 
       {/* Products Section */}
-      <section className="py-16">
+      <section className="py-16" id="products">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-gray-900">Featured Products</h2>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="flex items-center space-x-2" data-testid="button-filter">
                 <Filter className="h-4 w-4" />
                 <span>Filter</span>
               </Button>
@@ -287,14 +362,16 @@ export default function EcommerceTemplate() {
                   {/* Wishlist */}
                   <Button 
                     variant="ghost" 
+                    onClick={() => handleWishlist(product.id, product.name)}
                     className="absolute top-3 right-3 p-2 bg-white/80 hover:bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    data-testid={`button-wishlist-${product.id}`}
                   >
-                    <Heart className="h-4 w-4" />
+                    <Heart className={`h-4 w-4 ${wishlistItems.has(product.id) ? 'fill-current text-red-500' : ''}`} />
                   </Button>
 
                   {/* Quick Actions */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <Button className="bg-white text-gray-900 hover:bg-gray-100">
+                    <Button onClick={() => handleQuickView(product.id)} className="bg-white text-gray-900 hover:bg-gray-100" data-testid={`button-quick-view-${product.id}`}>
                       Quick View
                     </Button>
                   </div>
@@ -335,7 +412,8 @@ export default function EcommerceTemplate() {
                   <Button 
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                     disabled={!product.inStock}
-                    onClick={() => setCartItems(prev => prev + 1)}
+                    onClick={() => handleAddToCart(product)}
+                    data-testid={`button-add-to-cart-${product.id}`}
                   >
                     {product.inStock ? (
                       <>
@@ -352,7 +430,7 @@ export default function EcommerceTemplate() {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3">
+            <Button onClick={() => toast({ title: "All Products", description: "Loading complete product catalog..." })} variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3" data-testid="button-view-all-products">
               View All Products
             </Button>
           </div>
@@ -370,9 +448,12 @@ export default function EcommerceTemplate() {
             <input 
               type="email" 
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="flex-1 px-4 py-3 rounded-l-lg border-0 text-gray-900 focus:ring-2 focus:ring-blue-600"
+              data-testid="input-newsletter-email"
             />
-            <Button className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-l-none">
+            <Button onClick={handleSubscribe} className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-l-none" data-testid="button-newsletter-subscribe">
               Subscribe
             </Button>
           </div>
@@ -395,9 +476,9 @@ export default function EcommerceTemplate() {
               </p>
               <div className="flex space-x-4">
                 {['Facebook', 'Twitter', 'Instagram'].map((social, index) => (
-                  <a key={index} href="#" className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+                  <button key={index} onClick={() => handleSocialClick(social)} className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors" data-testid={`button-social-${social.toLowerCase()}`}>
                     <span className="text-xs font-bold">{social[0]}</span>
-                  </a>
+                  </button>
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   BarChart3,
@@ -19,8 +20,14 @@ import {
   Plus,
   RefreshCw
 } from "lucide-react";
+import { useState } from "react";
 
 export default function DashboardTemplate() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeNav, setActiveNav] = useState("Dashboard");
+  const [selectedTimeframe, setSelectedTimeframe] = useState("Last 30 days");
+  const [currentPage, setCurrentPage] = useState(1);
+  const { toast } = useToast();
   const stats = [
     {
       title: "Total Revenue",
@@ -72,6 +79,64 @@ export default function DashboardTemplate() {
     { name: "Desk Organizer", sales: 34, revenue: "$1,699", image: "📝" }
   ];
 
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    if (term) {
+      toast({ title: "Search", description: `Searching for: ${term}` });
+    }
+  };
+
+  const handleNavigation = (navItem: string) => {
+    setActiveNav(navItem);
+    toast({ title: "Navigation", description: `Switched to ${navItem}` });
+  };
+
+  const handleNotifications = () => {
+    toast({ title: "Notifications", description: "3 new notifications" });
+  };
+
+  const handleExport = () => {
+    toast({ title: "Export", description: "Exporting dashboard data..." });
+  };
+
+  const handleChartRefresh = () => {
+    toast({ title: "Refreshed", description: "Chart data has been updated" });
+  };
+
+  const handleTimeframeChange = () => {
+    const timeframes = ["Last 7 days", "Last 30 days", "Last 90 days", "Last year"];
+    const currentIndex = timeframes.indexOf(selectedTimeframe);
+    const nextTimeframe = timeframes[(currentIndex + 1) % timeframes.length];
+    setSelectedTimeframe(nextTimeframe);
+    toast({ title: "Timeframe Changed", description: `Now showing ${nextTimeframe}` });
+  };
+
+  const handleChartBarClick = (index: number, value: number) => {
+    toast({ title: "Chart Data", description: `Day ${index + 1}: ${value}% of max revenue` });
+  };
+
+  const handleStatClick = (statTitle: string) => {
+    toast({ title: "Stat Details", description: `Viewing details for ${statTitle}` });
+  };
+
+  const handleOrderAction = (orderId: string) => {
+    toast({ title: "Order Actions", description: `Managing order ${orderId}` });
+  };
+
+  const handleNewOrder = () => {
+    toast({ title: "New Order", description: "Creating a new order..." });
+  };
+
+  const handlePagination = (direction: string) => {
+    if (direction === "next") {
+      setCurrentPage(prev => prev + 1);
+      toast({ title: "Pagination", description: `Moved to page ${currentPage + 1}` });
+    } else {
+      setCurrentPage(prev => Math.max(1, prev - 1));
+      toast({ title: "Pagination", description: `Moved to page ${Math.max(1, currentPage - 1)}` });
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Completed": return "bg-green-100 text-green-800";
@@ -101,7 +166,10 @@ export default function DashboardTemplate() {
               <input 
                 type="text" 
                 placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-sm"
+                data-testid="input-dashboard-search"
               />
             </div>
           </div>
@@ -116,19 +184,21 @@ export default function DashboardTemplate() {
               { name: "Settings", icon: Settings, active: false }
             ].map((item) => {
               const IconComponent = item.icon;
+              const isActive = activeNav === item.name;
               return (
-                <a
+                <button
                   key={item.name}
-                  href="#"
-                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    item.active
+                  onClick={() => handleNavigation(item.name)}
+                  className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors w-full text-left ${
+                    isActive
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
+                  data-testid={`nav-${item.name.toLowerCase()}`}
                 >
                   <IconComponent className="h-5 w-5 mr-3" />
                   {item.name}
-                </a>
+                </button>
               );
             })}
           </div>
@@ -145,19 +215,19 @@ export default function DashboardTemplate() {
           </div>
           
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" className="relative p-2">
+            <Button variant="ghost" onClick={handleNotifications} className="relative p-2" data-testid="button-notifications">
               <Bell className="h-5 w-5" />
               <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 3
               </Badge>
             </Button>
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button variant="outline" onClick={handleExport} className="flex items-center space-x-2" data-testid="button-export">
               <Download className="h-4 w-4" />
               <span>Export</span>
             </Button>
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+            <button onClick={() => toast({ title: "Profile", description: "User profile settings" })} className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors" data-testid="button-user-profile">
               <span className="text-white text-sm font-bold">A</span>
-            </div>
+            </button>
           </div>
         </header>
 
@@ -169,7 +239,7 @@ export default function DashboardTemplate() {
               const IconComponent = stat.icon;
               const TrendIcon = stat.trend === 'up' ? TrendingUp : TrendingDown;
               return (
-                <div key={stat.title} className="bg-white rounded-2xl p-6 shadow-lg">
+                <button key={stat.title} onClick={() => handleStatClick(stat.title)} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow text-left w-full" data-testid={`stat-${stat.title.toLowerCase().replace(' ', '-')}`}>
                   <div className="flex items-center justify-between">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                       stat.color === 'green' ? 'bg-green-100' :
@@ -193,7 +263,7 @@ export default function DashboardTemplate() {
                     <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
                     <p className="text-gray-600 text-sm">{stat.title}</p>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -205,11 +275,11 @@ export default function DashboardTemplate() {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-gray-900">Revenue Overview</h2>
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={handleTimeframeChange} data-testid="button-timeframe">
                       <Calendar className="h-4 w-4 mr-2" />
-                      Last 30 days
+                      {selectedTimeframe}
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={handleChartRefresh} data-testid="button-refresh-chart">
                       <RefreshCw className="h-4 w-4" />
                     </Button>
                   </div>
@@ -218,11 +288,13 @@ export default function DashboardTemplate() {
                 {/* Mock Chart */}
                 <div className="h-64 bg-gradient-to-t from-blue-50 to-white rounded-xl flex items-end justify-center space-x-2 p-4">
                   {[40, 65, 35, 80, 45, 70, 60, 85, 55, 75, 90, 65].map((height, index) => (
-                    <div
+                    <button
                       key={index}
-                      className="bg-blue-600 rounded-t-lg w-8 transition-all hover:bg-blue-700"
+                      onClick={() => handleChartBarClick(index, height)}
+                      className="bg-blue-600 rounded-t-lg w-8 transition-all hover:bg-blue-700 cursor-pointer"
                       style={{ height: `${height}%` }}
-                    ></div>
+                      data-testid={`chart-bar-${index}`}
+                    ></button>
                   ))}
                 </div>
                 
@@ -243,7 +315,7 @@ export default function DashboardTemplate() {
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Top Products</h2>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => toast({ title: "Product Actions", description: "More product management options" })} data-testid="button-products-more">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </div>
@@ -265,7 +337,7 @@ export default function DashboardTemplate() {
                 ))}
               </div>
               
-              <Button variant="outline" className="w-full mt-4">
+              <Button variant="outline" onClick={() => toast({ title: "All Products", description: "Loading complete product catalog..." })} className="w-full mt-4" data-testid="button-view-all-products">
                 View All Products
               </Button>
             </div>
@@ -277,11 +349,11 @@ export default function DashboardTemplate() {
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">Recent Orders</h2>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => toast({ title: "Filter", description: "Showing order filter options" })} data-testid="button-filter-orders">
                     <Filter className="h-4 w-4 mr-2" />
                     Filter
                   </Button>
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                  <Button size="sm" onClick={handleNewOrder} className="bg-blue-600 hover:bg-blue-700" data-testid="button-new-order">
                     <Plus className="h-4 w-4 mr-2" />
                     New Order
                   </Button>
@@ -316,7 +388,7 @@ export default function DashboardTemplate() {
                       </td>
                       <td className="py-4 px-6 text-gray-600">{order.date}</td>
                       <td className="py-4 px-6">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" onClick={() => handleOrderAction(order.id)} data-testid={`button-order-actions-${order.id}`}>
                           <MoreVertical className="h-4 w-4" />
                         </Button>
                       </td>
@@ -330,8 +402,8 @@ export default function DashboardTemplate() {
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">Showing 5 of 247 orders</p>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">Previous</Button>
-                  <Button variant="outline" size="sm">Next</Button>
+                  <Button variant="outline" size="sm" onClick={() => handlePagination('previous')} disabled={currentPage === 1} data-testid="button-previous-page">Previous</Button>
+                  <Button variant="outline" size="sm" onClick={() => handlePagination('next')} data-testid="button-next-page">Next</Button>
                 </div>
               </div>
             </div>

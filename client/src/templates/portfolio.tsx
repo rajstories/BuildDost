@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   ArrowRight, 
@@ -10,10 +12,18 @@ import {
   Download,
   Eye,
   Calendar,
-  User
+  User,
+  Send
 } from "lucide-react";
 
 export default function PortfolioTemplate() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const { toast } = useToast();
   const projects = [
     {
       id: 1,
@@ -94,6 +104,65 @@ export default function PortfolioTemplate() {
     { name: "Docker", level: 70 }
   ];
 
+  const handleDownloadResume = () => {
+    // Create a fake resume download
+    const link = document.createElement('a');
+    link.href = 'data:text/plain;charset=utf-8,Alex Johnson - Resume\n\nFull Stack Developer\n\nExperience:\n- 5+ years of web development\n- 50+ projects completed\n- 30+ happy clients\n\nSkills:\n- JavaScript, React, Node.js\n- Python, TypeScript\n- MongoDB, AWS, Docker';
+    link.download = 'Alex_Johnson_Resume.txt';
+    link.click();
+    toast({ title: "Resume Downloaded!", description: "Alex Johnson's resume has been downloaded successfully." });
+  };
+
+  const handleViewDemo = (project: any) => {
+    toast({ 
+      title: "Demo Launched!", 
+      description: `Opening demo for ${project.title}` 
+    });
+    // In a real app, this would open the actual demo URL
+  };
+
+  const handleViewCode = (project: any) => {
+    toast({ 
+      title: "Code Repository", 
+      description: `Opening GitHub repository for ${project.title}` 
+    });
+    // In a real app, this would open the GitHub URL
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({ 
+        title: "Please fill in all required fields", 
+        variant: "destructive" 
+      });
+      return;
+    }
+    toast({ 
+      title: "Message Sent!", 
+      description: "Thank you for your message. I'll get back to you soon!" 
+    });
+    setFormData({ name: "", email: "", subject: "", message: "" });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSocialClick = (platform: string) => {
+    toast({ 
+      title: `Opening ${platform}`, 
+      description: `Redirecting to ${platform} profile...` 
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <TemplateActions templateId="portfolio" templateName="Portfolio" />
@@ -103,12 +172,12 @@ export default function PortfolioTemplate() {
           <div className="flex justify-between items-center h-16">
             <div className="text-2xl font-bold text-gray-900">Alex Johnson</div>
             <div className="hidden md:flex space-x-8">
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">About</a>
-              <a href="#projects" className="text-gray-700 hover:text-blue-600 transition-colors">Projects</a>
-              <a href="#skills" className="text-gray-700 hover:text-blue-600 transition-colors">Skills</a>
-              <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+              <button onClick={() => scrollToSection('about')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-about">About</button>
+              <button onClick={() => scrollToSection('projects')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-projects">Projects</button>
+              <button onClick={() => scrollToSection('skills')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-skills">Skills</button>
+              <button onClick={() => scrollToSection('contact')} className="text-gray-700 hover:text-blue-600 transition-colors" data-testid="nav-contact">Contact</button>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleDownloadResume} className="bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-download-resume">
               <Download className="h-4 w-4 mr-2" />
               Resume
             </Button>
@@ -131,12 +200,12 @@ export default function PortfolioTemplate() {
                 turning complex problems into elegant solutions that drive business growth.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4">
+                <Button size="lg" onClick={() => scrollToSection('projects')} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4" data-testid="button-view-work">
                   <Eye className="h-5 w-5 mr-2" />
                   View My Work
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4">
+                <Button size="lg" onClick={() => scrollToSection('contact')} variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4" data-testid="button-get-in-touch">
                   <Mail className="h-5 w-5 mr-2" />
                   Get In Touch
                 </Button>
@@ -235,11 +304,11 @@ export default function PortfolioTemplate() {
                   <div className="text-6xl">{project.image}</div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <div className="flex space-x-4">
-                      <Button size="sm" className="bg-white text-gray-900 hover:bg-gray-100">
+                      <Button size="sm" onClick={() => handleViewDemo(project)} className="bg-white text-gray-900 hover:bg-gray-100" data-testid={`button-demo-${project.id}`}>
                         <Eye className="h-4 w-4 mr-2" />
                         Demo
                       </Button>
-                      <Button size="sm" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900">
+                      <Button size="sm" onClick={() => handleViewCode(project)} variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900" data-testid={`button-code-${project.id}`}>
                         <Github className="h-4 w-4 mr-2" />
                         Code
                       </Button>
@@ -251,12 +320,12 @@ export default function PortfolioTemplate() {
                   <div className="flex items-center justify-between mb-2">
                     <Badge variant="secondary" className="text-xs">{project.category}</Badge>
                     <div className="flex space-x-2">
-                      <a href={project.demo} className="text-gray-400 hover:text-blue-600">
+                      <button onClick={() => handleViewDemo(project)} className="text-gray-400 hover:text-blue-600" data-testid={`button-external-${project.id}`}>
                         <ExternalLink className="h-4 w-4" />
-                      </a>
-                      <a href={project.github} className="text-gray-400 hover:text-blue-600">
+                      </button>
+                      <button onClick={() => handleViewCode(project)} className="text-gray-400 hover:text-blue-600" data-testid={`button-github-${project.id}`}>
                         <Github className="h-4 w-4" />
-                      </a>
+                      </button>
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{project.title}</h3>
@@ -274,7 +343,7 @@ export default function PortfolioTemplate() {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3">
+            <Button onClick={() => toast({ title: "All Projects", description: "Loading complete project portfolio..." })} variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3" data-testid="button-view-all-projects">
               View All Projects
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
@@ -378,37 +447,68 @@ export default function PortfolioTemplate() {
                 <h4 className="font-semibold mb-4">Follow Me</h4>
                 <div className="flex space-x-4">
                   {['LinkedIn', 'GitHub', 'Twitter', 'Dribbble'].map((platform, index) => (
-                    <a key={index} href="#" className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors">
+                    <button key={index} onClick={() => handleSocialClick(platform)} className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors" data-testid={`button-social-${platform.toLowerCase()}`}>
                       <span className="text-sm font-bold">{platform[0]}</span>
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
 
             <div className="bg-gray-800 rounded-2xl p-8">
-              <form className="space-y-6">
+              <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
-                    <input type="text" className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" />
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Name *</label>
+                    <input 
+                      type="text" 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" 
+                      data-testid="input-name"
+                      required
+                    />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                    <input type="email" className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" />
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" 
+                      data-testid="input-email"
+                      required
+                    />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Subject</label>
-                  <input type="text" className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" />
+                  <input 
+                    type="text" 
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white" 
+                    data-testid="input-subject"
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
-                  <textarea rows={4} className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white"></textarea>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Message *</label>
+                  <textarea 
+                    rows={4} 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent text-white"
+                    data-testid="textarea-message"
+                    required
+                  ></textarea>
                 </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3">
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3" data-testid="button-send-message">
                   Send Message
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <Send className="h-4 w-4 ml-2" />
                 </Button>
               </form>
             </div>

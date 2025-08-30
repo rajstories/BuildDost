@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   Search,
@@ -13,10 +15,19 @@ import {
   ThumbsUp,
   Clock,
   TrendingUp,
-  Eye
+  Eye,
+  Check,
+  BookmarkIcon
 } from "lucide-react";
 
 export default function BlogTemplate() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [email, setEmail] = useState("");
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<number>>(new Set());
+  const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
+  const [showFullArticle, setShowFullArticle] = useState<number | null>(null);
+  const { toast } = useToast();
   const categories = ["All", "Technology", "Design", "Business", "Lifestyle", "Travel"];
   
   const featuredPost = {
@@ -106,6 +117,72 @@ export default function BlogTemplate() {
     "Startup", "AI", "Web Development", "UX/UI", "Business"
   ];
 
+  // Filter posts based on search and category
+  const filteredPosts = posts.filter(post => {
+    const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
+    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         post.author.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  const handleSubscribe = () => {
+    if (!email) {
+      toast({ title: "Please enter your email address", variant: "destructive" });
+      return;
+    }
+    toast({ title: "Success!", description: "You've been subscribed to our newsletter!" });
+    setEmail("");
+  };
+
+  const handleBookmark = (postId: number) => {
+    const newBookmarks = new Set(bookmarkedPosts);
+    if (newBookmarks.has(postId)) {
+      newBookmarks.delete(postId);
+      toast({ title: "Removed from bookmarks" });
+    } else {
+      newBookmarks.add(postId);
+      toast({ title: "Added to bookmarks" });
+    }
+    setBookmarkedPosts(newBookmarks);
+  };
+
+  const handleLike = (postId: number) => {
+    const newLikes = new Set(likedPosts);
+    if (newLikes.has(postId)) {
+      newLikes.delete(postId);
+      toast({ title: "Like removed" });
+    } else {
+      newLikes.add(postId);
+      toast({ title: "Post liked!" });
+    }
+    setLikedPosts(newLikes);
+  };
+
+  const handleShare = (post: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: post.excerpt,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({ title: "Link copied to clipboard!" });
+    }
+  };
+
+  const handleReadMore = (postId: number) => {
+    setShowFullArticle(showFullArticle === postId ? null : postId);
+    toast({ title: "Article expanded" });
+  };
+
+  const handleTagFilter = (tag: string) => {
+    // Filter posts by tag (simulate by searching for the tag)
+    setSearchTerm(tag.toLowerCase());
+    toast({ title: `Filtered by "${tag}"` });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TemplateActions templateId="blog" templateName="Blog" />
@@ -133,10 +210,13 @@ export default function BlogTemplate() {
                 <input 
                   type="text" 
                   placeholder="Search articles..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64"
+                  data-testid="input-search"
                 />
               </div>
-              <Button variant="outline">Subscribe</Button>
+              <Button variant="outline" onClick={handleSubscribe} data-testid="button-subscribe-header">Subscribe</Button>
             </div>
           </div>
         </div>
@@ -154,10 +234,10 @@ export default function BlogTemplate() {
             Join our community of learners and innovators.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4" onClick={() => document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth' })} data-testid="button-start-reading">
               Start Reading
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4">
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4" onClick={() => document.getElementById('newsletter')?.scrollIntoView({ behavior: 'smooth' })} data-testid="button-subscribe-newsletter">
               Subscribe to Newsletter
             </Button>
           </div>
@@ -171,7 +251,13 @@ export default function BlogTemplate() {
             {categories.map((category) => (
               <button
                 key={category}
-                className="px-6 py-2 rounded-full font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white"
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-2 rounded-full font-medium transition-all whitespace-nowrap ${
+                  selectedCategory === category
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white'
+                }`}
+                data-testid={`button-category-${category.toLowerCase()}`}
               >
                 {category}
               </button>
@@ -183,7 +269,7 @@ export default function BlogTemplate() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid lg:grid-cols-4 gap-12">
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3" id="articles">
             {/* Featured Article */}
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-12">
               <div className="relative bg-gradient-to-br from-blue-500 to-purple-600 h-64 flex items-center justify-center">
@@ -217,10 +303,16 @@ export default function BlogTemplate() {
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-6 text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <ThumbsUp className="h-4 w-4" />
-                      <span>{featuredPost.likes}</span>
-                    </div>
+                    <button 
+                      onClick={() => handleLike(featuredPost.id)}
+                      className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
+                        likedPosts.has(featuredPost.id) ? 'text-blue-600' : ''
+                      }`}
+                      data-testid="button-like-featured"
+                    >
+                      <ThumbsUp className={`h-4 w-4 ${likedPosts.has(featuredPost.id) ? 'fill-current' : ''}`} />
+                      <span>{featuredPost.likes + (likedPosts.has(featuredPost.id) ? 1 : 0)}</span>
+                    </button>
                     <div className="flex items-center space-x-1">
                       <MessageCircle className="h-4 w-4" />
                       <span>{featuredPost.comments}</span>
@@ -232,14 +324,28 @@ export default function BlogTemplate() {
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Bookmark className="h-4 w-4" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleBookmark(featuredPost.id)}
+                      data-testid="button-bookmark-featured"
+                    >
+                      <Bookmark className={`h-4 w-4 ${bookmarkedPosts.has(featuredPost.id) ? 'fill-current text-blue-600' : ''}`} />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleShare(featuredPost)}
+                      data-testid="button-share-featured"
+                    >
                       <Share className="h-4 w-4" />
                     </Button>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                      Read More
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleReadMore(featuredPost.id)}
+                      data-testid="button-read-more-featured"
+                    >
+                      {showFullArticle === featuredPost.id ? 'Show Less' : 'Read More'}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </div>
@@ -251,7 +357,7 @@ export default function BlogTemplate() {
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-8">Recent Articles</h3>
               <div className="grid md:grid-cols-2 gap-8">
-                {posts.map((post) => (
+                {filteredPosts.map((post) => (
                   <article key={post.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                     <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-40 flex items-center justify-center">
                       <div className="text-5xl">{post.image}</div>
@@ -279,10 +385,16 @@ export default function BlogTemplate() {
                       
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-xs text-gray-500">
-                          <div className="flex items-center space-x-1">
-                            <ThumbsUp className="h-3 w-3" />
-                            <span>{post.likes}</span>
-                          </div>
+                          <button 
+                            onClick={() => handleLike(post.id)}
+                            className={`flex items-center space-x-1 hover:text-blue-600 transition-colors ${
+                              likedPosts.has(post.id) ? 'text-blue-600' : ''
+                            }`}
+                            data-testid={`button-like-${post.id}`}
+                          >
+                            <ThumbsUp className={`h-3 w-3 ${likedPosts.has(post.id) ? 'fill-current' : ''}`} />
+                            <span>{post.likes + (likedPosts.has(post.id) ? 1 : 0)}</span>
+                          </button>
                           <div className="flex items-center space-x-1">
                             <MessageCircle className="h-3 w-3" />
                             <span>{post.comments}</span>
@@ -293,8 +405,14 @@ export default function BlogTemplate() {
                           </div>
                         </div>
                         
-                        <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-700 p-0">
-                          Read More
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-blue-600 hover:text-blue-700 p-0"
+                          onClick={() => handleReadMore(post.id)}
+                          data-testid={`button-read-more-${post.id}`}
+                        >
+                          {showFullArticle === post.id ? 'Show Less' : 'Read More'}
                           <ArrowRight className="h-3 w-3 ml-1" />
                         </Button>
                       </div>
@@ -306,7 +424,12 @@ export default function BlogTemplate() {
 
             {/* Load More */}
             <div className="text-center">
-              <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3">
+              <Button 
+                variant="outline" 
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3"
+                onClick={() => toast({ title: "Loading...", description: "More articles would be loaded here!" })}
+                data-testid="button-load-more"
+              >
                 Load More Articles
               </Button>
             </div>
@@ -315,7 +438,7 @@ export default function BlogTemplate() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             {/* Newsletter Signup */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-700 text-white rounded-2xl p-6 mb-8">
+            <div className="bg-gradient-to-br from-blue-600 to-purple-700 text-white rounded-2xl p-6 mb-8" id="newsletter">
               <h3 className="text-xl font-bold mb-3">Stay Updated</h3>
               <p className="text-blue-100 text-sm mb-4">
                 Get the latest articles delivered straight to your inbox.
@@ -324,9 +447,16 @@ export default function BlogTemplate() {
                 <input 
                   type="email" 
                   placeholder="Your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-300"
+                  data-testid="input-email-newsletter"
                 />
-                <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                <Button 
+                  className="w-full bg-white text-blue-600 hover:bg-gray-100"
+                  onClick={handleSubscribe}
+                  data-testid="button-subscribe-newsletter"
+                >
                   Subscribe
                 </Button>
               </div>
@@ -339,7 +469,9 @@ export default function BlogTemplate() {
                 {popularTags.map((tag) => (
                   <button
                     key={tag}
+                    onClick={() => handleTagFilter(tag)}
                     className="px-3 py-1 bg-gray-100 hover:bg-blue-600 text-gray-800 hover:text-white text-sm rounded-full transition-colors font-medium"
+                    data-testid={`button-tag-${tag.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
                   >
                     <Tag className="h-3 w-3 inline mr-1" />
                     {tag}

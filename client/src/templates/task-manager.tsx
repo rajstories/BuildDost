@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 import TemplateActions from "@/components/features/template-actions";
 import { 
   Plus,
@@ -18,39 +19,19 @@ import {
   Folder,
   Target,
   TrendingUp,
-  AlertCircle
+  AlertCircle,
+  X,
+  Check
 } from "lucide-react";
 import { useState } from "react";
 
 export default function TaskManagerTemplate() {
   const [activeTab, setActiveTab] = useState("all");
   const [completedTasks, setCompletedTasks] = useState(new Set([1, 3]));
-
-  const toggleTask = (taskId: number) => {
-    const newCompleted = new Set(completedTasks);
-    if (newCompleted.has(taskId)) {
-      newCompleted.delete(taskId);
-    } else {
-      newCompleted.add(taskId);
-    }
-    setCompletedTasks(newCompleted);
-  };
-
-  const stats = [
-    { label: "Total Tasks", value: "48", icon: Target, color: "blue" },
-    { label: "Completed", value: "32", icon: CheckCircle2, color: "green" },
-    { label: "In Progress", value: "12", icon: Clock, color: "orange" },
-    { label: "Overdue", value: "4", icon: AlertCircle, color: "red" }
-  ];
-
-  const projects = [
-    { id: 1, name: "Website Redesign", tasks: 12, completed: 8, color: "blue", progress: 67 },
-    { id: 2, name: "Mobile App", tasks: 18, completed: 10, color: "purple", progress: 56 },
-    { id: 3, name: "Marketing Campaign", tasks: 8, completed: 6, color: "green", progress: 75 },
-    { id: 4, name: "Product Launch", tasks: 10, completed: 8, color: "orange", progress: 80 }
-  ];
-
-  const tasks = [
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [tasks, setTasks] = useState([
     {
       id: 1,
       title: "Design new landing page",
@@ -117,7 +98,80 @@ export default function TaskManagerTemplate() {
       tags: ["Presentation", "Demo"],
       completed: true
     }
+  ]);
+  const { toast } = useToast();
+
+  const toggleTask = (taskId: number) => {
+    const newCompleted = new Set(completedTasks);
+    const task = tasks.find(t => t.id === taskId);
+    if (newCompleted.has(taskId)) {
+      newCompleted.delete(taskId);
+      toast({ title: "Task marked as incomplete", description: `${task?.title} is now pending` });
+    } else {
+      newCompleted.add(taskId);
+      toast({ title: "Task completed!", description: `${task?.title} has been completed` });
+    }
+    setCompletedTasks(newCompleted);
+  };
+
+  const stats = [
+    { label: "Total Tasks", value: "48", icon: Target, color: "blue" },
+    { label: "Completed", value: "32", icon: CheckCircle2, color: "green" },
+    { label: "In Progress", value: "12", icon: Clock, color: "orange" },
+    { label: "Overdue", value: "4", icon: AlertCircle, color: "red" }
   ];
+
+  const projects = [
+    { id: 1, name: "Website Redesign", tasks: 12, completed: 8, color: "blue", progress: 67 },
+    { id: 2, name: "Mobile App", tasks: 18, completed: 10, color: "purple", progress: 56 },
+    { id: 3, name: "Marketing Campaign", tasks: 8, completed: 6, color: "green", progress: 75 },
+    { id: 4, name: "Product Launch", tasks: 10, completed: 8, color: "orange", progress: 80 }
+  ];
+
+  const handleNewTask = () => {
+    const newTask = {
+      id: Math.max(...tasks.map(t => t.id)) + 1,
+      title: "New Task",
+      description: "Task description",
+      project: "Website Redesign",
+      priority: "Medium",
+      dueDate: new Date().toISOString().split('T')[0],
+      assignee: "Current User",
+      tags: ["New"],
+      completed: false
+    };
+    setTasks([...tasks, newTask]);
+    toast({ title: "Task created!", description: "New task has been added to your list" });
+  };
+
+  const handleDeleteTask = (taskId: number) => {
+    const task = tasks.find(t => t.id === taskId);
+    setTasks(tasks.filter(t => t.id !== taskId));
+    setCompletedTasks(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(taskId);
+      return newSet;
+    });
+    toast({ title: "Task deleted", description: `${task?.title} has been removed` });
+  };
+
+  const handleEditTask = (taskId: number) => {
+    const task = tasks.find(t => t.id === taskId);
+    toast({ title: "Edit Task", description: `Editing: ${task?.title}` });
+  };
+
+  const handleProjectFilter = (projectName: string) => {
+    setSelectedProject(selectedProject === projectName ? null : projectName);
+    toast({ title: "Filter Applied", description: `Showing tasks for ${projectName}` });
+  };
+
+  const handleNavigation = (navType: string) => {
+    toast({ title: "Navigation", description: `Switched to ${navType}` });
+  };
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -134,12 +188,32 @@ export default function TaskManagerTemplate() {
   };
 
   const filteredTasks = tasks.filter(task => {
+    // Apply tab filter
+    let tabMatch = true;
     switch (activeTab) {
-      case "completed": return completedTasks.has(task.id);
-      case "pending": return !completedTasks.has(task.id);
-      case "overdue": return new Date(task.dueDate) < new Date() && !completedTasks.has(task.id);
-      default: return true;
+      case "completed": 
+        tabMatch = completedTasks.has(task.id);
+        break;
+      case "pending": 
+        tabMatch = !completedTasks.has(task.id);
+        break;
+      case "overdue": 
+        tabMatch = new Date(task.dueDate) < new Date() && !completedTasks.has(task.id);
+        break;
+      default: 
+        tabMatch = true;
     }
+    
+    // Apply search filter
+    const searchMatch = searchTerm === "" || 
+      task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      task.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    // Apply project filter
+    const projectMatch = !selectedProject || task.project === selectedProject;
+    
+    return tabMatch && searchMatch && projectMatch;
   });
 
   return (
@@ -156,7 +230,7 @@ export default function TaskManagerTemplate() {
         
         <nav className="mt-6">
           <div className="px-6 mb-6">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Button onClick={handleNewTask} className="w-full bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-new-task">
               <Plus className="h-4 w-4 mr-2" />
               New Task
             </Button>
@@ -171,10 +245,11 @@ export default function TaskManagerTemplate() {
             ].map((item) => {
               const IconComponent = item.icon;
               return (
-                <a
+                <button
                   key={item.name}
-                  href="#"
-                  className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  onClick={() => handleNavigation(item.name)}
+                  className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 w-full text-left"
+                  data-testid={`nav-${item.name.toLowerCase().replace(' ', '-')}`}
                 >
                   <div className="flex items-center">
                     <IconComponent className="h-5 w-5 mr-3" />
@@ -183,7 +258,7 @@ export default function TaskManagerTemplate() {
                   <Badge variant="secondary" className="text-xs">
                     {item.count}
                   </Badge>
-                </a>
+                </button>
               );
             })}
           </div>
@@ -194,17 +269,20 @@ export default function TaskManagerTemplate() {
             </h3>
             <div className="space-y-1">
               {projects.map((project) => (
-                <a
+                <button
                   key={project.id}
-                  href="#"
-                  className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+                  onClick={() => handleProjectFilter(project.name)}
+                  className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-50 w-full text-left ${
+                    selectedProject === project.name ? 'bg-blue-50 text-blue-700' : ''
+                  }`}
+                  data-testid={`project-${project.name.toLowerCase().replace(' ', '-')}`}
                 >
                   <div className="flex items-center">
                     <div className={`w-3 h-3 rounded-full bg-${project.color}-500 mr-3`}></div>
                     <span className="truncate">{project.name}</span>
                   </div>
                   <span className="text-xs text-gray-500">{project.completed}/{project.tasks}</span>
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -226,16 +304,19 @@ export default function TaskManagerTemplate() {
               <input 
                 type="text" 
                 placeholder="Search tasks..."
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent w-64"
+                data-testid="input-search-tasks"
               />
             </div>
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => setShowFilters(!showFilters)} data-testid="button-filter">
               <Filter className="h-4 w-4 mr-2" />
               Filter
             </Button>
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+            <button onClick={() => toast({ title: "Profile", description: "User profile settings" })} className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors" data-testid="button-user-profile">
               <span className="text-white text-sm font-bold">A</span>
-            </div>
+            </button>
           </div>
         </header>
 
@@ -274,7 +355,7 @@ export default function TaskManagerTemplate() {
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Projects Overview</h2>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => toast({ title: "Analytics", description: "Viewing project analytics" })} data-testid="button-project-analytics">
                   <TrendingUp className="h-4 w-4" />
                 </Button>
               </div>
@@ -310,7 +391,7 @@ export default function TaskManagerTemplate() {
                 <div className="p-6 border-b border-gray-200">
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-gray-900">Recent Tasks</h2>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Button onClick={handleNewTask} className="bg-blue-600 hover:bg-blue-700" data-testid="button-add-task">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Task
                     </Button>
@@ -332,6 +413,7 @@ export default function TaskManagerTemplate() {
                             ? 'bg-blue-100 text-blue-700'
                             : 'text-gray-600 hover:text-gray-900'
                         }`}
+                        data-testid={`tab-${tab.id}`}
                       >
                         {tab.label} ({tab.count})
                       </button>
@@ -346,6 +428,7 @@ export default function TaskManagerTemplate() {
                         <button
                           onClick={() => toggleTask(task.id)}
                           className="mt-1 flex-shrink-0"
+                          data-testid={`button-toggle-task-${task.id}`}
                         >
                           {completedTasks.has(task.id) ? (
                             <CheckCircle2 className="h-5 w-5 text-green-600" />
@@ -361,7 +444,7 @@ export default function TaskManagerTemplate() {
                             }`}>
                               {task.title}
                             </h3>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" onClick={() => toast({ title: "More Actions", description: `Options for: ${task.title}` })} data-testid={`button-more-${task.id}`}>
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </div>
@@ -389,10 +472,10 @@ export default function TaskManagerTemplate() {
                                   {task.assignee.split(' ').map(n => n[0]).join('')}
                                 </span>
                               </div>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" onClick={() => handleEditTask(task.id)} data-testid={`button-edit-${task.id}`}>
                                 <Edit className="h-3 w-3" />
                               </Button>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" onClick={() => handleDeleteTask(task.id)} data-testid={`button-delete-${task.id}`}>
                                 <Trash2 className="h-3 w-3" />
                               </Button>
                             </div>
