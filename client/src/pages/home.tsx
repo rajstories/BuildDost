@@ -5,14 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Box, Github, FileText, Sparkles, Grid3X3 } from "lucide-react";
 import Footer from "@/components/landing/footer";
 import AIAssistant from "@/components/chat/ai-assistant";
+import { useNavigationLoading } from "@/hooks/use-navigation-loading";
+import { LoadingSpinner, FullPageLoading } from "@/components/ui/loading-spinner";
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
+  const { isNavigating, navigateWithLoading } = useNavigationLoading();
 
-  const handleStartBuilding = () => {
+  const handleStartBuilding = async () => {
     if (prompt.trim()) {
       // Navigate to generation page with the prompt
-      window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}`;
+      await navigateWithLoading(`/generate?prompt=${encodeURIComponent(prompt)}`, 500);
     } else {
       // Require a prompt for generation
       alert('Please describe your app idea first!');
@@ -27,6 +30,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen text-foreground overflow-hidden">
+      {/* Loading Overlay */}
+      {isNavigating && <FullPageLoading text="Creating your app..." />}
       {/* Synchronized Patch Background */}
       <div className="fixed inset-0 -z-10">
         {/* Base dark background */}
@@ -132,11 +137,18 @@ export default function HomePage() {
                 />
                 <Button
                   onClick={handleStartBuilding}
-                  className="group absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
+                  disabled={isNavigating}
+                  className={`group absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out ${
+                    isNavigating ? 'opacity-75 cursor-not-allowed' : 'hover:scale-105 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0'
+                  }`}
                   data-testid="button-start-building"
                 >
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <Sparkles className="relative mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  {isNavigating ? (
+                    <LoadingSpinner size="sm" />
+                  ) : (
+                    <Sparkles className="relative mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  )}
                   <span className="relative">Build</span>
                 </Button>
               </div>
@@ -144,31 +156,43 @@ export default function HomePage() {
 
             {/* Action Buttons */}
             <div className="flex justify-center space-x-6 mb-8">
-              <Link href="/templates">
-                <Button 
-                  variant="outline" 
-                  className="group relative text-lg px-10 py-5 rounded-2xl border-2 border-white/80 bg-white backdrop-blur-xl text-gray-800 font-semibold shadow-2xl hover:shadow-3xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0 transform -translate-y-0.5"
-                  data-testid="button-choose-templates"
-                  style={{
-                    boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                  }}
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/30 to-purple-50/30 opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <Button 
+                onClick={() => navigateWithLoading('/templates')}
+                variant="outline" 
+                disabled={isNavigating}
+                className={`group relative text-lg px-10 py-5 rounded-2xl border-2 border-white/80 bg-white backdrop-blur-xl text-gray-800 font-semibold shadow-2xl hover:shadow-3xl transition-all duration-500 ease-out ${
+                  isNavigating ? 'opacity-75 cursor-not-allowed' : 'hover:scale-[1.02] hover:-translate-y-1 hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0 transform -translate-y-0.5'
+                }`}
+                data-testid="button-choose-templates"
+                style={{
+                  boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                }}
+              >
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/30 to-purple-50/30 opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {isNavigating ? (
+                  <LoadingSpinner size="sm" />
+                ) : (
                   <Grid3X3 className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                  <span className="relative">Choose Templates</span>
-                </Button>
-              </Link>
-              <Link href="/showcase">
-                <Button 
-                  className="group relative text-lg px-10 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-600 to-blue-600 hover:from-purple-500 hover:via-purple-500 hover:to-blue-500 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0"
-                  data-testid="button-hackathon-demo"
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                )}
+                <span className="relative">Choose Templates</span>
+              </Button>
+              <Button 
+                onClick={() => navigateWithLoading('/showcase')}
+                disabled={isNavigating}
+                className={`group relative text-lg px-10 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-600 to-blue-600 hover:from-purple-500 hover:via-purple-500 hover:to-blue-500 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-500 ease-out ${
+                  isNavigating ? 'opacity-75 cursor-not-allowed' : 'hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0'
+                }`}
+                data-testid="button-hackathon-demo"
+              >
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {isNavigating ? (
+                  <LoadingSpinner size="sm" />  
+                ) : (
                   <Sparkles className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                  <span className="relative">🏆 Hackathon Demo</span>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
-                </Button>
-              </Link>
+                )}
+                <span className="relative">🏆 Hackathon Demo</span>
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
+              </Button>
             </div>
 
             {/* Import Options */}

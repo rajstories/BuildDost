@@ -29,7 +29,7 @@ export default function GeneratePage() {
 
   useEffect(() => {
     let stepTimeout: NodeJS.Timeout;
-    let progressInterval: NodeJS.Timer;
+    let progressInterval: NodeJS.Timeout;
 
     const startGeneration = async () => {
       for (let i = 0; i < GENERATION_STEPS.length; i++) {
