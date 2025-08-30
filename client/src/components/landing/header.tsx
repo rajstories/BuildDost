@@ -12,10 +12,14 @@ export default function Header() {
 
   const handleSignIn = () => {
     toast({
-      title: "Redirecting",
-      description: "Taking you to sign in...",
+      title: "Authentication Temporarily Disabled",
+      description: "Using demo mode - full auth coming soon!",
+      variant: "default",
     });
-    window.location.href = "/api/login";
+    // Temporary demo user simulation
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
   };
 
   const handleLogout = () => {
