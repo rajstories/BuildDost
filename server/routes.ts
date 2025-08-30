@@ -158,28 +158,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Test endpoint to verify project creation works
+  app.post("/api/projects/test", async (req, res) => {
+    try {
+      console.log("Testing basic project creation...");
+      
+      const testProject = {
+        userId: "test-user",
+        name: "Test Project",
+        description: "Simple test project",
+        components: [],
+        config: { test: true },
+        isPublic: false,
+        status: "draft",
+        deploymentUrl: null
+      };
+
+      const savedProject = await storage.createProject(testProject);
+      console.log("Test project created successfully:", savedProject.id);
+      
+      res.json({ 
+        success: true, 
+        message: "Project creation works!",
+        project: savedProject 
+      });
+    } catch (error) {
+      console.error("Test project creation failed:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : "Test failed"
+      });
+    }
+  });
+
   // AI Full-Stack Project Generation
   app.post("/api/projects/generate", async (req, res) => {
     try {
       const { prompt } = req.body;
+      console.log("Received project generation request with prompt:", prompt);
+      
       if (!prompt || typeof prompt !== 'string') {
         return res.status(400).json({ message: "Prompt is required" });
       }
 
       // Extract features from the prompt
       const features = extractFeaturesFromPrompt(prompt);
+      console.log("Extracted features:", features);
       
       let generatedProject;
       try {
+        console.log("Attempting AI generation...");
         generatedProject = await generateFullStackProject({
           description: prompt,
           features,
           type: "web"
         });
+        console.log("AI generation successful");
       } catch (aiError) {
         console.error("AI generation failed, using fallback:", aiError);
         // Fallback to a simple project structure
         generatedProject = createFallbackProject(prompt, features);
+        console.log("Using fallback project:", generatedProject.name);
       }
 
       // Store the project
@@ -198,7 +237,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         deploymentUrl: null
       };
 
+      console.log("Attempting to save project with data:", {
+        name: projectData.name,
+        description: projectData.description,
+        userId: projectData.userId
+      });
+
       const savedProject = await storage.createProject(projectData);
+      console.log("Project saved successfully with ID:", savedProject.id);
       
       res.json({ 
         success: true, 
@@ -212,6 +258,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       });
     } catch (error) {
+      console.error("Full error in project generation:", error);
+      console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
+      
       res.status(500).json({ 
         success: false, 
         error: error instanceof Error ? error.message : "Failed to generate project"
