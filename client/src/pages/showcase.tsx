@@ -162,7 +162,7 @@ export default function ShowcasePage() {
             </Link>
             
             <Link href="/builder">
-              <Button variant="outline" className="group px-10 py-6 text-lg font-bold border-2 border-gray-300 text-gray-700 hover:border-purple-600 hover:text-purple-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 min-w-[220px]">
+              <Button variant="outline" className="group px-10 py-6 text-lg font-bold border-2 border-white/60 text-white hover:bg-white hover:text-purple-600 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-1 min-w-[220px]">
                 <Code className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
                 <span className="relative">🚀 Build Custom App</span>
               </Button>
