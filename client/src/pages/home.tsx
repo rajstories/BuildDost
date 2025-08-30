@@ -34,11 +34,35 @@ export default function HomePage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <div className="flex items-center space-x-3 cursor-pointer" data-testid="logo-builddost">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Box className="text-primary-foreground text-sm" size={16} />
+              <div className="flex items-center space-x-3 cursor-pointer group" data-testid="logo-builddost">
+                <div className="relative w-10 h-10">
+                  {/* Gradient background with subtle glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80 rounded-xl shadow-lg group-hover:shadow-primary/25 transition-all duration-300"></div>
+                  {/* Inner gradient overlay */}
+                  <div className="absolute inset-0.5 bg-gradient-to-br from-primary/20 to-transparent rounded-[10px]"></div>
+                  {/* Logo symbol */}
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-primary-foreground">
+                      <path 
+                        d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" 
+                        fill="currentColor" 
+                        fillOpacity="0.9"
+                      />
+                      <path 
+                        d="M9 22V12H15V22" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                        fill="none"
+                      />
+                      <circle cx="12" cy="8" r="1.5" fill="currentColor" fillOpacity="0.7"/>
+                    </svg>
+                  </div>
                 </div>
-                <span className="text-xl font-bold text-foreground tracking-tight">BuildDost</span>
+                <span className="text-xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300">
+                  BuildDost
+                </span>
               </div>
             </Link>
             
