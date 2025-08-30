@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Moon, RotateCcw, User, LogOut, Settings, Layers, Globe, Hammer } from "lucide-react";
+import { Moon, RotateCcw, User, LogOut, Settings, Square, Triangle, Circle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -40,52 +40,36 @@ export default function Header() {
           <Link href="/">
             <div className="flex items-center cursor-pointer group" data-testid="logo-builddost">
               <div className="relative flex items-center">
-                {/* Professional Website Builder Logo */}
-                <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl shadow-xl flex items-center justify-center overflow-hidden transform group-hover:scale-105 transition-all duration-500 border border-blue-500/20">
-                  {/* Sophisticated Background Pattern */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-indigo-600/10"></div>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15)_0%,transparent_50%)]"></div>
-                  <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,rgba(255,255,255,0.08)_50%,transparent_60%)]"></div>
-                  
-                  {/* Website Building Symbol - Layered Structure */}
-                  <div className="relative z-10 flex flex-col items-center justify-center">
-                    {/* Website Layers representing building blocks */}
-                    <div className="relative">
-                      {/* Top layer - Header */}
-                      <div className="w-6 h-1.5 bg-white rounded-sm mb-0.5 opacity-90 shadow-sm"></div>
-                      {/* Middle layer - Content with Globe */}
-                      <div className="relative w-7 h-2.5 bg-gradient-to-r from-white to-blue-100 rounded-sm flex items-center justify-center mb-0.5 shadow-sm">
-                        <Globe className="w-2 h-2 text-blue-600" />
-                      </div>
-                      {/* Bottom layer - Footer */}
-                      <div className="w-6 h-1 bg-white/80 rounded-sm opacity-90 shadow-sm"></div>
-                      
-                      {/* Building/Construction Symbol */}
-                      <div className="absolute -top-1 -right-1">
-                        <Hammer className="w-2.5 h-2.5 text-yellow-300 transform rotate-45" />
-                      </div>
+                {/* Replit-Style Clean Geometric Logo */}
+                <div className="relative w-10 h-10 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  {/* Clean Geometric Building Blocks */}
+                  <div className="relative flex flex-col items-center justify-center space-y-0.5">
+                    {/* Top Block - Triangle for dynamic building */}
+                    <div className="w-0 h-0 border-l-[4px] border-r-[4px] border-b-[3px] border-l-transparent border-r-transparent border-b-white"></div>
+                    
+                    {/* Middle Blocks - Squares for structure */}
+                    <div className="flex space-x-0.5">
+                      <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
+                      <div className="w-1.5 h-1.5 bg-white/80 rounded-sm"></div>
                     </div>
+                    
+                    {/* Base Block - Rectangle foundation */}
+                    <div className="w-4 h-1 bg-white/90 rounded-sm"></div>
                   </div>
                   
-                  {/* Premium Glow Effects */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/20 via-transparent to-indigo-400/20 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm scale-110"></div>
-                  <div className="absolute inset-0 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all duration-500"></div>
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-400/30 to-pink-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md scale-110"></div>
                 </div>
                 
-                {/* Enhanced Typography */}
-                <div className="ml-4 flex flex-col justify-center leading-none">
+                {/* Clean Replit-style Typography */}
+                <div className="ml-3">
                   <div className="flex items-center">
-                    <span className="text-2xl font-black bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 bg-clip-text text-transparent tracking-tight">
+                    <span className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
                       Build
                     </span>
-                    <span className="text-2xl font-black bg-gradient-to-r from-indigo-700 via-purple-700 to-blue-800 bg-clip-text text-transparent tracking-tight">
+                    <span className="text-2xl font-black bg-gradient-to-r from-orange-500 to-pink-600 bg-clip-text text-transparent tracking-tight">
                       Dost
                     </span>
-                    <div className="ml-1 w-1.5 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
-                  </div>
-                  <div className="text-[9px] font-bold text-blue-600/60 tracking-[0.2em] uppercase mt-1 flex items-center">
-                    <Layers className="w-2 h-2 mr-1" />
-                    Website Builder
                   </div>
                 </div>
               </div>
