@@ -24,10 +24,27 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Background with subtle glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15)_0%,transparent_50%)]"></div>
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Bolt.new Style Orbital Background */}
+      <div className="fixed inset-0 -z-10">
+        {/* Dark space background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-black"></div>
+        
+        {/* Orbital glow effect */}
+        <div className="absolute -bottom-48 left-1/2 transform -translate-x-1/2 w-[200vw] h-[100vh]">
+          {/* Main orbital curve */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-full rounded-t-full border-t-4 border-blue-400/30 shadow-[0_0_100px_rgba(59,130,246,0.3)]"></div>
+          
+          {/* Bright inner glow */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[95%] rounded-t-full border-t-2 border-blue-300/50 shadow-[0_0_60px_rgba(147,197,253,0.4)]"></div>
+          
+          {/* Core bright line */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[90%] rounded-t-full border-t border-white/60 shadow-[0_0_30px_rgba(255,255,255,0.5)]"></div>
+        </div>
+        
+        {/* Additional atmospheric glow */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-32 bg-gradient-to-t from-blue-500/10 to-transparent"></div>
+      </div>
       
       {/* Header */}
       <header className="relative z-10 border-b border-border/50 backdrop-blur-sm bg-background/80">
