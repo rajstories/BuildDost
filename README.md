@@ -2,6 +2,9 @@
 
 > **Winner Project** - AI-powered platform that enables non-technical users to create and deploy full-stack web applications using visual design tools combined with AI-assisted code generation.
 
+## 🌐 Live Preview
+**🔗 [Try BuildDost Live](https://build-dost.replit.app)** - Experience the AI-powered builder in action!
+
 ![BuildDost Banner](https://via.placeholder.com/1200x400/FF6B35/FFFFFF?text=BuildDost+-+AI+Website+Builder)
 
 ## ✨ Overview
@@ -97,6 +100,8 @@ npm run dev
 Visit `http://localhost:5000` and start building!
 
 ## 🎮 How It Works
+
+**👉 [See it in action at build-dost.replit.app](https://build-dost.replit.app)**
 
 1. **Describe Your Idea** - "Build me an educational platform with courses and students"
 2. **AI Generates Code** - Instantly creates custom application components
@@ -201,6 +206,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Built with ❤️ by [raj](https://github.com/raj)**
 
 *Empowering everyone to build amazing applications*
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-build--dost.replit.app-brightgreen?style=for-the-badge&logo=replit)](https://build-dost.replit.app)
 
 [![GitHub stars](https://img.shields.io/github/stars/raj/builddost.svg?style=social&label=Star)](https://github.com/raj/builddost)
 [![GitHub forks](https://img.shields.io/github/forks/raj/builddost.svg?style=social&label=Fork)](https://github.com/raj/builddost/fork)
