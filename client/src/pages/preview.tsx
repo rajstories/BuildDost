@@ -33,17 +33,25 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
                         lowerDescription.includes('learning') || lowerDescription.includes('course') ||
                         lowerDescription.includes('student') || lowerDescription.includes('lms') ||
                         lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system') ||
-                        lowerDescription.includes('platform');
+                        lowerDescription.includes('platform') || lowerName.includes('edubridge') || lowerDescription.includes('edubridge');
 
   // Show educational platform immediately if detected
   if (isEducationApp) {
+    console.log('✅ Detected educational platform:', project.name);
     return <EducationAppPreview project={project} />;
   }
   
   if (!appContent) {
+    console.log('❌ App content not found, available files:', Object.keys(project.files));
     return (
       <div className="flex items-center justify-center h-full bg-gray-50">
-        <p className="text-gray-500">App code not found</p>
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <Monitor size={48} className="mx-auto" />
+          </div>
+          <p className="text-gray-500 text-lg">App file not found</p>
+          <p className="text-gray-400 text-sm mt-2">Available files: {Object.keys(project.files).join(', ')}</p>
+        </div>
       </div>
     );
   }
