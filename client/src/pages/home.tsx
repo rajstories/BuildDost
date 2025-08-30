@@ -100,7 +100,12 @@ export default function HomePage() {
             </nav>
             
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" className="font-medium text-sm" data-testid="button-signin">
+              <Button 
+                variant="ghost" 
+                className="font-medium text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors" 
+                onClick={() => window.location.href = '/api/login'}
+                data-testid="button-signin"
+              >
                 Sign In
               </Button>
               <Link href="/builder">
