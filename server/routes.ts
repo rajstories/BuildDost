@@ -616,10 +616,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         // Try to create anonymous user if it doesn't exist
         await storage.createUser({
-          id: "anonymous",
-          username: "anonymous",
           email: "anonymous@builddost.com",
-          name: "Anonymous User"
+          firstName: "Anonymous",
+          lastName: "User"
         });
       } catch (error) {
         // User might already exist, that's fine
@@ -698,8 +697,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             { label: "Add Database", action: "database" },
             { label: "Improve Design", action: "design" },
             { label: "Add Features", action: "features" }
-          ],
-          code: "const PricingSection = () => {\n  return (\n    <div className=\"py-20 bg-gray-50\">\n      {/* Pricing content here */}\n    </div>\n  );\n};"
+          ]
         };
       } else if (lowerMessage.includes('contact') || lowerMessage.includes('form')) {
         responseData = {
@@ -710,8 +708,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             { label: "Add Database", action: "database" },
             { label: "Improve Design", action: "design" },
             { label: "Add Features", action: "features" }
-          ],
-          code: "const ContactForm = () => {\n  return (\n    <form className=\"max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg\">\n      {/* Form fields here */}\n    </form>\n  );\n};"
+          ]
         };
       } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('admin')) {
         responseData = {
@@ -722,8 +719,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             { label: "Add Database", action: "database" },
             { label: "Improve Design", action: "design" },
             { label: "Add Features", action: "features" }
-          ],
-          code: "const Dashboard = () => {\n  return (\n    <div className=\"min-h-screen bg-gray-50\">\n      {/* Dashboard content here */}\n    </div>\n  );\n};"
+          ]
         };
       } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
         responseData = {

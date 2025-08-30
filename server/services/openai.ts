@@ -1063,8 +1063,60 @@ Return a JSON object with complete working code for all files:
 }
 
 export async function generateIntelligentChatResponse(userMessage: string): Promise<ChatResponse> {
+  // Try Gemini first, then OpenAI
+  if (useGemini) {
+    const gemini = await getGeminiClient();
+    if (gemini) {
+      try {
+        console.log("🔄 Using Gemini for intelligent chat response...");
+        const response = await gemini.models.generateContent({
+          model: getModelForTask('analysis'),
+          contents: `You are BuildDost, an intelligent AI assistant that helps users build websites and apps. Analyze the user's message and provide a helpful response with actionable suggestions.
+
+User Message: "${userMessage}"
+
+Please provide:
+1. A conversational, encouraging response that acknowledges their idea
+2. 3-4 specific suggestions for next steps  
+3. 2-4 quick actions they can take immediately
+
+Respond with JSON in this exact format:
+{
+  "response": "A friendly, encouraging response (2-3 sentences)",
+  "suggestions": [
+    "Specific actionable suggestion 1",
+    "Specific actionable suggestion 2", 
+    "Specific actionable suggestion 3"
+  ],
+  "quickActions": [
+    {
+      "label": "Action Label",
+      "action": "action_type",
+      "icon": "code"
+    }
+  ]
+}`
+        });
+
+        console.log("✅ Gemini chat response received");
+        let responseText = response.text || "{}";
+        
+        // Extract JSON from markdown code blocks if present
+        const jsonMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (jsonMatch) {
+          responseText = jsonMatch[1].trim();
+        }
+        
+        const result = JSON.parse(responseText);
+        return result;
+      } catch (error) {
+        console.error("Gemini chat failed, falling back to OpenAI:", error);
+      }
+    }
+  }
+  
   if (!openai) {
-    throw new Error("OpenAI client not configured");
+    throw new Error("No AI client configured");
   }
 
   try {
