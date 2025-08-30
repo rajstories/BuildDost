@@ -5,7 +5,18 @@
 ## 🌐 Live Preview
 **🔗 [Try BuildDost Live](https://build-dost.replit.app)** - Experience the AI-powered builder in action!
 
-![BuildDost Banner](https://via.placeholder.com/1200x400/FF6B35/FFFFFF?text=BuildDost+-+AI+Website+Builder)
+<div align="center">
+
+![BuildDost Banner](https://capsule-render.vercel.app/api?type=waving&color=0:FF6B35,30:FF8E53,60:FFA07A,100:FFB347&height=200&section=header&text=BuildDost&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=AI-Powered%20Full-Stack%20Website%20Builder%20%7C%20Works%20Like%20Replit%20AI&descAlignY=55&descSize=20)
+
+<p>
+<img src="https://img.shields.io/badge/AI%20Powered-FF6B35?style=for-the-badge&logo=openai&logoColor=white" alt="AI Powered"/>
+<img src="https://img.shields.io/badge/Full%20Stack-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
+<img src="https://img.shields.io/badge/Like%20Replit-AI%20Builder-FF6B35?style=for-the-badge&logo=replit&logoColor=white" alt="Replit AI"/>
+<img src="https://img.shields.io/badge/Hackathon-Winner%20Project-FFD700?style=for-the-badge&logo=trophy&logoColor=black" alt="Winner"/>
+</p>
+
+</div>
 
 ## ✨ Overview
 
