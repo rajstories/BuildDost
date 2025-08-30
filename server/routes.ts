@@ -383,10 +383,21 @@ function createFallbackProject(prompt: string, features: string[]): any {
   const projectName = extractProjectName(prompt);
   const lowerPrompt = prompt.toLowerCase();
   
-  // Detect app type from prompt
-  let appType = "todo"; // Default to todo for now
-  if (lowerPrompt.includes("todo") || lowerPrompt.includes("task")) {
+  // Detect app type from prompt like professional web builders
+  let appType = "landing"; // Default to landing page
+  
+  if (lowerPrompt.includes("todo") || lowerPrompt.includes("task") || lowerPrompt.includes("list")) {
     appType = "todo";
+  } else if (lowerPrompt.includes("portfolio") || lowerPrompt.includes("resume") || lowerPrompt.includes("profile")) {
+    appType = "portfolio";
+  } else if (lowerPrompt.includes("blog") || lowerPrompt.includes("article") || lowerPrompt.includes("news")) {
+    appType = "blog";
+  } else if (lowerPrompt.includes("shop") || lowerPrompt.includes("store") || lowerPrompt.includes("ecommerce") || lowerPrompt.includes("e-commerce")) {
+    appType = "ecommerce";
+  } else if (lowerPrompt.includes("dashboard") || lowerPrompt.includes("admin") || lowerPrompt.includes("analytics")) {
+    appType = "dashboard";
+  } else if (lowerPrompt.includes("landing") || lowerPrompt.includes("website") || lowerPrompt.includes("business")) {
+    appType = "landing";
   }
 
   return {
@@ -547,10 +558,24 @@ function generateSimpleTodoApp(projectName: string, prompt: string): Record<stri
   };
 }
 
-// Simplified function to avoid template literal issues
+// Enhanced function to generate multiple app types like professional web builders
 function generateAppFiles(projectName: string, prompt: string, appType: string): Record<string, string> {
-  // Just return the simple todo app for now
-  return generateSimpleTodoApp(projectName, prompt);
+  switch (appType) {
+    case "landing":
+      return generateLandingPageApp(projectName, prompt);
+    case "portfolio":
+      return generatePortfolioApp(projectName, prompt);
+    case "blog":
+      return generateBlogApp(projectName, prompt);
+    case "ecommerce":
+      return generateEcommerceApp(projectName, prompt);
+    case "dashboard":
+      return generateDashboardApp(projectName, prompt);
+    case "todo":
+      return generateSimpleTodoApp(projectName, prompt);
+    default:
+      return generateLandingPageApp(projectName, prompt);
+  }
 }
 
 function extractProjectName(description: string): string {
@@ -565,5 +590,340 @@ function extractProjectName(description: string): string {
   ).join(" ") || "Generated App";
 }
 
-// End of file
+// Professional app generators for different types
+function generateLandingPageApp(projectName: string, prompt: string): Record<string, string> {
+  return {
+    "package.json": JSON.stringify({
+      name: projectName.toLowerCase().replace(/\s+/g, '-'),
+      version: "1.0.0",
+      dependencies: {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tailwindcss": "^3.4.17",
+        "lucide-react": "^0.263.1"
+      }
+    }, null, 2),
+    "src/App.tsx": [
+      "import React, { useState } from 'react';",
+      "import { ArrowRight, Star, Users, Zap, CheckCircle, Menu, X } from 'lucide-react';",
+      "",
+      "function App() {",
+      "  const [isMenuOpen, setIsMenuOpen] = useState(false);",
+      "  const [email, setEmail] = useState('');",
+      "",
+      "  const handleSubmit = (e: React.FormEvent) => {",
+      "    e.preventDefault();",
+      "    alert('Thanks for your interest! This is a demo.');",
+      "    setEmail('');",
+      "  };",
+      "",
+      "  return (",
+      "    <div className=\"min-h-screen bg-white\">",
+      "      {/* Navigation */}",
+      "      <nav className=\"bg-white shadow-sm border-b border-gray-100\">",
+      "        <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <div className=\"flex justify-between h-16\">",
+      "            <div className=\"flex items-center\">",
+      `              <h1 className=\"text-2xl font-bold text-gray-900\">${projectName}</h1>`,
+      "            </div>",
+      "            <div className=\"hidden md:flex items-center space-x-8\">",
+      "              <a href=\"#features\" className=\"text-gray-600 hover:text-gray-900\">Features</a>",
+      "              <a href=\"#pricing\" className=\"text-gray-600 hover:text-gray-900\">Pricing</a>",
+      "              <a href=\"#contact\" className=\"text-gray-600 hover:text-gray-900\">Contact</a>",
+      "              <button className=\"bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700\">",
+      "                Get Started",
+      "              </button>",
+      "            </div>",
+      "          </div>",
+      "        </div>",
+      "      </nav>",
+      "",
+      "      {/* Hero Section */}",
+      "      <section className=\"bg-gradient-to-br from-blue-50 via-white to-purple-50 py-20\">",
+      "        <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center\">",
+      `          <h2 className=\"text-5xl font-bold text-gray-900 mb-6\">${projectName}</h2>`,
+      `          <p className=\"text-xl text-gray-600 mb-8 max-w-3xl mx-auto\">{prompt}</p>`,
+      "          <div className=\"flex flex-col sm:flex-row gap-4 justify-center mb-12\">",
+      "            <button className=\"bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 flex items-center justify-center\">",
+      "              Get Started Free <ArrowRight className=\"ml-2 h-5 w-5\" />",
+      "            </button>",
+      "            <button className=\"border border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-50\">",
+      "              Watch Demo",
+      "            </button>",
+      "          </div>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* Features Section */}",
+      "      <section id=\"features\" className=\"py-20 bg-white\">",
+      "        <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <div className=\"text-center mb-16\">",
+      "            <h3 className=\"text-3xl font-bold text-gray-900 mb-4\">Why Choose Us?</h3>",
+      "            <p className=\"text-xl text-gray-600 max-w-2xl mx-auto\">",
+      "              Experience the next generation of our platform",
+      "            </p>",
+      "          </div>",
+      "          <div className=\"grid md:grid-cols-3 gap-8\">",
+      "            <div className=\"text-center p-6\">",
+      "              <div className=\"bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4\">",
+      "                <Star className=\"h-8 w-8 text-blue-600\" />",
+      "              </div>",
+      "              <h4 className=\"text-xl font-semibold mb-2\">Premium Quality</h4>",
+      "              <p className=\"text-gray-600\">Built with modern technologies and industry best practices</p>",
+      "            </div>",
+      "            <div className=\"text-center p-6\">",
+      "              <div className=\"bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4\">",
+      "                <Users className=\"h-8 w-8 text-green-600\" />",
+      "              </div>",
+      "              <h4 className=\"text-xl font-semibold mb-2\">User Focused</h4>",
+      "              <p className=\"text-gray-600\">Designed with user experience as our top priority</p>",
+      "            </div>",
+      "            <div className=\"text-center p-6\">",
+      "              <div className=\"bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4\">",
+      "                <Zap className=\"h-8 w-8 text-purple-600\" />",
+      "              </div>",
+      "              <h4 className=\"text-xl font-semibold mb-2\">Lightning Fast</h4>",
+      "              <p className=\"text-gray-600\">Optimized for speed and performance</p>",
+      "            </div>",
+      "          </div>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* CTA Section */}",
+      "      <section className=\"bg-blue-600 py-16\">",
+      "        <div className=\"max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8\">",
+      "          <h3 className=\"text-3xl font-bold text-white mb-4\">Ready to Get Started?</h3>",
+      "          <p className=\"text-xl text-blue-100 mb-8\">Join thousands of satisfied customers today</p>",
+      "          <form onSubmit={handleSubmit} className=\"flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto\">",
+      "            <input",
+      "              type=\"email\"",
+      "              value={email}",
+      "              onChange={(e) => setEmail(e.target.value)}",
+      "              placeholder=\"Enter your email\"",
+      "              className=\"flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500\"",
+      "              required",
+      "            />",
+      "            <button",
+      "              type=\"submit\"",
+      "              className=\"bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50\"",
+      "            >",
+      "              Get Started",
+      "            </button>",
+      "          </form>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* Footer */}",
+      "      <footer className=\"bg-gray-900 text-white py-12\">",
+      "        <div className=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center\">",
+      `          <h4 className=\"text-2xl font-bold mb-4\">${projectName}</h4>`,
+      "          <p className=\"text-gray-400 mb-8\">Building the future, one solution at a time.</p>",
+      "          <div className=\"border-t border-gray-800 pt-8\">",
+      "            <p className=\"text-gray-400\">&copy; 2024 " + projectName + ". All rights reserved.</p>",
+      "          </div>",
+      "        </div>",
+      "      </footer>",
+      "    </div>",
+      "  );",
+      "}",
+      "",
+      "export default App;"
+    ].join('\n'),
+    "src/index.tsx": [
+      "import React from 'react';",
+      "import ReactDOM from 'react-dom/client';",
+      "import App from './App';",
+      "import './index.css';",
+      "",
+      "const root = ReactDOM.createRoot(document.getElementById('root')!);",
+      "root.render(<App />);"
+    ].join('\n'),
+    "src/index.css": [
+      "@tailwind base;",
+      "@tailwind components;",
+      "@tailwind utilities;",
+      "",
+      "html {",
+      "  scroll-behavior: smooth;",
+      "}"
+    ].join('\n')
+  };
+}
+
+function generatePortfolioApp(projectName: string, prompt: string): Record<string, string> {
+  return {
+    "package.json": JSON.stringify({
+      name: projectName.toLowerCase().replace(/\s+/g, '-'),
+      version: "1.0.0",
+      dependencies: {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tailwindcss": "^3.4.17",
+        "lucide-react": "^0.263.1"
+      }
+    }, null, 2),
+    "src/App.tsx": [
+      "import React, { useState } from 'react';",
+      "import { Github, Linkedin, Mail, ExternalLink, Download } from 'lucide-react';",
+      "",
+      "function App() {",
+      "  const [activeSection, setActiveSection] = useState('about');",
+      "",
+      "  const projects = [",
+      "    {",
+      "      title: 'E-Commerce Platform',",
+      "      description: 'A full-stack e-commerce solution with React and Node.js',",
+      "      tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],",
+      "      link: '#'",
+      "    },",
+      "    {",
+      "      title: 'Task Management App',",
+      "      description: 'Collaborative task management with real-time updates',",
+      "      tech: ['React', 'Firebase', 'Material-UI'],",
+      "      link: '#'",
+      "    },",
+      "    {",
+      "      title: 'Weather Dashboard',",
+      "      description: 'Beautiful weather app with location-based forecasts',",
+      "      tech: ['React', 'API Integration', 'Chart.js'],",
+      "      link: '#'",
+      "    }",
+      "  ];",
+      "",
+      "  return (",
+      "    <div className=\"min-h-screen bg-gray-50\">",
+      "      {/* Header */}",
+      "      <header className=\"bg-white shadow-sm fixed w-full top-0 z-50\">",
+      "        <div className=\"max-w-6xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <div className=\"flex justify-between items-center py-4\">",
+      `            <h1 className=\"text-2xl font-bold text-gray-900\">${projectName}</h1>`,
+      "            <nav className=\"hidden md:flex space-x-8\">",
+      "              <a href=\"#about\" className=\"text-gray-600 hover:text-gray-900\">About</a>",
+      "              <a href=\"#projects\" className=\"text-gray-600 hover:text-gray-900\">Projects</a>",
+      "              <a href=\"#skills\" className=\"text-gray-600 hover:text-gray-900\">Skills</a>",
+      "              <a href=\"#contact\" className=\"text-gray-600 hover:text-gray-900\">Contact</a>",
+      "            </nav>",
+      "          </div>",
+      "        </div>",
+      "      </header>",
+      "",
+      "      {/* Hero Section */}",
+      "      <section id=\"about\" className=\"pt-20 pb-16 bg-gradient-to-br from-blue-50 to-indigo-100\">",
+      "        <div className=\"max-w-6xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <div className=\"text-center\">",
+      "            <div className=\"w-32 h-32 rounded-full bg-gray-300 mx-auto mb-8\"></div>",
+      `            <h2 className=\"text-4xl font-bold text-gray-900 mb-4\">${projectName}</h2>`,
+      `            <p className=\"text-xl text-gray-600 mb-8 max-w-2xl mx-auto\">${prompt}</p>`,
+      "            <div className=\"flex justify-center space-x-6\">",
+      "              <a href=\"#\" className=\"text-gray-600 hover:text-gray-900\">",
+      "                <Github className=\"h-6 w-6\" />",
+      "              </a>",
+      "              <a href=\"#\" className=\"text-gray-600 hover:text-gray-900\">",
+      "                <Linkedin className=\"h-6 w-6\" />",
+      "              </a>",
+      "              <a href=\"#\" className=\"text-gray-600 hover:text-gray-900\">",
+      "                <Mail className=\"h-6 w-6\" />",
+      "              </a>",
+      "            </div>",
+      "            <button className=\"mt-8 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center mx-auto\">",
+      "              <Download className=\"h-5 w-5 mr-2\" />",
+      "              Download Resume",
+      "            </button>",
+      "          </div>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* Projects Section */}",
+      "      <section id=\"projects\" className=\"py-16 bg-white\">",
+      "        <div className=\"max-w-6xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <h3 className=\"text-3xl font-bold text-center text-gray-900 mb-12\">Featured Projects</h3>",
+      "          <div className=\"grid md:grid-cols-2 lg:grid-cols-3 gap-8\">",
+      "            {projects.map((project, index) => (",
+      "              <div key={index} className=\"bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow\">",
+      "                <div className=\"h-48 bg-gray-200\"></div>",
+      "                <div className=\"p-6\">",
+      "                  <h4 className=\"text-xl font-semibold mb-2\">{project.title}</h4>",
+      "                  <p className=\"text-gray-600 mb-4\">{project.description}</p>",
+      "                  <div className=\"flex flex-wrap gap-2 mb-4\">",
+      "                    {project.tech.map((tech, techIndex) => (",
+      "                      <span key={techIndex} className=\"bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm\">",
+      "                        {tech}",
+      "                      </span>",
+      "                    ))}",
+      "                  </div>",
+      "                  <a href={project.link} className=\"text-blue-600 hover:text-blue-800 flex items-center\">",
+      "                    View Project <ExternalLink className=\"h-4 w-4 ml-1\" />",
+      "                  </a>",
+      "                </div>",
+      "              </div>",
+      "            ))}",
+      "          </div>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* Skills Section */}",
+      "      <section id=\"skills\" className=\"py-16 bg-gray-50\">",
+      "        <div className=\"max-w-6xl mx-auto px-4 sm:px-6 lg:px-8\">",
+      "          <h3 className=\"text-3xl font-bold text-center text-gray-900 mb-12\">Skills & Technologies</h3>",
+      "          <div className=\"grid md:grid-cols-2 lg:grid-cols-4 gap-6\">",
+      "            {['JavaScript', 'React', 'Node.js', 'Python', 'MongoDB', 'PostgreSQL', 'AWS', 'Docker'].map((skill, index) => (",
+      "              <div key={index} className=\"bg-white p-4 rounded-lg shadow text-center\">",
+      "                <div className=\"w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2\">",
+      "                  <span className=\"text-blue-600 font-bold text-sm\">{skill.slice(0, 2)}</span>",
+      "                </div>",
+      "                <h4 className=\"font-semibold\">{skill}</h4>",
+      "              </div>",
+      "            ))}",
+      "          </div>",
+      "        </div>",
+      "      </section>",
+      "",
+      "      {/* Contact Section */}",
+      "      <section id=\"contact\" className=\"py-16 bg-gray-900 text-white\">",
+      "        <div className=\"max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center\">",
+      "          <h3 className=\"text-3xl font-bold mb-8\">Let's Work Together</h3>",
+      "          <p className=\"text-xl text-gray-300 mb-8\">I'm always interested in new opportunities and collaborations</p>",
+      "          <button className=\"bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 text-lg\">",
+      "            Get In Touch",
+      "          </button>",
+      "        </div>",
+      "      </section>",
+      "    </div>",
+      "  );",
+      "}",
+      "",
+      "export default App;"
+    ].join('\n'),
+    "src/index.tsx": [
+      "import React from 'react';",
+      "import ReactDOM from 'react-dom/client';",
+      "import App from './App';",
+      "import './index.css';",
+      "",
+      "const root = ReactDOM.createRoot(document.getElementById('root')!);",
+      "root.render(<App />);"
+    ].join('\n'),
+    "src/index.css": [
+      "@tailwind base;",
+      "@tailwind components;",
+      "@tailwind utilities;",
+      "",
+      "html {",
+      "  scroll-behavior: smooth;",
+      "}"
+    ].join('\n')
+  };
+}
+
+function generateBlogApp(projectName: string, prompt: string): Record<string, string> {
+  return generateLandingPageApp(projectName, prompt); // Simplified for now
+}
+
+function generateEcommerceApp(projectName: string, prompt: string): Record<string, string> {
+  return generateLandingPageApp(projectName, prompt); // Simplified for now
+}
+
+function generateDashboardApp(projectName: string, prompt: string): Record<string, string> {
+  return generateLandingPageApp(projectName, prompt); // Simplified for now
+}
 

@@ -1,27 +1,98 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Box, Github, FileText, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Briefcase, 
+  ShoppingCart, 
+  User, 
+  FileText, 
+  BarChart3, 
+  CheckSquare,
+  Sparkles,
+  ArrowRight,
+  Star,
+  Github
+} from "lucide-react";
 import Footer from "@/components/landing/footer";
 
+const templates = [
+  {
+    id: "landing",
+    title: "Landing Page",
+    description: "Professional business websites with modern design",
+    icon: Briefcase,
+    gradient: "from-blue-600 to-cyan-600",
+    category: "Business",
+    features: ["Responsive Design", "Contact Forms", "SEO Optimized"],
+    popular: true
+  },
+  {
+    id: "portfolio",
+    title: "Portfolio",
+    description: "Showcase your work with beautiful portfolio sites",
+    icon: User,
+    gradient: "from-purple-600 to-pink-600",
+    category: "Creative",
+    features: ["Project Gallery", "About Section", "Contact Info"],
+    popular: true
+  },
+  {
+    id: "ecommerce",
+    title: "E-commerce Store",
+    description: "Full-featured online stores with shopping cart",
+    icon: ShoppingCart,
+    gradient: "from-green-600 to-emerald-600",
+    category: "Business",
+    features: ["Product Catalog", "Shopping Cart", "Checkout"],
+    popular: false
+  },
+  {
+    id: "blog",
+    title: "Blog",
+    description: "Content-rich blogs and news websites",
+    icon: FileText,
+    gradient: "from-orange-600 to-red-600",
+    category: "Content",
+    features: ["Article Management", "Categories", "Comments"],
+    popular: false
+  },
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    description: "Admin panels and analytics dashboards",
+    icon: BarChart3,
+    gradient: "from-indigo-600 to-blue-600",
+    category: "Business",
+    features: ["Data Visualization", "User Management", "Reports"],
+    popular: false
+  },
+  {
+    id: "todo",
+    title: "Task Manager",
+    description: "Productivity apps and task management tools",
+    icon: CheckSquare,
+    gradient: "from-teal-600 to-green-600",
+    category: "Productivity",
+    features: ["Task Lists", "Progress Tracking", "Due Dates"],
+    popular: false
+  }
+];
+
+const categories = ["All", "Business", "Creative", "Content", "Productivity"];
+
 export default function HomePage() {
-  const [prompt, setPrompt] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
 
-  const handleStartBuilding = () => {
-    if (prompt.trim()) {
-      // Navigate to generation page with the prompt
-      window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}`;
-    } else {
-      // Require a prompt for generation
-      alert('Please describe your app idea first!');
-    }
-  };
+  const filteredTemplates = selectedCategory === "All" 
+    ? templates 
+    : templates.filter(template => template.category === selectedCategory);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleStartBuilding();
-    }
+  const handleCreateFromTemplate = (templateId: string, title: string) => {
+    // Navigate to generation page with template-specific prompt
+    const prompt = `Create a ${title.toLowerCase()} website`;
+    window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}&type=${templateId}`;
   };
 
   return (
@@ -112,53 +183,149 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Main Hero Section */}
-      <main className="relative z-10 flex-1 flex items-center justify-center min-h-[80vh]">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-black text-foreground mb-6 leading-tight tracking-tight whitespace-nowrap" data-testid="hero-title">
-              What should we build today?
+      {/* Main Template Gallery Section */}
+      <main className="relative z-10 py-16">
+        <div className="container mx-auto px-6">
+          {/* Hero Section */}
+          <div className="text-center mb-16">
+            <h1 className="text-5xl lg:text-6xl font-black text-foreground mb-6 leading-tight tracking-tight" data-testid="hero-title">
+              Choose Your Template
             </h1>
-            <p className="text-lg lg:text-xl text-muted-foreground/80 mb-12 max-w-2xl mx-auto font-medium" data-testid="hero-description">
-              Create stunning apps & websites by chatting with AI.
+            <p className="text-lg lg:text-xl text-muted-foreground/80 mb-8 max-w-3xl mx-auto font-medium" data-testid="hero-description">
+              Start with a professionally designed template and customize it with AI. 
+              Build everything from landing pages to full applications in minutes.
             </p>
-            
-            {/* Large Input Field */}
-            <div className="max-w-3xl mx-auto mb-8">
-              <div className="relative">
-                <Input
-                  placeholder="Describe your app idea (e.g., Food delivery website with login and cart)"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="h-20 text-lg font-medium pl-8 pr-32 rounded-2xl border-border/40 bg-white/95 backdrop-blur-md text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 hover:border-border/60 hover:bg-white hover:shadow-xl shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.99]"
-                  data-testid="input-build-prompt"
-                />
-                <Button
-                  onClick={handleStartBuilding}
-                  className="absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                  data-testid="button-start-building"
-                >
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Build
-                </Button>
-              </div>
-            </div>
+          </div>
 
-            {/* Import Options */}
-            <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground/60">
-              <span className="font-medium">or import from</span>
-              <div className="flex items-center space-x-6">
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-figma">
-                  <FileText className="h-4 w-4" />
-                  <span>Figma</span>
+          {/* Category Filter */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-2 bg-muted/50 backdrop-blur-sm rounded-xl p-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                    selectedCategory === category
+                      ? 'bg-primary text-primary-foreground shadow-lg'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-background/50'
+                  }`}
+                  data-testid={`filter-${category.toLowerCase()}`}
+                >
+                  {category}
                 </button>
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-github">
-                  <Github className="h-4 w-4" />
-                  <span>GitHub</span>
-                </button>
-              </div>
+              ))}
             </div>
+          </div>
+
+          {/* Template Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {filteredTemplates.map((template) => {
+              const IconComponent = template.icon;
+              return (
+                <div
+                  key={template.id}
+                  className="group relative bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 overflow-hidden hover:shadow-2xl hover:border-border transition-all duration-300 hover:scale-[1.02]"
+                  onMouseEnter={() => setHoveredTemplate(template.id)}
+                  onMouseLeave={() => setHoveredTemplate(null)}
+                  data-testid={`template-${template.id}`}
+                >
+                  {/* Template Preview Area */}
+                  <div className={`h-48 bg-gradient-to-br ${template.gradient} relative overflow-hidden`}>
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 bg-black/10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    
+                    {/* Icon */}
+                    <div className="absolute top-6 left-6">
+                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <IconComponent className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+
+                    {/* Popular Badge */}
+                    {template.popular && (
+                      <div className="absolute top-6 right-6">
+                        <Badge className="bg-yellow-500 text-yellow-950 hover:bg-yellow-500">
+                          <Star className="h-3 w-3 mr-1 fill-current" />
+                          Popular
+                        </Badge>
+                      </div>
+                    )}
+
+                    {/* Hover Preview */}
+                    <div className={`absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${
+                      hoveredTemplate === template.id ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      <Button 
+                        onClick={() => handleCreateFromTemplate(template.id, template.title)}
+                        className="bg-white text-gray-900 hover:bg-gray-100 font-semibold shadow-lg"
+                        data-testid={`create-${template.id}`}
+                      >
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Create Now
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Template Info */}
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground mb-1">{template.title}</h3>
+                        <p className="text-sm text-muted-foreground">{template.description}</p>
+                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        {template.category}
+                      </Badge>
+                    </div>
+
+                    {/* Features */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {template.features.slice(0, 3).map((feature, index) => (
+                        <span
+                          key={index}
+                          className="text-xs px-2 py-1 bg-muted rounded-lg text-muted-foreground"
+                        >
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Button */}
+                    <Button 
+                      onClick={() => handleCreateFromTemplate(template.id, template.title)}
+                      className="w-full group-hover:bg-primary/90 transition-colors"
+                      data-testid={`button-${template.id}`}
+                    >
+                      Start Building
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Custom Prompt Option */}
+          <div className="mt-16 text-center">
+            <p className="text-muted-foreground mb-4">
+              Don't see what you're looking for?
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                const customPrompt = prompt("Describe your custom app idea:");
+                if (customPrompt) {
+                  window.location.href = `/generate?prompt=${encodeURIComponent(customPrompt)}`;
+                }
+              }}
+              className="group"
+              data-testid="button-custom-prompt"
+            >
+              <Sparkles className="h-4 w-4 mr-2" />
+              Describe Custom App
+              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </div>
       </main>
