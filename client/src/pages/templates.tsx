@@ -146,10 +146,10 @@ export default function TemplatesPage() {
         <div className="container mx-auto px-6">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight" data-testid="hero-title">
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight" data-testid="hero-title">
               Choose Your Template
             </h1>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed" data-testid="hero-description">
+            <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed" data-testid="hero-description">
               Start with a professionally designed template and customize it with AI. 
               Build everything from landing pages to full applications in minutes.
             </p>
