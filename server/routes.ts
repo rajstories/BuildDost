@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema, insertUserSchema, insertTemplateSchema, insertComponentSchema } from "@shared/schema";
-import { generateComponent, generateBackend, optimizeCode, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest } from "./services/openai";
+import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest } from "./services/openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // User routes
@@ -158,6 +158,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Full-Stack Project Generation
+  app.post("/api/projects/generate", async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      if (!prompt || typeof prompt !== 'string') {
+        return res.status(400).json({ message: "Prompt is required" });
+      }
+
+      // Extract features from the prompt
+      const features = extractFeaturesFromPrompt(prompt);
+      
+      const generatedProject = await generateFullStackProject({
+        description: prompt,
+        features,
+        type: "web"
+      });
+
+      // Store the project
+      const projectData = {
+        name: generatedProject.name,
+        description: generatedProject.description,
+        components: [],
+        config: {
+          files: generatedProject.files,
+          structure: generatedProject.structure,
+          dependencies: generatedProject.dependencies
+        },
+        isPublic: false,
+        deployUrl: null
+      };
+
+      const savedProject = await storage.createProject(projectData);
+      
+      res.json({ 
+        success: true, 
+        project: {
+          id: savedProject.id,
+          name: savedProject.name,
+          description: savedProject.description,
+          files: generatedProject.files,
+          structure: generatedProject.structure,
+          dependencies: generatedProject.dependencies
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        error: error.message || "Failed to generate project"
+      });
+    }
+  });
+
   // AI Code Generation routes
   app.post("/api/ai/generate-component", async (req, res) => {
     try {
@@ -251,4 +303,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Helper function to extract features from prompt
+function extractFeaturesFromPrompt(prompt: string): string[] {
+  const commonFeatures = [
+    "authentication", "login", "user management", "dashboard", "forms", 
+    "database", "api", "responsive design", "search", "payments", "cart",
+    "notifications", "real-time", "chat", "file upload", "admin panel"
+  ];
+  
+  const lowerPrompt = prompt.toLowerCase();
+  return commonFeatures.filter(feature => 
+    lowerPrompt.includes(feature) || 
+    lowerPrompt.includes(feature.replace(" ", ""))
+  );
 }

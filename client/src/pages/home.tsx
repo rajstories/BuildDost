@@ -10,10 +10,11 @@ export default function HomePage() {
 
   const handleStartBuilding = () => {
     if (prompt.trim()) {
-      // Navigate to builder with the prompt
-      window.location.href = `/builder?prompt=${encodeURIComponent(prompt)}`;
+      // Navigate to generation page with the prompt
+      window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}`;
     } else {
-      window.location.href = "/builder";
+      // Require a prompt for generation
+      alert('Please describe your app idea first!');
     }
   };
 
@@ -123,22 +124,22 @@ export default function HomePage() {
             </p>
             
             {/* Large Input Field */}
-            <div className="max-w-2xl mx-auto mb-8">
+            <div className="max-w-3xl mx-auto mb-8">
               <div className="relative">
                 <Input
-                  placeholder="Type your idea and we'll build it together..."
+                  placeholder="Describe your app idea (e.g., Food delivery website with login and cart)"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="h-16 text-lg font-medium pl-6 pr-20 rounded-xl border-border/50 bg-card/50 backdrop-blur-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 shadow-sm"
+                  className="h-20 text-lg font-medium pl-8 pr-32 rounded-2xl border-border/30 bg-card/70 backdrop-blur-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 shadow-lg transition-all duration-200"
                   data-testid="input-build-prompt"
                 />
                 <Button
                   onClick={handleStartBuilding}
-                  className="absolute right-2 top-2 h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-sm"
+                  className="absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                   data-testid="button-start-building"
                 >
-                  <Sparkles className="mr-2 h-4 w-4" />
+                  <Sparkles className="mr-2 h-5 w-5" />
                   Build
                 </Button>
               </div>

@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/common/theme-provider";
 import HomePage from "@/pages/home";
+import GeneratePage from "@/pages/generate";
+import PreviewPage from "@/pages/preview";
 import BuilderPage from "@/pages/builder";
 import DashboardPage from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
@@ -13,6 +15,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/generate" component={GeneratePage} />
+      <Route path="/preview" component={PreviewPage} />
       <Route path="/builder" component={BuilderPage} />
       <Route path="/builder/:id" component={BuilderPage} />
       <Route path="/dashboard" component={DashboardPage} />
