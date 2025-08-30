@@ -174,7 +174,14 @@ export class MemStorage implements IStorage {
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = randomUUID();
     const project: Project = {
-      ...insertProject,
+      userId: insertProject.userId,
+      name: insertProject.name,
+      description: insertProject.description || null,
+      components: insertProject.components || [],
+      config: insertProject.config || {},
+      isPublic: insertProject.isPublic ?? false,
+      status: insertProject.status || "draft",
+      deploymentUrl: insertProject.deploymentUrl || null,
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -217,7 +224,13 @@ export class MemStorage implements IStorage {
   async createTemplate(insertTemplate: InsertTemplate): Promise<Template> {
     const id = randomUUID();
     const template: Template = {
-      ...insertTemplate,
+      name: insertTemplate.name,
+      description: insertTemplate.description || null,
+      category: insertTemplate.category,
+      components: insertTemplate.components,
+      config: insertTemplate.config,
+      previewImage: insertTemplate.previewImage || null,
+      isPublic: insertTemplate.isPublic ?? true,
       id,
       createdAt: new Date(),
     };
@@ -242,7 +255,12 @@ export class MemStorage implements IStorage {
   async createComponent(insertComponent: InsertComponent): Promise<Component> {
     const id = randomUUID();
     const component: Component = {
-      ...insertComponent,
+      name: insertComponent.name,
+      category: insertComponent.category,
+      code: insertComponent.code,
+      config: insertComponent.config,
+      previewImage: insertComponent.previewImage || null,
+      isPublic: insertComponent.isPublic ?? true,
       id,
       createdAt: new Date(),
     };
