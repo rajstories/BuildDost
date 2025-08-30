@@ -572,9 +572,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let generatedProject;
       try {
-        console.log("Attempting adaptive AI generation...");
-        generatedProject = await generateAdaptiveProject(prompt);
-        console.log("Adaptive AI generation successful");
+        console.log("🤖 Using real-time AI generation like Replit AI...");
+        // Use the new custom app generation
+        const { generateCustomApp } = await import('./services/openai');
+        const customApp = await generateCustomApp({
+          prompt: prompt.trim(),
+          features: extractFeaturesFromPrompt(prompt),
+          style: 'modern, professional, and user-friendly'
+        });
+        
+        // Convert to expected format
+        generatedProject = {
+          name: customApp.name,
+          description: customApp.description,
+          files: customApp.files,
+          structure: customApp.structure,
+          dependencies: { "react": "^18.3.1", "tailwindcss": "^3.4.17" },
+          appType: customApp.appType,
+          preview: customApp.preview
+        };
+        
+        console.log(`✅ Real AI generation successful: ${customApp.appType} app`);
       } catch (aiError) {
         console.error("AI generation failed, trying fallback...", aiError);
         

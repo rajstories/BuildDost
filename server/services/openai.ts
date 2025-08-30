@@ -63,6 +63,110 @@ export interface ChatResponse {
   quickActions: Array<{ label: string; action: string; icon?: string }>;
 }
 
+// Real-time AI application generation like Replit AI
+export interface AppGenerationRequest {
+  prompt: string;
+  features?: string[];
+  style?: string;
+}
+
+export interface GeneratedApp {
+  id: string;
+  name: string;
+  description: string;
+  appType: string;
+  files: Record<string, string>;
+  preview: {
+    mainComponent: string;
+    styling: string;
+    features: string[];
+  };
+  structure: {
+    frontend: string[];
+    backend: string[];
+    database: string[];
+  };
+}
+
+export async function generateCustomApp(request: AppGenerationRequest): Promise<GeneratedApp> {
+  const prompt = `You are an expert full-stack developer. Create a complete React application based on this user request: "${request.prompt}"
+
+ANALYSIS: First understand what the user wants to build:
+- For "food delivery website with login and cart" → Create a restaurant delivery app with menus, cart, ordering
+- For "todo list app" → Create a task management app with projects and collaboration
+- For "portfolio website" → Create a personal showcase with projects and skills
+
+REQUIREMENTS:
+- Generate a complete, functional React application
+- Use TypeScript, Tailwind CSS, and modern React patterns
+- Include realistic data and content (not placeholders)
+- Make it production-ready with proper state management
+- Include all requested features (login, cart, etc.)
+- Style: ${request.style || 'modern, professional, and user-friendly'}
+- Additional features: ${request.features?.join(', ') || 'standard functionality'}
+
+Return a JSON object with this exact structure:
+{
+  "id": "app_timestamp",
+  "name": "App Name",
+  "description": "Brief description of the app",
+  "appType": "ecommerce|portfolio|dashboard|blog|todo|landing",
+  "files": {
+    "App.tsx": "complete main React component code",
+    "components/Header.tsx": "header component code", 
+    "components/MainContent.tsx": "main content component code",
+    "types.ts": "TypeScript type definitions",
+    "data.ts": "realistic sample data"
+  },
+  "preview": {
+    "mainComponent": "App",
+    "styling": "tailwindcss",
+    "features": ["feature1", "feature2", "feature3"]
+  },
+  "structure": {
+    "frontend": ["src/", "src/components/", "src/types/"],
+    "backend": ["api/", "api/routes/"],
+    "database": ["schemas/", "migrations/"]
+  }
+}
+
+IMPORTANT: Generate REAL, FUNCTIONAL code that works immediately. Include realistic data, not placeholders.`;
+
+  try {
+    if (!openai) {
+      throw new Error("OpenAI API not configured");
+    }
+
+    const response = await openai.chat.completions.create({
+      model: getModelForTask('generation'),
+      messages: [
+        {
+          role: "system",
+          content: "You are BuildDost AI - an expert full-stack developer who creates complete, production-ready applications. Always respond with valid JSON containing functional React code."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+      max_tokens: 4000,
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    
+    // Add generated ID if not provided
+    if (!result.id) {
+      result.id = `app_${Date.now()}`;
+    }
+    
+    return result as GeneratedApp;
+  } catch (error) {
+    throw new Error(`Failed to generate custom app: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 export async function generateComponent(request: ComponentGenerationRequest): Promise<GeneratedComponent> {
   const prompt = `Generate a React component based on this description: "${request.description}"
 

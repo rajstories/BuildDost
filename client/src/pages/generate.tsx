@@ -21,6 +21,7 @@ export default function GeneratePage() {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [generatedProjectId, setGeneratedProjectId] = useState<string | null>(null);
+  const [generatedApp, setGeneratedApp] = useState<any>(null);
 
   // Get prompt from URL parameters
   const urlParams = new URLSearchParams(window.location.search);
@@ -67,6 +68,8 @@ export default function GeneratePage() {
           const data = await response.json();
           if (data.success && data.project) {
             actualProjectId = data.project.id.toString();
+            // Store the generated app data for live preview
+            setGeneratedApp(data.project.generatedApp || null);
           }
         }
       } catch (error) {
@@ -90,44 +93,50 @@ export default function GeneratePage() {
   }, [prompt]);
 
   const handleViewProject = () => {
-    // Intelligent routing like Replit AI - understand user intent and context
-    const lowerPrompt = prompt.toLowerCase();
-    
-    // Food & Restaurant Apps - route to ecommerce with food context
-    if (lowerPrompt.includes('food') || lowerPrompt.includes('restaurant') || lowerPrompt.includes('delivery') || 
-        lowerPrompt.includes('menu') || lowerPrompt.includes('order') || lowerPrompt.includes('pizza') || 
-        lowerPrompt.includes('cafe') || lowerPrompt.includes('kitchen')) {
-      setLocation('/template/ecommerce'); // Food delivery = ecommerce app
-    }
-    // Task Management & Productivity
-    else if (lowerPrompt.includes('task') || lowerPrompt.includes('todo') || lowerPrompt.includes('list') ||
-             lowerPrompt.includes('productivity') || lowerPrompt.includes('project manager')) {
-      setLocation('/template/todo');
-    }
-    // E-commerce & Shopping
-    else if (lowerPrompt.includes('shop') || lowerPrompt.includes('store') || lowerPrompt.includes('ecommerce') || 
-             lowerPrompt.includes('e-commerce') || lowerPrompt.includes('cart') || lowerPrompt.includes('buy') ||
-             lowerPrompt.includes('sell') || lowerPrompt.includes('marketplace') || lowerPrompt.includes('product')) {
-      setLocation('/template/ecommerce');
-    }
-    // Personal & Professional Portfolios
-    else if (lowerPrompt.includes('portfolio') || lowerPrompt.includes('resume') || lowerPrompt.includes('profile') ||
-             lowerPrompt.includes('cv') || lowerPrompt.includes('personal site') || lowerPrompt.includes('showcase')) {
-      setLocation('/template/portfolio');
-    }
-    // Content & Publishing
-    else if (lowerPrompt.includes('blog') || lowerPrompt.includes('article') || lowerPrompt.includes('news') ||
-             lowerPrompt.includes('content') || lowerPrompt.includes('publish') || lowerPrompt.includes('magazine')) {
-      setLocation('/template/blog');
-    }
-    // Analytics & Admin
-    else if (lowerPrompt.includes('dashboard') || lowerPrompt.includes('admin') || lowerPrompt.includes('analytics') ||
-             lowerPrompt.includes('stats') || lowerPrompt.includes('metrics') || lowerPrompt.includes('data')) {
-      setLocation('/template/dashboard');
-    }
-    // Default to landing page for generic websites
-    else {
-      setLocation('/template/landing');
+    // Check if we have real AI-generated content
+    if (generatedApp && generatedProjectId) {
+      // Navigate to live preview of AI-generated app
+      setLocation(`/preview/${generatedProjectId}`);
+    } else {
+      // Fallback to intelligent template routing
+      const lowerPrompt = prompt.toLowerCase();
+      
+      // Food & Restaurant Apps - route to ecommerce with food context
+      if (lowerPrompt.includes('food') || lowerPrompt.includes('restaurant') || lowerPrompt.includes('delivery') || 
+          lowerPrompt.includes('menu') || lowerPrompt.includes('order') || lowerPrompt.includes('pizza') || 
+          lowerPrompt.includes('cafe') || lowerPrompt.includes('kitchen')) {
+        setLocation('/template/ecommerce'); // Food delivery = ecommerce app
+      }
+      // Task Management & Productivity
+      else if (lowerPrompt.includes('task') || lowerPrompt.includes('todo') || lowerPrompt.includes('list') ||
+               lowerPrompt.includes('productivity') || lowerPrompt.includes('project manager')) {
+        setLocation('/template/todo');
+      }
+      // E-commerce & Shopping
+      else if (lowerPrompt.includes('shop') || lowerPrompt.includes('store') || lowerPrompt.includes('ecommerce') || 
+               lowerPrompt.includes('e-commerce') || lowerPrompt.includes('cart') || lowerPrompt.includes('buy') ||
+               lowerPrompt.includes('sell') || lowerPrompt.includes('marketplace') || lowerPrompt.includes('product')) {
+        setLocation('/template/ecommerce');
+      }
+      // Personal & Professional Portfolios
+      else if (lowerPrompt.includes('portfolio') || lowerPrompt.includes('resume') || lowerPrompt.includes('profile') ||
+               lowerPrompt.includes('cv') || lowerPrompt.includes('personal site') || lowerPrompt.includes('showcase')) {
+        setLocation('/template/portfolio');
+      }
+      // Content & Publishing
+      else if (lowerPrompt.includes('blog') || lowerPrompt.includes('article') || lowerPrompt.includes('news') ||
+               lowerPrompt.includes('content') || lowerPrompt.includes('publish') || lowerPrompt.includes('magazine')) {
+        setLocation('/template/blog');
+      }
+      // Analytics & Admin
+      else if (lowerPrompt.includes('dashboard') || lowerPrompt.includes('admin') || lowerPrompt.includes('analytics') ||
+               lowerPrompt.includes('stats') || lowerPrompt.includes('metrics') || lowerPrompt.includes('data')) {
+        setLocation('/template/dashboard');
+      }
+      // Default to landing page for generic websites
+      else {
+        setLocation('/template/landing');
+      }
     }
   };
 
