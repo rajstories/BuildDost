@@ -162,29 +162,44 @@ IMPORTANT: Generate REAL, FUNCTIONAL code that works immediately. Include realis
     if (useGemini) {
       const gemini = await getGeminiClient();
       if (gemini) {
+        console.log("🔄 Calling Gemini API for educational platform generation...");
         const response = await gemini.models.generateContent({
-        model: getModelForTask('generation'),
-        config: {
-          systemInstruction: "You are BuildDost AI - an expert full-stack developer who creates complete, production-ready applications. You excel at understanding educational platforms, learning management systems, and course structures. Always respond with valid JSON containing functional React code.",
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "object",
-            properties: {
-              id: { type: "string" },
-              name: { type: "string" },
-              description: { type: "string" },
-              appType: { type: "string" },
-              files: { type: "object" },
-              preview: { type: "object" },
-              structure: { type: "object" }
-            },
-            required: ["name", "description", "appType", "files"]
-          }
-        },
-        contents: prompt,
-      });
+          model: getModelForTask('generation'),
+          contents: `${prompt}
 
-      const result = JSON.parse(response.text || "{}");
+Generate a complete educational platform (Learning Management System) with:
+- Student dashboard with analytics (enrollment, progress, grades)
+- Course management (course list, lessons, assignments)
+- User authentication and profiles
+- Modern React components with Tailwind CSS styling
+- Real functional code with sample data
+
+Return valid JSON format:
+{
+  "name": "Educational Platform",
+  "description": "Complete LMS with courses and student dashboard", 
+  "appType": "education",
+  "files": {
+    "App.tsx": "Main React app component with routing",
+    "Dashboard.tsx": "Student dashboard with analytics and progress tracking",
+    "Courses.tsx": "Course management and course listing page"
+  }
+}`
+        });
+
+        console.log("✅ Gemini API response received");
+
+        // Clean the response text to extract JSON from markdown code blocks
+        let responseText = response.text || "{}";
+        console.log("📄 Raw Gemini response:", responseText.substring(0, 200) + "...");
+        
+        // Extract JSON from markdown code blocks if present
+        const jsonMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (jsonMatch) {
+          responseText = jsonMatch[1].trim();
+        }
+        
+        const result = JSON.parse(responseText);
       
       // Add generated ID if not provided
       if (!result.id) {
