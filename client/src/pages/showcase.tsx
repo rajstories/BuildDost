@@ -100,10 +100,27 @@ export default function ShowcasePage() {
           <div className="flex items-center justify-between">
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer group">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-lg">B</span>
+                {/* BuildDost Orange Geometric Logo */}
+                <div className="relative w-10 h-10 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  {/* Clean Geometric Building Blocks */}
+                  <div className="relative flex flex-col items-center justify-center space-y-0.5">
+                    {/* Top Block - Triangle for dynamic building */}
+                    <div className="w-0 h-0 border-l-[4px] border-r-[4px] border-b-[3px] border-l-transparent border-r-transparent border-b-white"></div>
+                    
+                    {/* Middle Blocks - Squares for structure */}
+                    <div className="flex space-x-0.5">
+                      <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
+                      <div className="w-1.5 h-1.5 bg-white/80 rounded-sm"></div>
+                    </div>
+                    
+                    {/* Base Block - Rectangle foundation */}
+                    <div className="w-4 h-1 bg-white/90 rounded-sm"></div>
+                  </div>
+                  
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-400/30 to-pink-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md scale-110"></div>
                 </div>
-                <span className="text-2xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">BuildDost</span>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-orange-500 transition-colors">BuildDost</span>
               </div>
             </Link>
             
