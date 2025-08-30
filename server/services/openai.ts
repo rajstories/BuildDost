@@ -199,6 +199,12 @@ Return valid JSON format:
           responseText = jsonMatch[1].trim();
         }
         
+        // Clean up common JSON parsing issues from AI responses
+        responseText = responseText
+          .replace(/\n/g, '\\n')  // Escape actual newlines in strings
+          .replace(/\t/g, '\\t')  // Escape tabs
+          .replace(/\r/g, '\\r'); // Escape carriage returns
+        
         const result = JSON.parse(responseText);
       
       // Add generated ID if not provided

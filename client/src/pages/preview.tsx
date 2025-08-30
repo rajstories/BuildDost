@@ -33,6 +33,7 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
 
   // Detect app type from the generated code and project description
   const lowerDescription = project.description.toLowerCase();
+  const lowerName = project.name.toLowerCase();
   const isTodoApp = appContent.includes('addTask') || appContent.includes('Task[]') || 
                    lowerDescription.includes('todo') || lowerDescription.includes('task');
   const isBlogApp = appContent.includes('BlogPost[]') || appContent.includes('posts') ||
@@ -41,8 +42,15 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
                         lowerDescription.includes('shop') || lowerDescription.includes('ecommerce') || lowerDescription.includes('store');
   const isPortfolioApp = appContent.includes('activeSection') || appContent.includes('portfolio') ||
                         lowerDescription.includes('portfolio') || lowerDescription.includes('profile');
+  const isEducationApp = appContent.includes('Course[]') || appContent.includes('Student[]') || appContent.includes('enrolledCourses') ||
+                        lowerDescription.includes('education') || lowerDescription.includes('educational') || 
+                        lowerDescription.includes('learning') || lowerDescription.includes('course') ||
+                        lowerDescription.includes('student') || lowerDescription.includes('lms') ||
+                        lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system');
 
-  if (isTodoApp) {
+  if (isEducationApp) {
+    return <EducationAppPreview project={project} />;
+  } else if (isTodoApp) {
     return <TodoAppPreview project={project} />;
   } else if (isBlogApp) {
     return <BlogAppPreview project={project} />;
@@ -53,6 +61,227 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
   } else {
     return <GenericAppPreview project={project} />;
   }
+}
+
+// Education/LMS App Preview Component - Shows real educational platform dashboard
+function EducationAppPreview({ project }: { project: GeneratedProject }) {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'courses' | 'analytics'>('dashboard');
+  const [enrolledCourses] = useState([
+    { id: 1, name: 'React Fundamentals', progress: 75, instructor: 'John Smith', enrolled: 1234 },
+    { id: 2, name: 'Advanced JavaScript', progress: 45, instructor: 'Sarah Wilson', enrolled: 892 },
+    { id: 3, name: 'Database Design', progress: 90, instructor: 'Mike Chen', enrolled: 567 }
+  ]);
+  
+  const [stats] = useState({
+    totalStudents: 12483,
+    activeCourses: 45,
+    completionRate: 87,
+    totalRevenue: 45231
+  });
+
+  return (
+    <div className="h-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4 overflow-auto" data-testid="education-app-preview">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800" data-testid="text-app-name">{project.name}</h1>
+              <p className="text-gray-600 mt-1" data-testid="text-app-description">{project.description}</p>
+            </div>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeTab === 'dashboard' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                data-testid="button-dashboard"
+              >
+                <LucideIcons.LayoutDashboard className="h-4 w-4 mr-2 inline" />
+                Dashboard
+              </button>
+              <button
+                onClick={() => setActiveTab('courses')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeTab === 'courses' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                data-testid="button-courses"
+              >
+                <LucideIcons.BookOpen className="h-4 w-4 mr-2 inline" />
+                Courses
+              </button>
+              <button
+                onClick={() => setActiveTab('analytics')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeTab === 'analytics' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+                data-testid="button-analytics"
+              >
+                <LucideIcons.BarChart3 className="h-4 w-4 mr-2 inline" />
+                Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dashboard Content */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-6">
+            {/* Stats Cards */}
+            <div className="grid md:grid-cols-4 gap-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Students</p>
+                    <p className="text-2xl font-bold text-blue-600" data-testid="text-total-students">{stats.totalStudents.toLocaleString()}</p>
+                  </div>
+                  <LucideIcons.Users className="h-8 w-8 text-blue-500" />
+                </div>
+                <p className="text-xs text-green-600 mt-2">↑ +5.4% from last month</p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Active Courses</p>
+                    <p className="text-2xl font-bold text-purple-600" data-testid="text-active-courses">{stats.activeCourses}</p>
+                  </div>
+                  <LucideIcons.BookOpen className="h-8 w-8 text-purple-500" />
+                </div>
+                <p className="text-xs text-green-600 mt-2">↑ +12.8% completion rate</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Completion Rate</p>
+                    <p className="text-2xl font-bold text-green-600" data-testid="text-completion-rate">{stats.completionRate}%</p>
+                  </div>
+                  <LucideIcons.TrendingUp className="h-8 w-8 text-green-500" />
+                </div>
+                <p className="text-xs text-green-600 mt-2">↑ +2.3% this week</p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Revenue</p>
+                    <p className="text-2xl font-bold text-orange-600" data-testid="text-revenue">${stats.totalRevenue.toLocaleString()}</p>
+                  </div>
+                  <LucideIcons.DollarSign className="h-8 w-8 text-orange-500" />
+                </div>
+                <p className="text-xs text-green-600 mt-2">↑ +8.7% revenue growth</p>
+              </div>
+            </div>
+
+            {/* Recent Enrollments */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">My Enrolled Courses</h3>
+              <div className="space-y-4">
+                {enrolledCourses.map(course => (
+                  <div key={course.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50" data-testid={`course-${course.id}`}>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <LucideIcons.PlayCircle className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-800" data-testid={`text-course-name-${course.id}`}>{course.name}</h4>
+                        <p className="text-sm text-gray-600">by {course.instructor}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center space-x-3">
+                        <div className="text-sm text-gray-600">{course.progress}% complete</div>
+                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full" 
+                            style={{ width: `${course.progress}%` }}
+                            data-testid={`progress-${course.id}`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Courses Content */}
+        {activeTab === 'courses' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-semibold mb-6">All Courses</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              {enrolledCourses.map(course => (
+                <div key={course.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow" data-testid={`course-card-${course.id}`}>
+                  <div className="w-full h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                    <LucideIcons.BookOpen className="h-8 w-8 text-white" />
+                  </div>
+                  <h4 className="font-semibold text-lg mb-2" data-testid={`card-course-name-${course.id}`}>{course.name}</h4>
+                  <p className="text-gray-600 text-sm mb-3">Instructor: {course.instructor}</p>
+                  <p className="text-gray-600 text-sm mb-4">{course.enrolled} students enrolled</p>
+                  <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors" data-testid={`button-enroll-${course.id}`}>
+                    Continue Learning
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Analytics Content */}
+        {activeTab === 'analytics' && (
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-semibold mb-6">Learning Analytics</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-6">
+                <h4 className="font-semibold mb-4">Course Completion Trends</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">This Week</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-20 bg-gray-200 rounded-full h-2">
+                        <div className="bg-green-500 h-2 rounded-full" style={{width: '85%'}} data-testid="progress-this-week" />
+                      </div>
+                      <span className="text-sm font-medium">85%</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">This Month</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-20 bg-gray-200 rounded-full h-2">
+                        <div className="bg-blue-500 h-2 rounded-full" style={{width: '78%'}} data-testid="progress-this-month" />
+                      </div>
+                      <span className="text-sm font-medium">78%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-6">
+                <h4 className="font-semibold mb-4">Popular Subjects</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Programming</span>
+                    <span className="font-medium" data-testid="text-programming-popularity">45%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Design</span>
+                    <span className="font-medium" data-testid="text-design-popularity">32%</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Data Science</span>
+                    <span className="font-medium" data-testid="text-data-science-popularity">23%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 // Todo App Preview Component
