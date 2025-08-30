@@ -44,11 +44,9 @@ export default function CodeExport({ templateId, templateName, className = "" }:
   const handleDownloadZip = async () => {
     setIsExporting(true);
     try {
-      // Create a ZIP file with the template code
-      const response = await fetch(`/api/templates/${templateId}/export`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ format: 'zip' })
+      // Use the working API endpoint for ZIP export
+      const response = await fetch(`/api/templates/${templateId}/export/zip`, {
+        method: 'GET'
       });
       
       if (response.ok) {
