@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/common/theme-provider";
+import { useNavigationLoading } from "@/hooks/use-navigation-loading";
+import { FullPageLoading } from "@/components/ui/loading-spinner";
 import HomePage from "@/pages/home";
 import GeneratePage from "@/pages/generate";
 import PreviewPage from "@/pages/preview";
@@ -25,30 +27,35 @@ import DashboardTemplate from "@/templates/dashboard";
 import TaskManagerTemplate from "@/templates/task-manager";
 
 function Router() {
+  const { isNavigating } = useNavigationLoading();
+
   return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/templates" component={TemplatesPage} />
-      <Route path="/showcase" component={ShowcasePage} />
-      <Route path="/generate" component={GeneratePage} />
-      <Route path="/preview" component={PreviewPage} />
-      <Route path="/builder" component={BuilderPage} />
-      <Route path="/builder/:id" component={BuilderPage} />
-      <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/profile" component={ProfilePage} />
-      <Route path="/chat" component={ChatPage} />
-      <Route path="/build" component={BuildPage} />
-      
-      {/* Template Showcases */}
-      <Route path="/template/landing" component={LandingPageTemplate} />
-      <Route path="/template/portfolio" component={PortfolioTemplate} />
-      <Route path="/template/ecommerce" component={EcommerceTemplate} />
-      <Route path="/template/blog" component={BlogTemplate} />
-      <Route path="/template/dashboard" component={DashboardTemplate} />
-      <Route path="/template/todo" component={TaskManagerTemplate} />
-      
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      {isNavigating && <FullPageLoading />}
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/templates" component={TemplatesPage} />
+        <Route path="/showcase" component={ShowcasePage} />
+        <Route path="/generate" component={GeneratePage} />
+        <Route path="/preview" component={PreviewPage} />
+        <Route path="/builder" component={BuilderPage} />
+        <Route path="/builder/:id" component={BuilderPage} />
+        <Route path="/dashboard" component={DashboardPage} />
+        <Route path="/profile" component={ProfilePage} />
+        <Route path="/chat" component={ChatPage} />
+        <Route path="/build" component={BuildPage} />
+        
+        {/* Template Showcases */}
+        <Route path="/template/landing" component={LandingPageTemplate} />
+        <Route path="/template/portfolio" component={PortfolioTemplate} />
+        <Route path="/template/ecommerce" component={EcommerceTemplate} />
+        <Route path="/template/blog" component={BlogTemplate} />
+        <Route path="/template/dashboard" component={DashboardTemplate} />
+        <Route path="/template/todo" component={TaskManagerTemplate} />
+        
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
