@@ -20,61 +20,61 @@ const templates = [
   {
     id: "landing",
     title: "Landing Page",
-    description: "Professional business websites with modern design",
+    description: "Professional business website with hero section, features, testimonials, and pricing",
     icon: Briefcase,
     gradient: "from-blue-600 to-cyan-600",
     category: "Business",
-    features: ["Responsive Design", "Contact Forms", "SEO Optimized"],
+    features: ["Hero Section", "Pricing Plans", "Testimonials", "Contact Form"],
     popular: true
   },
   {
     id: "portfolio",
     title: "Portfolio",
-    description: "Showcase your work with beautiful portfolio sites",
+    description: "Creative developer portfolio showcasing projects, skills, and contact information",
     icon: User,
     gradient: "from-purple-600 to-pink-600",
     category: "Creative",
-    features: ["Project Gallery", "About Section", "Contact Info"],
+    features: ["Project Showcase", "Skills Section", "About Me", "Contact Form"],
     popular: true
   },
   {
     id: "ecommerce",
     title: "E-commerce Store",
-    description: "Full-featured online stores with shopping cart",
+    description: "Complete online store with products, shopping cart, and checkout system",
     icon: ShoppingCart,
     gradient: "from-green-600 to-emerald-600",
     category: "Business",
-    features: ["Product Catalog", "Shopping Cart", "Checkout"],
+    features: ["Product Catalog", "Shopping Cart", "Category Filter", "Checkout"],
     popular: false
   },
   {
     id: "blog",
     title: "Blog",
-    description: "Content-rich blogs and news websites",
+    description: "Modern blog platform with featured posts, categories, and sidebar widgets",
     icon: FileText,
     gradient: "from-orange-600 to-red-600",
     category: "Content",
-    features: ["Article Management", "Categories", "Comments"],
+    features: ["Featured Posts", "Categories", "Search", "Sidebar"],
     popular: false
   },
   {
     id: "dashboard",
-    title: "Dashboard",
-    description: "Admin panels and analytics dashboards",
+    title: "Admin Dashboard",
+    description: "Complete admin panel with analytics, stats, charts, and data management",
     icon: BarChart3,
     gradient: "from-indigo-600 to-blue-600",
     category: "Business",
-    features: ["Data Visualization", "User Management", "Reports"],
+    features: ["Analytics Charts", "Revenue Stats", "Data Tables", "User Management"],
     popular: false
   },
   {
     id: "todo",
     title: "Task Manager",
-    description: "Productivity apps and task management tools",
+    description: "Productivity app with project tracking, task management, and team collaboration",
     icon: CheckSquare,
     gradient: "from-teal-600 to-green-600",
     category: "Productivity",
-    features: ["Task Lists", "Progress Tracking", "Due Dates"],
+    features: ["Project Overview", "Task Lists", "Team Stats", "Progress Tracking"],
     popular: false
   }
 ];
@@ -90,9 +90,8 @@ export default function TemplatesPage() {
     : templates.filter(template => template.category === selectedCategory);
 
   const handleCreateFromTemplate = (templateId: string, title: string) => {
-    // Navigate to generation page with template-specific prompt
-    const prompt = `Create a ${title.toLowerCase()} website`;
-    window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}&type=${templateId}`;
+    // Navigate directly to the actual template showcase page
+    window.location.href = `/template/${templateId}`;
   };
 
   const handleBrowseMoreTemplates = () => {
@@ -155,8 +154,8 @@ export default function TemplatesPage() {
               Choose Your Template
             </h1>
             <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed" data-testid="hero-description">
-              Start with a professionally designed template and customize it with AI. 
-              Build everything from landing pages to full applications in minutes.
+              Start with professionally designed, fully working templates. Each template is a complete, 
+              functional application ready to showcase and customize for your needs.
             </p>
           </div>
 

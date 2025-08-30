@@ -13,6 +13,14 @@ import TemplatesPage from "@/pages/templates";
 import ShowcasePage from "@/pages/showcase";
 import NotFound from "@/pages/not-found";
 
+// Import template showcases
+import LandingPageTemplate from "@/templates/landing-page";
+import PortfolioTemplate from "@/templates/portfolio";
+import EcommerceTemplate from "@/templates/ecommerce";
+import BlogTemplate from "@/templates/blog";
+import DashboardTemplate from "@/templates/dashboard";
+import TaskManagerTemplate from "@/templates/task-manager";
+
 function Router() {
   return (
     <Switch>
@@ -24,6 +32,15 @@ function Router() {
       <Route path="/builder" component={BuilderPage} />
       <Route path="/builder/:id" component={BuilderPage} />
       <Route path="/dashboard" component={DashboardPage} />
+      
+      {/* Template Showcases */}
+      <Route path="/template/landing" component={LandingPageTemplate} />
+      <Route path="/template/portfolio" component={PortfolioTemplate} />
+      <Route path="/template/ecommerce" component={EcommerceTemplate} />
+      <Route path="/template/blog" component={BlogTemplate} />
+      <Route path="/template/dashboard" component={DashboardTemplate} />
+      <Route path="/template/todo" component={TaskManagerTemplate} />
+      
       <Route component={NotFound} />
     </Switch>
   );

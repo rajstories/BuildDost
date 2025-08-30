@@ -655,20 +655,22 @@ function createFallbackProject(prompt: string, features: string[]): any {
 }
 
 function generateAppByType(appType: string, projectName: string, prompt: string): Record<string, string> {
+  // Use our professional showcase templates instead of simple fallbacks
   switch (appType) {
     case "landing":
-      return generateLandingPage(projectName, prompt);
+      return generateShowcaseLandingPage(projectName, prompt);
     case "ecommerce":
-      return generateEcommerceStore(projectName, prompt);
+      return generateShowcaseEcommerce(projectName, prompt);
     case "portfolio":
-      return generatePortfolio(projectName, prompt);
+      return generateShowcasePortfolio(projectName, prompt);
     case "dashboard":
-      return generateDashboard(projectName, prompt);
+      return generateShowcaseDashboard(projectName, prompt);
     case "blog":
-      return generateBlog(projectName, prompt);
+      return generateShowcaseBlog(projectName, prompt);
     case "todo":
+      return generateShowcaseTaskManager(projectName, prompt);
     default:
-      return generateSimpleTodoApp(projectName, prompt);
+      return generateShowcaseLandingPage(projectName, prompt);
   }
 }
 
