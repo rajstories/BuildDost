@@ -27,37 +27,55 @@ export default function HomePage() {
     <div className="min-h-screen text-white overflow-hidden" style={{background: '#0A0E17'}}>
       {/* Bolt.new Style Orbital Background */}
       <div className="fixed inset-0" style={{zIndex: -1}}>
-        {/* Main orbital curve effect */}
-        <div 
-          className="absolute bottom-0 left-1/2 rounded-full"
+        {/* Bright visible orbital curve */}
+        <svg 
+          className="absolute bottom-0 left-1/2" 
           style={{
-            width: '400vw',
-            height: '400vw',
-            transform: 'translateX(-50%) translateY(95%)',
-            borderTop: '4px solid #3B82F6',
-            boxShadow: '0 0 100px #3B82F6, 0 0 200px #3B82F6, 0 0 400px rgba(59,130,246,0.6)'
+            transform: 'translateX(-50%)',
+            width: '200vw',
+            height: '100vh',
+            overflow: 'visible'
           }}
-        />
+          viewBox="0 0 2000 1000"
+        >
+          <defs>
+            <filter id="glow">
+              <fegaussianblur stdDeviation="10" result="coloredBlur"/>
+              <femerge> 
+                <femergenode in="coloredBlur"/>
+                <femergenode in="SourceGraphic"/> 
+              </femerge>
+            </filter>
+          </defs>
+          {/* Main orbital arc */}
+          <path 
+            d="M 0 1000 Q 1000 700 2000 1000" 
+            stroke="#3B82F6" 
+            strokeWidth="6" 
+            fill="none"
+            filter="url(#glow)"
+            style={{
+              filter: 'drop-shadow(0 0 20px #3B82F6) drop-shadow(0 0 40px #3B82F6)',
+            }}
+          />
+          {/* Bright white core */}
+          <path 
+            d="M 0 1000 Q 1000 700 2000 1000" 
+            stroke="white" 
+            strokeWidth="2" 
+            fill="none"
+            style={{
+              filter: 'drop-shadow(0 0 15px white)',
+            }}
+          />
+        </svg>
         
-        {/* Bright white core line */}
-        <div 
-          className="absolute bottom-0 left-1/2 rounded-full"
-          style={{
-            width: '380vw',
-            height: '380vw',
-            transform: 'translateX(-50%) translateY(95%)',
-            borderTop: '2px solid white',
-            boxShadow: '0 0 50px white, 0 0 100px rgba(255,255,255,0.8)'
-          }}
-        />
-        
-        {/* Atmospheric glow */}
+        {/* Large atmospheric glow at bottom */}
         <div 
           className="absolute bottom-0 left-0 right-0"
           style={{
-            height: '200px',
-            background: 'linear-gradient(to top, rgba(59,130,246,0.4), rgba(59,130,246,0.2), transparent)',
-            filter: 'blur(20px)'
+            height: '300px',
+            background: 'radial-gradient(ellipse at center bottom, rgba(59,130,246,0.6) 0%, rgba(59,130,246,0.3) 30%, transparent 70%)',
           }}
         />
       </div>
