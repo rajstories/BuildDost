@@ -7,10 +7,20 @@ import Footer from "@/components/landing/footer";
 import AIAssistant from "@/components/chat/ai-assistant";
 import { useNavigationLoading } from "@/hooks/use-navigation-loading";
 import { LoadingSpinner, FullPageLoading } from "@/components/ui/loading-spinner";
+import { useToast } from "@/hooks/use-toast";
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
   const { isNavigating, navigateWithLoading } = useNavigationLoading();
+  const { toast } = useToast();
+
+  const showToast = (title: string, description: string) => {
+    toast({
+      title: title,
+      description: description,
+      duration: 4000,
+    });
+  };
 
   const handleStartBuilding = async () => {
     if (prompt.trim()) {
@@ -92,41 +102,41 @@ export default function HomePage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <a 
-                href="/community" 
+              <button 
+                onClick={() => showToast("Community", "Join our developer community! Coming soon with forums, tutorials, and collaboration tools.")}
                 className="text-muted-foreground/70 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium text-sm cursor-pointer hover:scale-105 active:scale-95" 
                 data-testid="nav-community"
               >
                 Community
-              </a>
-              <a 
-                href="/enterprise" 
+              </button>
+              <button 
+                onClick={() => showToast("Enterprise", "Enterprise solutions for teams and organizations. Contact us for custom plans and dedicated support.")}
                 className="text-muted-foreground/70 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium text-sm cursor-pointer hover:scale-105 active:scale-95" 
                 data-testid="nav-enterprise"
               >
                 Enterprise
-              </a>
-              <a 
-                href="/resources" 
+              </button>
+              <button 
+                onClick={() => showToast("Resources", "Access documentation, tutorials, API guides, and developer resources. Full library coming soon!")}
                 className="text-muted-foreground/70 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium text-sm cursor-pointer hover:scale-105 active:scale-95" 
                 data-testid="nav-resources"
               >
                 Resources
-              </a>
-              <a 
-                href="/careers" 
+              </button>
+              <button 
+                onClick={() => showToast("Careers", "Join our team! We're building the future of no-code development. Exciting opportunities available.")}
                 className="text-muted-foreground/70 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium text-sm cursor-pointer hover:scale-105 active:scale-95" 
                 data-testid="nav-careers"
               >
                 Careers
-              </a>
-              <a 
-                href="/pricing" 
+              </button>
+              <button 
+                onClick={() => showToast("Pricing", "Simple, transparent pricing. Free tier available with premium plans starting at $9/month.")}
                 className="text-muted-foreground/70 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium text-sm cursor-pointer hover:scale-105 active:scale-95" 
                 data-testid="nav-pricing"
               >
                 Pricing
-              </a>
+              </button>
             </nav>
             
             <div className="flex items-center space-x-4">
