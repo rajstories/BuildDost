@@ -44,11 +44,22 @@ export default function PreviewPage() {
       const response = await fetch(`/api/projects/${id}`);
       if (response.ok) {
         const data = await response.json();
-        setProject(data);
+        
+        // Transform the data structure to match what the UI expects
+        const transformedProject = {
+          id: data.id,
+          name: data.name,
+          description: data.description,
+          files: data.config?.files || {},
+          structure: data.config?.structure || { frontend: [], backend: [], database: [] },
+          dependencies: data.config?.dependencies || { frontend: [], backend: [] }
+        };
+        
+        setProject(transformedProject);
         
         // Set default selected file
-        if (data.files && Object.keys(data.files).length > 0) {
-          setSelectedFile(Object.keys(data.files)[0]);
+        if (transformedProject.files && Object.keys(transformedProject.files).length > 0) {
+          setSelectedFile(Object.keys(transformedProject.files)[0]);
         }
       } else {
         console.error('Failed to fetch project');

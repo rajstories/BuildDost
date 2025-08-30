@@ -54,15 +54,8 @@ export default function GeneratePage() {
         clearInterval(progressInterval);
       }
 
-      // Complete generation
-      setProgress(100);
-      setIsComplete(true);
-      
-      // Simulate project creation
-      const projectId = `project_${Date.now()}`;
-      setGeneratedProjectId(projectId);
-
-      // Call backend to actually generate the project
+      // Call backend to actually generate the project during animation
+      let actualProjectId = null;
       try {
         const response = await fetch('/api/projects/generate', {
           method: 'POST',
@@ -73,12 +66,19 @@ export default function GeneratePage() {
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.project) {
-            setGeneratedProjectId(data.project.id.toString());
+            actualProjectId = data.project.id.toString();
           }
         }
       } catch (error) {
         console.error('Generation failed:', error);
+        // Use fallback ID if API fails
+        actualProjectId = `project_${Date.now()}`;
       }
+
+      // Complete generation
+      setProgress(100);
+      setIsComplete(true);
+      setGeneratedProjectId(actualProjectId);
     };
 
     startGeneration();
