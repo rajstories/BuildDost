@@ -92,9 +92,12 @@ export async function generateCustomApp(request: AppGenerationRequest): Promise<
   const prompt = `You are an expert full-stack developer. Create a complete React application based on this user request: "${request.prompt}"
 
 ANALYSIS: First understand what the user wants to build:
+- For "educational platform" → Create a learning management system with courses, students, lessons, quizzes
 - For "food delivery website with login and cart" → Create a restaurant delivery app with menus, cart, ordering
 - For "todo list app" → Create a task management app with projects and collaboration
 - For "portfolio website" → Create a personal showcase with projects and skills
+- For "learning system" → Create educational platform with course enrollment, progress tracking
+- For "online course platform" → Create LMS with video lessons, assignments, student dashboard
 
 REQUIREMENTS:
 - Generate a complete, functional React application

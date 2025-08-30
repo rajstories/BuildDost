@@ -101,8 +101,16 @@ export default function GeneratePage() {
       // Fallback to intelligent template routing
       const lowerPrompt = prompt.toLowerCase();
       
+      // Education & Learning Apps - HIGHEST PRIORITY
+      if (lowerPrompt.includes('educational') || lowerPrompt.includes('education') || lowerPrompt.includes('learning') || 
+          lowerPrompt.includes('course') || lowerPrompt.includes('student') || lowerPrompt.includes('teacher') || 
+          lowerPrompt.includes('lesson') || lowerPrompt.includes('classroom') || lowerPrompt.includes('university') ||
+          lowerPrompt.includes('school') || lowerPrompt.includes('academy') || lowerPrompt.includes('training') ||
+          lowerPrompt.includes('quiz') || lowerPrompt.includes('exam') || lowerPrompt.includes('lms')) {
+        setLocation('/template/dashboard'); // Educational platform uses dashboard template for course management
+      }
       // Food & Restaurant Apps - route to ecommerce with food context
-      if (lowerPrompt.includes('food') || lowerPrompt.includes('restaurant') || lowerPrompt.includes('delivery') || 
+      else if (lowerPrompt.includes('food') || lowerPrompt.includes('restaurant') || lowerPrompt.includes('delivery') || 
           lowerPrompt.includes('menu') || lowerPrompt.includes('order') || lowerPrompt.includes('pizza') || 
           lowerPrompt.includes('cafe') || lowerPrompt.includes('kitchen')) {
         setLocation('/template/ecommerce'); // Food delivery = ecommerce app

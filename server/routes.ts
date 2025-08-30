@@ -611,9 +611,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Store the project
+      // Store the project with a valid user (create anonymous user if needed)
+      let userId = "anonymous";
+      try {
+        // Try to create anonymous user if it doesn't exist
+        await storage.createUser({
+          id: "anonymous",
+          username: "anonymous",
+          email: "anonymous@builddost.com",
+          name: "Anonymous User"
+        });
+      } catch (error) {
+        // User might already exist, that's fine
+        console.log("Anonymous user already exists or creation failed:", error);
+      }
+
       const projectData = {
-        userId: "anonymous",
+        userId,
         name: generatedProject.name,
         description: generatedProject.description,
         components: [],
@@ -928,8 +942,16 @@ function createFallbackProject(prompt: string, features: string[]): any {
   // Intelligent app type detection like Replit AI - understand context and intent
   let appType = "landing"; // Default to landing page
   
-  // Food & Restaurant Apps - highest priority for food-related prompts
-  if (lowerPrompt.includes("food") || lowerPrompt.includes("restaurant") || lowerPrompt.includes("delivery") || 
+  // Education & Learning Apps - HIGHEST PRIORITY
+  if (lowerPrompt.includes("educational") || lowerPrompt.includes("education") || lowerPrompt.includes("learning") || 
+      lowerPrompt.includes("course") || lowerPrompt.includes("student") || lowerPrompt.includes("teacher") || 
+      lowerPrompt.includes("lesson") || lowerPrompt.includes("classroom") || lowerPrompt.includes("university") ||
+      lowerPrompt.includes("school") || lowerPrompt.includes("academy") || lowerPrompt.includes("training") ||
+      lowerPrompt.includes("quiz") || lowerPrompt.includes("exam") || lowerPrompt.includes("lms")) {
+    appType = "education"; // Educational platform = LMS with courses, students, lessons
+  }
+  // Food & Restaurant Apps  
+  else if (lowerPrompt.includes("food") || lowerPrompt.includes("restaurant") || lowerPrompt.includes("delivery") || 
       lowerPrompt.includes("menu") || lowerPrompt.includes("order") || lowerPrompt.includes("pizza") || 
       lowerPrompt.includes("cafe") || lowerPrompt.includes("kitchen")) {
     appType = "ecommerce"; // Food delivery apps are ecommerce apps
