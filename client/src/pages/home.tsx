@@ -24,60 +24,32 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen text-white overflow-hidden" style={{background: '#0A0E17'}}>
-      {/* Bolt.new Style Orbital Background */}
-      <div className="fixed inset-0" style={{zIndex: -1}}>
-        {/* Bright visible orbital curve */}
-        <svg 
-          className="absolute bottom-0 left-1/2" 
-          style={{
-            transform: 'translateX(-50%)',
-            width: '200vw',
-            height: '100vh',
-            overflow: 'visible'
-          }}
-          viewBox="0 0 2000 1000"
-        >
-          <defs>
-            <filter id="glow">
-              <fegaussianblur stdDeviation="10" result="coloredBlur"/>
-              <femerge> 
-                <femergenode in="coloredBlur"/>
-                <femergenode in="SourceGraphic"/> 
-              </femerge>
-            </filter>
-          </defs>
-          {/* Main orbital arc */}
-          <path 
-            d="M 0 1000 Q 1000 700 2000 1000" 
-            stroke="#3B82F6" 
-            strokeWidth="6" 
-            fill="none"
-            filter="url(#glow)"
-            style={{
-              filter: 'drop-shadow(0 0 20px #3B82F6) drop-shadow(0 0 40px #3B82F6)',
-            }}
-          />
-          {/* Bright white core */}
-          <path 
-            d="M 0 1000 Q 1000 700 2000 1000" 
-            stroke="white" 
-            strokeWidth="2" 
-            fill="none"
-            style={{
-              filter: 'drop-shadow(0 0 15px white)',
-            }}
-          />
-        </svg>
+    <div className="min-h-screen text-foreground overflow-hidden">
+      {/* Professional Mixed Gradient Background */}
+      <div className="fixed inset-0 -z-10">
+        {/* Base dark gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800"></div>
         
-        {/* Large atmospheric glow at bottom */}
-        <div 
-          className="absolute bottom-0 left-0 right-0"
-          style={{
-            height: '300px',
-            background: 'radial-gradient(ellipse at center bottom, rgba(59,130,246,0.6) 0%, rgba(59,130,246,0.3) 30%, transparent 70%)',
-          }}
-        />
+        {/* Subtle white gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/5 via-transparent to-white/10"></div>
+        
+        {/* Radial highlights */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-white/10 via-transparent to-transparent opacity-40"></div>
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-gradient-radial from-blue-500/20 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-gradient-radial from-slate-400/15 to-transparent rounded-full blur-2xl"></div>
+        
+        {/* Subtle mesh pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" 
+             style={{
+               backgroundImage: `radial-gradient(circle at 20% 80%, white 1px, transparent 1px),
+                                radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
+                                radial-gradient(circle at 40% 40%, white 1px, transparent 1px)`,
+               backgroundSize: '100px 100px, 80px 80px, 120px 120px'
+             }}>
+        </div>
+        
+        {/* Bottom atmospheric glow */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-600/20 to-transparent"></div>
       </div>
       
       {/* Header */}
