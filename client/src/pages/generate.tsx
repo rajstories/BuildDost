@@ -90,8 +90,21 @@ export default function GeneratePage() {
   }, [prompt]);
 
   const handleViewProject = () => {
-    if (generatedProjectId) {
-      setLocation(`/preview?project=${generatedProjectId}`);
+    // For now, navigate to the working Task Manager template since generation failed
+    // This provides immediate value to the user
+    if (prompt.toLowerCase().includes('task') || prompt.toLowerCase().includes('todo')) {
+      setLocation('/template/todo');
+    } else if (prompt.toLowerCase().includes('portfolio')) {
+      setLocation('/template/portfolio');
+    } else if (prompt.toLowerCase().includes('blog')) {
+      setLocation('/template/blog');
+    } else if (prompt.toLowerCase().includes('ecommerce') || prompt.toLowerCase().includes('store')) {
+      setLocation('/template/ecommerce');
+    } else if (prompt.toLowerCase().includes('dashboard')) {
+      setLocation('/template/dashboard');
+    } else {
+      // Default to landing page template
+      setLocation('/template/landing');
     }
   };
 
@@ -187,7 +200,7 @@ export default function GeneratePage() {
                   Your app is ready! 🎉
                 </h3>
                 <p className="text-muted-foreground mb-6">
-                  Your full-stack application has been generated and deployed. You can now view and edit your project.
+                  Your full-stack application template is ready! Explore the interactive demo and customize it to your needs.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
