@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema, insertUserSchema, insertTemplateSchema, insertComponentSchema, updateUserProfileSchema } from "@shared/schema";
-import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, analyzeWebsiteRequirements, generateAdaptiveProject, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest, type WebsiteAnalysisRequest } from "./services/openai";
+import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, analyzeWebsiteRequirements, generateAdaptiveProject, generateIntelligentChatResponse, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest, type WebsiteAnalysisRequest } from "./services/openai";
 import { templateExportService } from "./services/template-export";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
@@ -37,6 +37,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating profile:", error);
       res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
+  // AI Chat Intelligence endpoint
+  app.post('/api/chat', async (req, res) => {
+    try {
+      const { message } = req.body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ message: "Message is required" });
+      }
+
+      // AI intelligence to understand user intent and provide smart responses
+      const chatResponse = await generateIntelligentChatResponse(message);
+      
+      res.json(chatResponse);
+    } catch (error) {
+      console.error("Error in AI chat:", error);
+      res.status(500).json({ message: "Failed to process chat request" });
     }
   });
 

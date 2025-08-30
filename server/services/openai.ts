@@ -57,6 +57,12 @@ export interface GeneratedComponent {
   };
 }
 
+export interface ChatResponse {
+  response: string;
+  suggestions: string[];
+  quickActions: Array<{ label: string; action: string; icon?: string }>;
+}
+
 export async function generateComponent(request: ComponentGenerationRequest): Promise<GeneratedComponent> {
   const prompt = `Generate a React component based on this description: "${request.description}"
 
@@ -574,5 +580,109 @@ Return a JSON object with complete working code for all files:
     };
   } catch (error) {
     throw new Error(`Failed to generate adaptive project: ${error.message}`);
+  }
+}
+
+export async function generateIntelligentChatResponse(userMessage: string): Promise<ChatResponse> {
+  if (!openai) {
+    throw new Error("OpenAI client not configured");
+  }
+
+  try {
+    const prompt = `You are BuildDost, an intelligent AI assistant that helps users build websites and apps. Analyze the user's message and provide a helpful response with actionable suggestions.
+
+User Message: "${userMessage}"
+
+Please provide:
+1. A conversational, encouraging response that acknowledges their idea
+2. 3-4 specific suggestions for next steps
+3. 2-4 quick actions they can take immediately
+
+Consider these aspects:
+- What type of app/website they want (landing page, e-commerce, portfolio, dashboard, etc.)
+- Technical requirements they might need
+- Design preferences or inspirations
+- Features and functionality
+- Target audience
+
+Respond with JSON in this exact format:
+{
+  "response": "A friendly, encouraging response that shows you understand their idea and provides helpful guidance (2-3 sentences)",
+  "suggestions": [
+    "Specific actionable suggestion 1",
+    "Specific actionable suggestion 2", 
+    "Specific actionable suggestion 3",
+    "Specific actionable suggestion 4"
+  ],
+  "quickActions": [
+    {
+      "label": "Action Label",
+      "action": "action_type",
+      "icon": "code|palette|database|sparkles"
+    }
+  ]
+}
+
+Make responses specific to their request. For example:
+- If they want an e-commerce site, suggest shopping cart features, payment integration, product catalogs
+- If they want a portfolio, suggest gallery layouts, contact forms, project showcases
+- If they want a landing page, suggest hero sections, call-to-action buttons, feature highlights
+- If they want a dashboard, suggest data visualization, user management, analytics
+
+Quick action types should be:
+- create_landing, build_ecommerce, make_portfolio, design_dashboard, generate_component, create_api
+- Or suggest browsing existing templates that match their needs`;
+
+    const response = await openai.chat.completions.create({
+      model: getModelForTask('analysis'),
+      messages: [
+        {
+          role: "system",
+          content: "You are BuildDost, a helpful AI assistant for building websites and apps. Be encouraging, specific, and actionable in your responses. Always respond with valid JSON."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+
+    const result = JSON.parse(response.choices[0].message.content || "{}");
+    
+    // Ensure we have valid data with fallbacks
+    return {
+      response: result.response || "I'd love to help you build that! Let me suggest some ways to get started.",
+      suggestions: Array.isArray(result.suggestions) ? result.suggestions.slice(0, 4) : [
+        "Start with a template that matches your vision",
+        "Define your target audience and key features",
+        "Choose a modern, responsive design approach",
+        "Plan your content structure and navigation"
+      ],
+      quickActions: Array.isArray(result.quickActions) ? result.quickActions.slice(0, 4) : [
+        { label: "Browse Templates", action: "browse_templates", icon: "palette" },
+        { label: "Start Building", action: "create_project", icon: "code" }
+      ]
+    };
+  } catch (error) {
+    console.error("Error generating chat response:", error);
+    
+    // Fallback response for errors
+    return {
+      response: "I'm excited to help you build something amazing! Let me suggest some ways we can get started with your project.",
+      suggestions: [
+        "Browse our template gallery for inspiration",
+        "Start with a simple landing page layout",
+        "Define your main features and goals",
+        "Choose colors and styling preferences"
+      ],
+      quickActions: [
+        { label: "View Templates", action: "browse_templates", icon: "palette" },
+        { label: "Start Building", action: "create_landing", icon: "code" },
+        { label: "Get Inspired", action: "view_showcase", icon: "sparkles" }
+      ]
+    };
   }
 }
