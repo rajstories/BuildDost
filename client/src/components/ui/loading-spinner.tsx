@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import logoUrl from "@assets/image_1756581060902.png";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -8,20 +9,28 @@ interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ size = "md", className, text }: LoadingSpinnerProps) {
   const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-8 h-8", 
-    lg: "w-12 h-12"
+    sm: "w-6 h-6",
+    md: "w-10 h-10", 
+    lg: "w-16 h-16"
   };
 
   return (
     <div className={cn("flex flex-col items-center justify-center gap-3", className)}>
-      {/* BuildDost Logo Animation */}
+      {/* BuildDost Logo Animation - Replit Style */}
       <div className={cn("relative", sizeClasses[size])}>
-        <div className="absolute inset-0 rounded-full border-2 border-primary/20"></div>
-        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin"></div>
-        <div className={cn("absolute inset-1 rounded-full bg-primary/10 flex items-center justify-center", 
-          size === "sm" ? "text-xs" : size === "md" ? "text-sm" : "text-lg")}>
-          <span className="font-bold text-primary">BD</span>
+        {/* Rotating ring around logo */}
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500 border-r-blue-400 animate-spin"></div>
+        <div className="absolute inset-0.5 rounded-full border border-transparent border-t-blue-300 animate-spin" style={{animationDuration: '1.5s', animationDirection: 'reverse'}}></div>
+        
+        {/* Logo Image */}
+        <div className="absolute inset-2 rounded-full flex items-center justify-center bg-white/10 backdrop-blur-sm">
+          <img 
+            src={logoUrl} 
+            alt="BuildDost" 
+            className={cn("rounded-lg object-cover", 
+              size === "sm" ? "w-4 h-4" : size === "md" ? "w-6 h-6" : "w-10 h-10"
+            )}
+          />
         </div>
       </div>
       
