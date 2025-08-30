@@ -9,12 +9,14 @@ import GeneratePage from "@/pages/generate";
 import PreviewPage from "@/pages/preview";
 import BuilderPage from "@/pages/builder";
 import DashboardPage from "@/pages/dashboard";
+import TemplatesPage from "@/pages/templates";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/templates" component={TemplatesPage} />
       <Route path="/generate" component={GeneratePage} />
       <Route path="/preview" component={PreviewPage} />
       <Route path="/builder" component={BuilderPage} />

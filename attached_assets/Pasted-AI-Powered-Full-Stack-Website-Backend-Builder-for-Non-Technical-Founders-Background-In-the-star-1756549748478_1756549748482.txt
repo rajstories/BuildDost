@@ -1,0 +1,32 @@
+AI-Powered Full-Stack Website & Backend Builder for
+Non-Technical Founders
+Background
+In the startup world, countless early-stage founders and entrepreneurs have brilliant ideas
+but struggle to build and launch their products due to a lack of technical knowledge. Current
+no-code tools like Framer or Webflow allow drag-and-drop designs but do not provide full
+ownership of frontend and backend code. On the other hand, AI code generators like v0 and
+Bold lack a visual canvas or do not support end-to-end functionality for real deployment.
+There is a growing need for a platform that lets users design visually, generate real code,
+build backend logic, and deploy the full project, all with the power of AI.
+The Challenge
+Build a prototype of a platform that enables non-technical users to create and deploy
+full-stack web applications using drag-and-drop tools combined with AI-assisted code
+generation.
+The platform should allow users to:
+● Design the frontend visually using a canvas or block system.
+● Automatically generate production-ready code (HTML/CSS/JS or React).
+● Generate backend APIs, database models, and authentication flows using AI.
+● Preview, edit, and deploy the full application — frontend, backend, and database —
+with minimal effort.
+● Optionally integrate features like AI chat assistant, role management, test generation,
+and component upload.
+Your Objective
+As a team, you are tasked with building an MVP (Minimum Viable Product) of this platform.
+The solution should focus on simplicity, usability, and real functionality — especially for
+people with zero coding knowledge.
+Bonus Features to Explore (Optional but Impressive)
+● AI chat assistant to help with edits.
+● Database schema visualizer and backend logic builder.
+● One-click deployment using platforms like Vercel, Render, or Supabase.
+● Ability to upload code snippets and convert them into visual components.
+Focus Areas: No-Code Platforms, AI Code Generation, Full-Stack Development.

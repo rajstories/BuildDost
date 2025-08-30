@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertProjectSchema, insertUserSchema, insertTemplateSchema, insertComponentSchema } from "@shared/schema";
-import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest } from "./services/openai";
+import { generateComponent, generateBackend, optimizeCode, generateFullStackProject, analyzeWebsiteRequirements, generateAdaptiveProject, type ComponentGenerationRequest, type BackendGenerationRequest, type CodeOptimizationRequest, type FullStackProjectRequest, type WebsiteAnalysisRequest } from "./services/openai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // User routes
@@ -191,7 +191,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // AI Full-Stack Project Generation
+  // NEW: AI Website Analysis Route
+  app.post("/api/ai/analyze-website", async (req, res) => {
+    try {
+      const { userInput, context, previousFeedback }: WebsiteAnalysisRequest = req.body;
+      
+      if (!userInput || typeof userInput !== 'string') {
+        return res.status(400).json({ message: "User input is required" });
+      }
+
+      console.log("Analyzing website requirements for:", userInput);
+      
+      const analysis = await analyzeWebsiteRequirements({
+        userInput,
+        context,
+        previousFeedback
+      });
+      
+      console.log("Website analysis completed:", analysis.projectType, analysis.complexity);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Website analysis failed:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to analyze website requirements"
+      });
+    }
+  });
+
+  // NEW: AI Adaptive Project Generation (Uses OpenRouter for smart generation)
+  app.post("/api/ai/generate-adaptive", async (req, res) => {
+    try {
+      const { userInput, analysis } = req.body;
+      
+      if (!userInput || typeof userInput !== 'string') {
+        return res.status(400).json({ message: "User input is required" });
+      }
+
+      console.log("Generating adaptive project for:", userInput);
+      
+      const generatedProject = await generateAdaptiveProject(userInput, analysis);
+      
+      // Store the project
+      const projectData = {
+        userId: "anonymous",
+        name: generatedProject.name,
+        description: generatedProject.description,
+        components: [],
+        config: {
+          files: generatedProject.files,
+          structure: generatedProject.structure,
+          dependencies: generatedProject.dependencies,
+          analysis: analysis
+        },
+        isPublic: false,
+        status: "live",
+        deploymentUrl: null
+      };
+
+      const savedProject = await storage.createProject(projectData);
+      console.log("Adaptive project saved with ID:", savedProject.id);
+      
+      res.json({ 
+        success: true, 
+        project: {
+          id: savedProject.id,
+          name: savedProject.name,
+          description: savedProject.description,
+          files: generatedProject.files,
+          structure: generatedProject.structure,
+          dependencies: generatedProject.dependencies
+        }
+      });
+    } catch (error) {
+      console.error("Adaptive project generation failed:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : "Failed to generate adaptive project"
+      });
+    }
+  });
+
+  // Enhanced Project Generation (now with fallback support)
   app.post("/api/projects/generate", async (req, res) => {
     try {
       const { prompt } = req.body;
@@ -201,29 +281,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Prompt is required" });
       }
 
-      // Extract features from the prompt
-      const features = extractFeaturesFromPrompt(prompt);
-      console.log("Extracted features:", features);
-      
       let generatedProject;
       try {
-        console.log("Attempting AI generation...");
-        generatedProject = await generateFullStackProject({
-          description: prompt,
-          features,
-          type: "web"
-        });
-        console.log("AI generation successful");
+        console.log("Attempting adaptive AI generation...");
+        generatedProject = await generateAdaptiveProject(prompt);
+        console.log("Adaptive AI generation successful");
       } catch (aiError) {
-        console.error("AI generation failed, using fallback:", aiError);
-        // Fallback to a simple project structure
-        generatedProject = createFallbackProject(prompt, features);
-        console.log("Using fallback project:", generatedProject.name);
+        console.error("AI generation failed, trying fallback...", aiError);
+        
+        try {
+          // Try legacy generation as fallback
+          const features = extractFeaturesFromPrompt(prompt);
+          generatedProject = await generateFullStackProject({
+            description: prompt,
+            features,
+            type: "web"
+          });
+          console.log("Legacy AI generation successful");
+        } catch (legacyError) {
+          console.error("Legacy AI also failed, using simple fallback:", legacyError);
+          generatedProject = createFallbackProject(prompt, extractFeaturesFromPrompt(prompt));
+        }
       }
 
       // Store the project
       const projectData = {
-        userId: "anonymous", // For now, use anonymous user
+        userId: "anonymous",
         name: generatedProject.name,
         description: generatedProject.description,
         components: [],
@@ -236,12 +319,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "live",
         deploymentUrl: null
       };
-
-      console.log("Attempting to save project with data:", {
-        name: projectData.name,
-        description: projectData.description,
-        userId: projectData.userId
-      });
 
       const savedProject = await storage.createProject(projectData);
       console.log("Project saved successfully with ID:", savedProject.id);
@@ -259,7 +336,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Full error in project generation:", error);
-      console.error("Error stack:", error instanceof Error ? error.stack : "No stack trace");
       
       res.status(500).json({ 
         success: false, 
