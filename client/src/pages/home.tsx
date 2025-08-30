@@ -13,6 +13,7 @@ export default function HomePage() {
   const [prompt, setPrompt] = useState("");
   const { isNavigating, navigateWithLoading } = useNavigationLoading();
   const { toast } = useToast();
+  const [showImportModal, setShowImportModal] = useState<'figma' | 'github' | null>(null);
 
   const showToast = (title: string, description: string) => {
     toast({
@@ -246,7 +247,7 @@ export default function HomePage() {
               <div className="flex items-center space-x-6">
                 <button 
                   className="flex items-center space-x-2 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium cursor-pointer hover:scale-105 active:scale-95" 
-                  onClick={() => showToast("Figma Import", "Import your Figma designs and convert them to code! Upload Figma files, extract components, and generate React code automatically.")}
+                  onClick={() => setShowImportModal('figma')}
                   data-testid="import-figma"
                 >
                   <FileText className="h-4 w-4" />
@@ -254,7 +255,7 @@ export default function HomePage() {
                 </button>
                 <button 
                   className="flex items-center space-x-2 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium cursor-pointer hover:scale-105 active:scale-95" 
-                  onClick={() => showToast("GitHub Import", "Import existing GitHub repositories and enhance them with AI! Connect your repo, analyze the code, and get AI-powered improvements.")}
+                  onClick={() => setShowImportModal('github')}
                   data-testid="import-github"
                 >
                   <Github className="h-4 w-4" />
@@ -271,6 +272,81 @@ export default function HomePage() {
       
       {/* AI Assistant - Hackathon Winning Feature */}
       <AIAssistant />
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+            <div className="p-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  {showImportModal === 'figma' ? (
+                    <FileText className="h-8 w-8 text-purple-500" />
+                  ) : (
+                    <Github className="h-8 w-8 text-gray-700" />
+                  )}
+                  <h2 className="text-3xl font-bold text-foreground">
+                    {showImportModal === 'figma' ? 'Figma Import' : 'GitHub Import'}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setShowImportModal(null)}
+                  className="text-muted-foreground hover:text-foreground p-2 rounded-lg hover:bg-accent transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="space-y-6">
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  {showImportModal === 'figma' 
+                    ? "Import your Figma designs and convert them to code! Upload Figma files, extract components, and generate React code automatically."
+                    : "Import existing GitHub repositories and enhance them with AI! Connect your repo, analyze the code, and get AI-powered improvements."
+                  }
+                </p>
+
+                {/* Coming Soon Section */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-xl p-6 border border-blue-200/50 dark:border-blue-800/50">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                    <h3 className="text-xl font-semibold text-foreground">Coming Soon!</h3>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    This feature is currently in development. We're building amazing import capabilities to make your workflow even smoother.
+                  </p>
+                  <div className="bg-white/70 dark:bg-black/20 rounded-lg p-4 border-l-4 border-blue-500">
+                    <p className="text-foreground font-medium">
+                      💡 <strong>For now, use our AI prompt to make your dream web!</strong>
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Describe your app idea in the main input field and let our AI build it for you instantly.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4 pt-4">
+                  <Button
+                    onClick={() => setShowImportModal(null)}
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  >
+                    Got it, use AI prompt instead
+                  </Button>
+                  <Button
+                    onClick={() => setShowImportModal(null)}
+                    variant="outline"
+                    className="px-6"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
