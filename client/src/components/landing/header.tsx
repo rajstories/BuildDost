@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Moon, RotateCcw, User, LogOut, Settings, Zap, Code2 } from "lucide-react";
+import { Moon, RotateCcw, User, LogOut, Settings, Layers, Globe, Hammer } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -40,34 +40,52 @@ export default function Header() {
           <Link href="/">
             <div className="flex items-center cursor-pointer group" data-testid="logo-builddost">
               <div className="relative flex items-center">
-                {/* Professional Logo Symbol */}
-                <div className="relative w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-xl shadow-lg flex items-center justify-center overflow-hidden transform group-hover:scale-105 transition-all duration-300">
-                  {/* Geometric Pattern Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20"></div>
-                  <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(45deg,transparent_35%,rgba(255,255,255,0.1)_50%,transparent_65%)] transform -skew-x-12"></div>
+                {/* Professional Website Builder Logo */}
+                <div className="relative w-12 h-12 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl shadow-xl flex items-center justify-center overflow-hidden transform group-hover:scale-105 transition-all duration-500 border border-blue-500/20">
+                  {/* Sophisticated Background Pattern */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 via-transparent to-indigo-600/10"></div>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15)_0%,transparent_50%)]"></div>
+                  <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,rgba(255,255,255,0.08)_50%,transparent_60%)]"></div>
                   
-                  {/* Main Symbol - Creative combination of Code and Building */}
-                  <div className="relative z-10 flex items-center justify-center">
-                    <Code2 className="w-5 h-5 text-white absolute transform -rotate-12 opacity-80" />
-                    <Zap className="w-4 h-4 text-yellow-300 absolute transform rotate-12 translate-x-0.5 translate-y-0.5" />
+                  {/* Website Building Symbol - Layered Structure */}
+                  <div className="relative z-10 flex flex-col items-center justify-center">
+                    {/* Website Layers representing building blocks */}
+                    <div className="relative">
+                      {/* Top layer - Header */}
+                      <div className="w-6 h-1.5 bg-white rounded-sm mb-0.5 opacity-90 shadow-sm"></div>
+                      {/* Middle layer - Content with Globe */}
+                      <div className="relative w-7 h-2.5 bg-gradient-to-r from-white to-blue-100 rounded-sm flex items-center justify-center mb-0.5 shadow-sm">
+                        <Globe className="w-2 h-2 text-blue-600" />
+                      </div>
+                      {/* Bottom layer - Footer */}
+                      <div className="w-6 h-1 bg-white/80 rounded-sm opacity-90 shadow-sm"></div>
+                      
+                      {/* Building/Construction Symbol */}
+                      <div className="absolute -top-1 -right-1">
+                        <Hammer className="w-2.5 h-2.5 text-yellow-300 transform rotate-45" />
+                      </div>
+                    </div>
                   </div>
                   
-                  {/* Glowing effect */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400/30 to-purple-400/30 blur-sm transform scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Premium Glow Effects */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-400/20 via-transparent to-indigo-400/20 opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm scale-110"></div>
+                  <div className="absolute inset-0 rounded-2xl border border-white/10 group-hover:border-white/20 transition-all duration-500"></div>
                 </div>
                 
-                {/* Professional Typography */}
-                <div className="ml-3 flex flex-col justify-center leading-none">
-                  <div className="flex items-baseline">
-                    <span className="text-2xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent tracking-tight">
+                {/* Enhanced Typography */}
+                <div className="ml-4 flex flex-col justify-center leading-none">
+                  <div className="flex items-center">
+                    <span className="text-2xl font-black bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 bg-clip-text text-transparent tracking-tight">
                       Build
                     </span>
-                    <span className="text-2xl font-black bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent tracking-tight">
+                    <span className="text-2xl font-black bg-gradient-to-r from-indigo-700 via-purple-700 to-blue-800 bg-clip-text text-transparent tracking-tight">
                       Dost
                     </span>
+                    <div className="ml-1 w-1.5 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
                   </div>
-                  <div className="text-[10px] font-semibold text-muted-foreground/70 tracking-[0.15em] uppercase mt-0.5">
-                    AI Website Builder
+                  <div className="text-[9px] font-bold text-blue-600/60 tracking-[0.2em] uppercase mt-1 flex items-center">
+                    <Layers className="w-2 h-2 mr-1" />
+                    Website Builder
                   </div>
                 </div>
               </div>
