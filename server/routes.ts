@@ -370,21 +370,115 @@ Your capabilities:
 
 Always be helpful, concise, and provide actionable advice. If the user asks for code, provide complete, working examples.`;
 
-      try {
-        const response = await generateAdaptiveProject(`Respond to this user message as a helpful assistant: "${message}"`, {
-          projectType: 'assistant-response',
-          complexity: 'simple',
-          suggestedFeatures: ['helpful-response', 'actionable-advice'],
-          techStack: { frontend: ['react'], backend: ['express'], database: false },
-          timeline: 'immediate',
-          recommendations: ['be-helpful', 'provide-examples']
-        });
+      // Provide smart, contextual responses with code generation
+      const responses = {
+        'pricing': {
+          response: "I'll create a modern pricing section with multiple tiers! This will include features, pricing, and call-to-action buttons.",
+          suggestions: ["Add tier comparison", "Include feature highlights", "Add discount badges", "Monthly/yearly toggle"],
+          quickActions: [
+            { label: "Generate Component", action: "component" },
+            { label: "Add Database", action: "database" },
+            { label: "Improve Design", action: "design" },
+            { label: "Add Features", action: "features" }
+          ],
+          code: `const PricingSection = () => {
+  const [isYearly, setIsYearly] = useState(false);
+  
+  const plans = [
+    {
+      name: "Starter",
+      price: isYearly ? 99 : 9,
+      features: ["5 Projects", "Basic Support", "1GB Storage"],
+      popular: false
+    },
+    {
+      name: "Pro",
+      price: isYearly ? 199 : 19,
+      features: ["Unlimited Projects", "Priority Support", "10GB Storage", "Custom Domain"],
+      popular: true
+    },
+    {
+      name: "Enterprise",
+      price: isYearly ? 499 : 49,
+      features: ["Everything in Pro", "24/7 Support", "100GB Storage", "Custom Integrations"],
+      popular: false
+    }
+  ];
 
-        // For now, provide smart fallback responses
-        const responses = {
+  return (
+    <div className="py-20 bg-gray-50">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Choose Your Plan</h2>
+          <p className="text-xl text-gray-600">Start building amazing projects today</p>
+          
+          <div className="flex items-center justify-center mt-8">
+            <span className={!isYearly ? 'font-semibold' : ''}>Monthly</span>
+            <button 
+              onClick={() => setIsYearly(!isYearly)}
+              className="mx-3 relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600"
+            >
+              <span className={\`inline-block h-4 w-4 transform rounded-full bg-white transition \${isYearly ? 'translate-x-6' : 'translate-x-1'}\`} />
+            </button>
+            <span className={isYearly ? 'font-semibold' : ''}>Yearly</span>
+            {isYearly && <span className="ml-2 text-green-600 font-semibold">Save 20%</span>}
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {plans.map((plan) => (
+            <div key={plan.name} className={\`relative bg-white rounded-2xl shadow-lg p-8 \${plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''}\`}>
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+              
+              <div className="text-center">
+                <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold">\${plan.price}</span>
+                  <span className="text-gray-600 ml-2">/{isYearly ? 'year' : 'month'}</span>
+                </div>
+                
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center">
+                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                
+                <button className={\`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 \${
+                  plan.popular 
+                    ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                }\`}>
+                  Get Started
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};`
+        },
           'contact form': {
             response: "I'll help you add a contact form! This should include name, email, message fields with validation and a submit handler.",
             suggestions: ["Add form validation", "Style with Tailwind CSS", "Connect to backend API", "Add success message"],
+            quickActions: [
+              { label: "Generate Component", action: "component" },
+              { label: "Add Database", action: "database" },
+              { label: "Improve Design", action: "design" },
+              { label: "Add Features", action: "features" }
+            ],
             code: `const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '', email: '', message: ''
@@ -422,6 +516,12 @@ Always be helpful, concise, and provide actionable advice. If the user asks for 
           'dashboard': {
             response: "A user dashboard is perfect for managing user data! I'll create one with stats, navigation, and user info sections.",
             suggestions: ["Add user profile section", "Include analytics charts", "Add navigation menu", "Show recent activity"],
+            quickActions: [
+              { label: "Generate Component", action: "component" },
+              { label: "Add Database", action: "database" },
+              { label: "Improve Design", action: "design" },
+              { label: "Add Features", action: "features" }
+            ],
             code: `const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -452,17 +552,31 @@ Always be helpful, concise, and provide actionable advice. If the user asks for 
         const lowerMessage = message.toLowerCase();
         let responseData = {
           response: "I'm here to help! Could you be more specific about what you'd like to build or improve?",
-          suggestions: ["Add a contact form", "Create a user dashboard", "Generate a pricing section", "Build an authentication system"]
+          suggestions: ["Generate a pricing section", "Add a contact form", "Create a user dashboard", "Build an authentication system"],
+          quickActions: [
+            { label: "Generate Component", action: "component" },
+            { label: "Add Database", action: "database" },
+            { label: "Improve Design", action: "design" },
+            { label: "Add Features", action: "features" }
+          ]
         };
 
-        if (lowerMessage.includes('contact') || lowerMessage.includes('form')) {
+        if (lowerMessage.includes('pricing') || lowerMessage.includes('price') || lowerMessage.includes('plan')) {
+          responseData = responses['pricing'];
+        } else if (lowerMessage.includes('contact') || lowerMessage.includes('form')) {
           responseData = responses['contact form'];
         } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('admin')) {
           responseData = responses['dashboard'];
         } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
           responseData = {
             response: "I'm your AI development assistant! I can help you with:\n\n• Generating React components\n• Creating forms and interfaces\n• Building backend APIs\n• Database design\n• Deployment guidance\n• UI/UX improvements\n\nWhat would you like to work on?",
-            suggestions: ["Generate a component", "Improve my design", "Add a feature", "Help with deployment"]
+            suggestions: ["Generate a component", "Improve my design", "Add a feature", "Help with deployment"],
+            quickActions: [
+              { label: "Generate Component", action: "component" },
+              { label: "Add Database", action: "database" },
+              { label: "Improve Design", action: "design" },
+              { label: "Add Features", action: "features" }
+            ]
           };
         }
 
@@ -472,7 +586,13 @@ Always be helpful, concise, and provide actionable advice. If the user asks for 
         // Fallback response
         res.json({
           response: "I'm here to help! I can assist with generating components, improving your design, adding features, and answering development questions. What would you like to work on?",
-          suggestions: ["Generate a React component", "Add a contact form", "Improve the design", "Create a dashboard"]
+          suggestions: ["Generate a React component", "Add a contact form", "Improve the design", "Create a dashboard"],
+          quickActions: [
+            { label: "Generate Component", action: "component" },
+            { label: "Add Database", action: "database" },
+            { label: "Improve Design", action: "design" },
+            { label: "Add Features", action: "features" }
+          ]
         });
       }
     } catch (error) {
