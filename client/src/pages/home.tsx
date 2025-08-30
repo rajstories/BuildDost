@@ -24,39 +24,42 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+    <div className="min-h-screen text-white overflow-hidden" style={{background: '#0A0E17'}}>
       {/* Bolt.new Style Orbital Background */}
-      <div className="fixed inset-0 -z-10">
-        {/* Dark space background */}
-        <div className="absolute inset-0 bg-[#0A0E17]"></div>
+      <div className="fixed inset-0" style={{zIndex: -1}}>
+        {/* Main orbital curve effect */}
+        <div 
+          className="absolute bottom-0 left-1/2 rounded-full"
+          style={{
+            width: '400vw',
+            height: '400vw',
+            transform: 'translateX(-50%) translateY(95%)',
+            borderTop: '4px solid #3B82F6',
+            boxShadow: '0 0 100px #3B82F6, 0 0 200px #3B82F6, 0 0 400px rgba(59,130,246,0.6)'
+          }}
+        />
         
-        {/* Planetary orbital effect */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-          {/* Main orbital curve with intense glow */}
-          <div className="w-[400vw] h-[400vw] rounded-full border-t-[6px] border-[#3B82F6] 
-                        shadow-[0_0_100px_#3B82F6,0_0_200px_#3B82F6,0_0_300px_rgba(59,130,246,0.4)] 
-                        transform translate-y-[95%]"></div>
-          
-          {/* Bright white core line */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[95%]
-                        w-[380vw] h-[380vw] rounded-full border-t-[3px] border-white
-                        shadow-[0_0_50px_white,0_0_100px_rgba(255,255,255,0.8)]"></div>
-          
-          {/* Inner blue glow */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[95%]
-                        w-[360vw] h-[360vw] rounded-full border-t-[2px] border-[#60A5FA]
-                        shadow-[0_0_30px_#60A5FA]"></div>
-        </div>
+        {/* Bright white core line */}
+        <div 
+          className="absolute bottom-0 left-1/2 rounded-full"
+          style={{
+            width: '380vw',
+            height: '380vw',
+            transform: 'translateX(-50%) translateY(95%)',
+            borderTop: '2px solid white',
+            boxShadow: '0 0 50px white, 0 0 100px rgba(255,255,255,0.8)'
+          }}
+        />
         
-        {/* Atmospheric glow at horizon */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 
-                      bg-gradient-to-t from-[#3B82F6]/30 via-[#3B82F6]/10 to-transparent
-                      blur-xl"></div>
-        
-        {/* Center bright spot */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 
-                      w-[600px] h-24 bg-gradient-to-t from-white/40 to-transparent 
-                      blur-2xl"></div>
+        {/* Atmospheric glow */}
+        <div 
+          className="absolute bottom-0 left-0 right-0"
+          style={{
+            height: '200px',
+            background: 'linear-gradient(to top, rgba(59,130,246,0.4), rgba(59,130,246,0.2), transparent)',
+            filter: 'blur(20px)'
+          }}
+        />
       </div>
       
       {/* Header */}
