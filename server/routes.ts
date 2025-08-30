@@ -553,6 +553,17 @@ function generateAppFiles(projectName: string, prompt: string, appType: string):
   return generateSimpleTodoApp(projectName, prompt);
 }
 
-// Remove all broken functions for now
-import { Plus, Check, Trash2, Clock } from 'lucide-react';
+function extractProjectName(description: string): string {
+  const words = description.toLowerCase().split(" ");
+  const stopWords = ["a", "an", "the", "for", "with", "app", "website", "application"];
+  const relevantWords = words.filter(word => 
+    word.length > 2 && !stopWords.includes(word)
+  ).slice(0, 3);
+  
+  return relevantWords.map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(" ") || "Generated App";
+}
+
+// End of file
 
