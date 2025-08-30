@@ -117,29 +117,27 @@ export default function TemplatesPage() {
           <div className="flex items-center justify-between">
             <Link href="/">
               <div className="flex items-center space-x-3 cursor-pointer group" data-testid="logo-builddost">
-                <div className="relative w-10 h-10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/80 rounded-xl shadow-lg group-hover:shadow-primary/25 transition-all duration-300"></div>
-                  <div className="absolute inset-0.5 bg-gradient-to-br from-primary/20 to-transparent rounded-[10px]"></div>
-                  <div className="relative w-full h-full flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-primary-foreground">
-                      <path 
-                        d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z" 
-                        fill="currentColor" 
-                        fillOpacity="0.9"
-                      />
-                      <path 
-                        d="M9 22V12H15V22" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                        fill="none"
-                      />
-                      <circle cx="12" cy="8" r="1.5" fill="currentColor" fillOpacity="0.7"/>
-                    </svg>
+                {/* Updated Orange Geometric Logo */}
+                <div className="relative w-10 h-10 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  {/* Clean Geometric Building Blocks */}
+                  <div className="relative flex flex-col items-center justify-center space-y-0.5">
+                    {/* Top Block - Triangle for dynamic building */}
+                    <div className="w-0 h-0 border-l-[4px] border-r-[4px] border-b-[3px] border-l-transparent border-r-transparent border-b-white"></div>
+                    
+                    {/* Middle Blocks - Squares for structure */}
+                    <div className="flex space-x-0.5">
+                      <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
+                      <div className="w-1.5 h-1.5 bg-white/80 rounded-sm"></div>
+                    </div>
+                    
+                    {/* Base Block - Rectangle foundation */}
+                    <div className="w-4 h-1 bg-white/90 rounded-sm"></div>
                   </div>
+                  
+                  {/* Hover glow effect */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-400/30 to-pink-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md scale-110"></div>
                 </div>
-                <span className="text-xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors duration-300">
+                <span className="text-xl font-bold text-foreground tracking-tight group-hover:text-orange-500 transition-colors duration-300">
                   BuildDost
                 </span>
               </div>
