@@ -28,22 +28,31 @@ export default function HomePage() {
       {/* Bolt.new Style Orbital Background */}
       <div className="fixed inset-0 -z-10">
         {/* Dark space background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-black"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"></div>
         
-        {/* Orbital glow effect */}
-        <div className="absolute -bottom-48 left-1/2 transform -translate-x-1/2 w-[200vw] h-[100vh]">
-          {/* Main orbital curve */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-full rounded-t-full border-t-4 border-blue-400/30 shadow-[0_0_100px_rgba(59,130,246,0.3)]"></div>
+        {/* Orbital planetary curve effect */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[300vw] h-[150vh]">
+          {/* Outer atmospheric glow */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-full rounded-t-full bg-gradient-to-t from-blue-600/20 via-blue-500/10 to-transparent blur-3xl"></div>
+          
+          {/* Main bright orbital line */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[90%] rounded-t-full border-t-[3px] border-blue-400/80"></div>
           
           {/* Bright inner glow */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[95%] rounded-t-full border-t-2 border-blue-300/50 shadow-[0_0_60px_rgba(147,197,253,0.4)]"></div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[85%] h-[85%] rounded-t-full border-t-[2px] border-blue-300/90"></div>
           
-          {/* Core bright line */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[90%] rounded-t-full border-t border-white/60 shadow-[0_0_30px_rgba(255,255,255,0.5)]"></div>
+          {/* Core bright white line */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[80%] h-[80%] rounded-t-full border-t border-white/95"></div>
+          
+          {/* Intense glow effect */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90%] h-[90%] rounded-t-full bg-gradient-to-t from-blue-400/30 via-blue-300/20 to-transparent blur-2xl"></div>
         </div>
         
-        {/* Additional atmospheric glow */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-32 bg-gradient-to-t from-blue-500/10 to-transparent"></div>
+        {/* Additional bright atmospheric glow at bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-blue-500/25 via-blue-400/15 to-transparent"></div>
+        
+        {/* Extra bright center glow */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-32 bg-gradient-to-t from-white/20 via-blue-200/30 to-transparent blur-xl"></div>
       </div>
       
       {/* Header */}
