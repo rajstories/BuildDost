@@ -222,10 +222,24 @@ export default function TaskManagerTemplate() {
       {/* Sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg z-50">
         <div className="flex items-center h-16 px-6 border-b border-gray-200">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Target className="h-5 w-5 text-white" />
+          {/* BuildDost Logo with Orange Geometric Design */}
+          <div className="relative w-8 h-8 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 rounded-lg flex items-center justify-center shadow-md group">
+            {/* Clean Geometric Building Blocks */}
+            <div className="relative flex flex-col items-center justify-center space-y-[1px]">
+              {/* Top Block - Triangle for dynamic building */}
+              <div className="w-0 h-0 border-l-[3px] border-r-[3px] border-b-[2px] border-l-transparent border-r-transparent border-b-white"></div>
+              
+              {/* Middle Blocks - Squares for structure */}
+              <div className="flex space-x-[1px]">
+                <div className="w-1 h-1 bg-white rounded-[1px]"></div>
+                <div className="w-1 h-1 bg-white/80 rounded-[1px]"></div>
+              </div>
+              
+              {/* Base Block - Rectangle foundation */}
+              <div className="w-3 h-[2px] bg-white/90 rounded-[1px]"></div>
+            </div>
           </div>
-          <span className="ml-2 text-xl font-bold text-gray-900">TaskFlow</span>
+          <span className="ml-2 text-xl font-bold text-gray-900">BuildDost</span>
         </div>
         
         <nav className="mt-6">
