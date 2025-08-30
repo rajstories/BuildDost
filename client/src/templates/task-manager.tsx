@@ -400,7 +400,7 @@ export default function TaskManagerTemplate() {
                           
                           <div className="flex flex-wrap gap-1 mt-2">
                             {task.tags.map((tag) => (
-                              <span key={tag} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                              <span key={tag} className="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full font-medium">
                                 {tag}
                               </span>
                             ))}

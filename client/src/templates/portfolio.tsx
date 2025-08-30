@@ -263,7 +263,7 @@ export default function PortfolioTemplate() {
                   <p className="text-gray-600 text-sm mb-4 leading-relaxed">{project.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {project.tech.map((tech, index) => (
-                      <span key={index} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                      <span key={index} className="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full font-medium">
                         {tech}
                       </span>
                     ))}

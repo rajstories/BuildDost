@@ -258,7 +258,7 @@ export default function EcommerceTemplate() {
                 className={`px-4 py-2 rounded-full font-medium transition-all whitespace-nowrap ${
                   selectedCategory === category
                     ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    : 'bg-white text-gray-800 hover:bg-gray-50 border border-gray-200'
                 }`}
               >
                 {category}
