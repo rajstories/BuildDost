@@ -152,10 +152,13 @@ export default function HomePage() {
               <Link href="/templates">
                 <Button 
                   variant="outline" 
-                  className="group relative text-lg px-10 py-5 rounded-2xl border-2 border-gray-200/60 bg-white/70 backdrop-blur-xl text-gray-700 font-semibold shadow-lg hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:bg-white hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0"
+                  className="group relative text-lg px-10 py-5 rounded-2xl border-2 border-white/80 bg-white backdrop-blur-xl text-gray-800 font-semibold shadow-2xl hover:shadow-3xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0 transform -translate-y-0.5"
                   data-testid="button-choose-templates"
+                  style={{
+                    boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                  }}
                 >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/30 to-purple-50/30 opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <Grid3X3 className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
                   <span className="relative">Choose Templates</span>
                 </Button>
