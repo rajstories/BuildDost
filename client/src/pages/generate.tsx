@@ -69,7 +69,8 @@ export default function GeneratePage() {
           if (data.success && data.project) {
             actualProjectId = data.project.id.toString();
             // Store the generated app data for live preview
-            setGeneratedApp(data.project.generatedApp || null);
+            setGeneratedApp(data.project || null);
+            console.log('✅ Generated project:', data.project.name, 'ID:', actualProjectId);
           }
         }
       } catch (error) {
@@ -94,9 +95,9 @@ export default function GeneratePage() {
 
   const handleViewProject = () => {
     // Check if we have real AI-generated content
-    if (generatedApp && generatedProjectId) {
-      // Navigate to live preview of AI-generated app
-      setLocation(`/preview/${generatedProjectId}`);
+    if (generatedProjectId) {
+      // Navigate to live preview of AI-generated app with query parameter
+      setLocation(`/preview?project=${generatedProjectId}`);
     } else {
       // Fallback to intelligent template routing
       const lowerPrompt = prompt.toLowerCase();
