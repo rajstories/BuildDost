@@ -12,7 +12,9 @@ import {
   Sparkles,
   ArrowRight,
   Star,
-  ArrowLeft
+  ArrowLeft,
+  Loader2,
+  Zap
 } from "lucide-react";
 import AIAssistant from "@/components/chat/ai-assistant";
 
@@ -84,13 +86,21 @@ const categories = ["All", "Business", "Creative", "Content", "Productivity"];
 export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [hoveredTemplate, setHoveredTemplate] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const [creatingTemplate, setCreatingTemplate] = useState<string>("");
 
   const filteredTemplates = selectedCategory === "All" 
     ? templates 
     : templates.filter(template => template.category === selectedCategory);
 
-  const handleCreateFromTemplate = (templateId: string, title: string) => {
-    // Navigate directly to the actual template showcase page
+  const handleCreateFromTemplate = async (templateId: string, title: string) => {
+    setIsCreating(true);
+    setCreatingTemplate(title);
+    
+    // Simulate app creation process with loading time
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    
+    // Navigate to the actual template showcase page
     window.location.href = `/template/${templateId}`;
   };
 
@@ -356,6 +366,51 @@ export default function TemplatesPage() {
       
       {/* AI Assistant - Available everywhere */}
       <AIAssistant />
+
+      {/* Loading Overlay */}
+      {isCreating && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-md w-full mx-4 text-center">
+            <div className="mb-6">
+              <div className="relative w-16 h-16 mx-auto mb-4">
+                <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+                <div className="absolute inset-2 bg-blue-50 rounded-full flex items-center justify-center">
+                  <Zap className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Creating Your App
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Setting up your <span className="font-semibold text-blue-600">{creatingTemplate}</span> template...
+              </p>
+              
+              <div className="space-y-2 text-sm text-gray-500">
+                <div className="flex items-center justify-center space-x-2">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>Initializing project structure</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>Setting up components</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <span>Preparing your workspace</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-xs text-blue-700">
+                💡 Tip: Your app will be ready with all components, styling, and functionality included!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
