@@ -6,19 +6,19 @@ const footerSections = [
   {
     title: "Product",
     links: [
-      { name: "Features", href: "#features", internal: true },
-      { name: "Templates", href: "#templates", internal: true },
-      { name: "Pricing", href: "#pricing", internal: true },
-      { name: "Changelog", href: "https://github.com/rajstories/builddost/releases", internal: false },
+      { name: "Features", href: "#", internal: true, action: "features" },
+      { name: "Templates", href: "#", internal: true, action: "templates" },
+      { name: "Pricing", href: "#", internal: true, action: "pricing" },
+      { name: "Changelog", href: "#", internal: true, action: "changelog" },
     ],
   },
   {
     title: "Support",
     links: [
-      { name: "Documentation", href: "https://docs.builddost.com", internal: false },
-      { name: "Help Center", href: "https://help.builddost.com", internal: false },
-      { name: "Community", href: "https://discord.gg/builddost", internal: false },
-      { name: "Contact", href: "#contact", internal: true },
+      { name: "Documentation", href: "#", internal: true, action: "documentation" },
+      { name: "Help Center", href: "https://wa.me/919958262272?text=Hi%2C%20I%20need%20help%20with%20BuildDost", internal: false },
+      { name: "Community", href: "#", internal: true, action: "community" },
+      { name: "Contact", href: "https://wa.me/919958262272?text=Hi%2C%20I%20want%20to%20contact%20BuildDost%20team", internal: false },
     ],
   },
 ];
@@ -33,14 +33,31 @@ const socialLinks = [
 export default function Footer() {
   const { toast } = useToast();
 
-  const handleLinkClick = (linkName: string, href: string, isInternal: boolean) => {
-    if (isInternal && href.startsWith('#')) {
-      // Smooth scroll to section
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-      toast({ title: "Navigation", description: `Scrolled to ${linkName} section` });
+  const handleLinkClick = (linkName: string, href: string, isInternal: boolean, action?: string) => {
+    if (isInternal && action) {
+      // Handle internal actions with informative toasts
+      const messages = {
+        features: "Explore our AI-powered features: real-time code generation, drag-and-drop builder, and smart templates!",
+        templates: "Browse our template library: e-commerce, portfolios, dashboards, and more - all customizable!",
+        pricing: "Simple pricing: Free tier available, Premium starts at $9/month with advanced AI features.",
+        changelog: "Stay updated with our latest releases, bug fixes, and new AI capabilities!",
+        documentation: "Access our comprehensive docs, tutorials, and API guides. Full library coming soon!",
+        community: "Join our developer community for collaboration, support, and exclusive updates!"
+      };
+      
+      toast({ 
+        title: linkName, 
+        description: messages[action as keyof typeof messages] || `${linkName} information`,
+        duration: 5000
+      });
+    } else if (!isInternal && href.includes('wa.me')) {
+      // WhatsApp links - open directly
+      window.open(href, '_blank');
+      toast({ 
+        title: "WhatsApp", 
+        description: `Opening WhatsApp to ${linkName.toLowerCase()} BuildDost team`,
+        duration: 3000
+      });
     } else {
       toast({ title: "Navigation", description: `Opening ${linkName}` });
     }
@@ -101,10 +118,10 @@ export default function Footer() {
                       target={link.internal ? undefined : "_blank"}
                       rel={link.internal ? undefined : "noopener noreferrer"}
                       onClick={(e) => {
-                        if (link.internal && link.href.startsWith('#')) {
+                        if (link.internal) {
                           e.preventDefault();
                         }
-                        handleLinkClick(link.name, link.href, link.internal);
+                        handleLinkClick(link.name, link.href, link.internal, (link as any).action);
                       }}
                       className="text-sm text-muted-foreground/70 hover:text-foreground hover:text-primary transition-all duration-200 font-medium cursor-pointer hover:underline hover:underline-offset-4"
                       data-testid={`footer-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
