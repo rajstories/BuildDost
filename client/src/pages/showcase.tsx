@@ -133,19 +133,19 @@ export default function ShowcasePage() {
           </div>
           
           {/* Main Title */}
-          <h1 className="text-7xl lg:text-8xl font-black text-gray-900 mb-8 leading-tight tracking-tight">
+          <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
             <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
               BuildDost
             </span>
           </h1>
           
           {/* Subtitle */}
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-6 leading-tight">
+          <h2 className="text-2xl lg:text-3xl font-semibold text-gray-700 mb-6 leading-tight">
             AI-Powered Full-Stack Website & Backend Builder
           </h2>
           
           {/* Professional Description */}
-          <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto font-medium leading-relaxed">
+          <p className="text-lg lg:text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             The only platform that enables non-technical founders to create and deploy 
             <span className="text-purple-600 font-semibold"> production-ready full-stack applications</span> with 
             <span className="text-blue-600 font-semibold"> zero coding knowledge</span>
@@ -170,22 +170,22 @@ export default function ShowcasePage() {
           </div>
 
           {/* Enhanced Stats Section */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="text-5xl font-black text-purple-600 mb-3">5</div>
-              <div className="text-base font-semibold text-gray-700">Game-Changing Features</div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+              <div className="text-3xl font-bold text-purple-600 mb-2">5</div>
+              <div className="text-sm font-medium text-gray-600">Game-Changing Features</div>
             </div>
-            <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="text-5xl font-black text-blue-600 mb-3">0</div>
-              <div className="text-base font-semibold text-gray-700">Code Required</div>
+            <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+              <div className="text-3xl font-bold text-blue-600 mb-2">0</div>
+              <div className="text-sm font-medium text-gray-600">Code Required</div>
             </div>
-            <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="text-5xl font-black text-green-600 mb-3">1-Click</div>
-              <div className="text-base font-semibold text-gray-700">Deployment</div>
+            <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+              <div className="text-3xl font-bold text-green-600 mb-2">1-Click</div>
+              <div className="text-sm font-medium text-gray-600">Deployment</div>
             </div>
-            <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <div className="text-5xl font-black text-orange-600 mb-3">Full</div>
-              <div className="text-base font-semibold text-gray-700">Code Ownership</div>
+            <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+              <div className="text-3xl font-bold text-orange-600 mb-2">Full</div>
+              <div className="text-sm font-medium text-gray-600">Code Ownership</div>
             </div>
           </div>
         </div>
@@ -194,14 +194,14 @@ export default function ShowcasePage() {
       {/* Hackathon Features */}
       <section className="py-24 bg-gradient-to-b from-gray-50/50 to-white">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               Hackathon-Winning Features
             </h2>
-            <p className="text-2xl text-gray-600 font-medium max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Five breakthrough innovations that set BuildDost apart from all competitors
             </p>
-            <div className="mt-8 w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full"></div>
+            <div className="mt-6 w-20 h-1 bg-gradient-to-r from-purple-600 to-blue-600 mx-auto rounded-full"></div>
           </div>
 
           <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8 lg:gap-10">
@@ -230,10 +230,10 @@ export default function ShowcasePage() {
                         {feature.badge}
                       </Badge>
                     </div>
-                    <CardTitle className="text-2xl font-black text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300">
+                    <CardTitle className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-300">
                       {feature.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 text-base leading-relaxed font-medium">
+                    <CardDescription className="text-gray-600 text-sm leading-relaxed">
                       {feature.description}
                     </CardDescription>
                   </CardHeader>
@@ -267,14 +267,14 @@ export default function ShowcasePage() {
       {/* Competitive Advantages */}
       <section className="py-24 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-indigo-50/30">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               Why BuildDost Wins
             </h2>
-            <p className="text-2xl text-gray-600 font-medium max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Our unique approach solves problems that existing solutions can't address
             </p>
-            <div className="mt-8 w-24 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+            <div className="mt-6 w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
@@ -292,10 +292,10 @@ export default function ShowcasePage() {
                       </div>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-purple-600 transition-colors duration-300">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors duration-300">
                         {advantage.title}
                       </h3>
-                      <p className="text-gray-600 text-lg leading-relaxed font-medium">
+                      <p className="text-gray-600 leading-relaxed">
                         {advantage.description}
                       </p>
                     </div>
@@ -356,13 +356,13 @@ export default function ShowcasePage() {
         
         <div className="container mx-auto px-6 text-center relative z-10">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl lg:text-6xl font-black mb-8 leading-tight">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
               Ready to Judge Our Innovation?
             </h2>
-            <p className="text-xl lg:text-2xl mb-12 opacity-90 font-medium leading-relaxed max-w-3xl mx-auto">
+            <p className="text-lg lg:text-xl mb-10 opacity-90 leading-relaxed max-w-2xl mx-auto">
               Experience the future of no-code development with 
-              <span className="text-yellow-300 font-bold"> full code ownership</span> and 
-              <span className="text-green-300 font-bold"> zero limitations</span>
+              <span className="text-yellow-300 font-semibold"> full code ownership</span> and 
+              <span className="text-green-300 font-semibold"> zero limitations</span>
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center items-center gap-6 mb-12">
