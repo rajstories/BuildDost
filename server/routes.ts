@@ -354,25 +354,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log("AI Assistant received message:", message);
-      
-      // Use OpenRouter for intelligent assistance
-      const systemPrompt = `You are an expert full-stack development assistant for BuildDost, an AI-powered website builder. Help users build and improve their web applications.
 
-Current Context: ${context?.currentProject ? `User is working on: ${context.currentProject.name} - ${context.currentProject.description}` : 'No active project'}
+      // Smart response matching
+      const lowerMessage = message.toLowerCase();
+      let responseData = {
+        response: "I'm here to help! Could you be more specific about what you'd like to build or improve?",
+        suggestions: ["Generate a pricing section", "Add a contact form", "Create a user dashboard", "Build an authentication system"],
+        quickActions: [
+          { label: "Generate Component", action: "component" },
+          { label: "Add Database", action: "database" },
+          { label: "Improve Design", action: "design" },
+          { label: "Add Features", action: "features" }
+        ]
+      };
 
-Your capabilities:
-- Generate React components and code snippets
-- Suggest UI/UX improvements  
-- Help with database design
-- Provide deployment guidance
-- Answer development questions
-- Suggest features and enhancements
-
-Always be helpful, concise, and provide actionable advice. If the user asks for code, provide complete, working examples.`;
-
-      // Provide smart, contextual responses with code generation
-      const responses = {
-        'pricing': {
+      if (lowerMessage.includes('pricing') || lowerMessage.includes('price') || lowerMessage.includes('plan')) {
+        responseData = {
           response: "I'll create a modern pricing section with multiple tiers! This will include features, pricing, and call-to-action buttons.",
           suggestions: ["Add tier comparison", "Include feature highlights", "Add discount badges", "Monthly/yearly toggle"],
           quickActions: [
@@ -381,178 +378,36 @@ Always be helpful, concise, and provide actionable advice. If the user asks for 
             { label: "Improve Design", action: "design" },
             { label: "Add Features", action: "features" }
           ],
-          code: `const PricingSection = () => {
-  const [isYearly, setIsYearly] = useState(false);
-  
-  const plans = [
-    {
-      name: "Starter",
-      price: isYearly ? 99 : 9,
-      features: ["5 Projects", "Basic Support", "1GB Storage"],
-      popular: false
-    },
-    {
-      name: "Pro",
-      price: isYearly ? 199 : 19,
-      features: ["Unlimited Projects", "Priority Support", "10GB Storage", "Custom Domain"],
-      popular: true
-    },
-    {
-      name: "Enterprise",
-      price: isYearly ? 499 : 49,
-      features: ["Everything in Pro", "24/7 Support", "100GB Storage", "Custom Integrations"],
-      popular: false
-    }
-  ];
-
-  return (
-    <div className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Choose Your Plan</h2>
-          <p className="text-xl text-gray-600">Start building amazing projects today</p>
-          
-          <div className="flex items-center justify-center mt-8">
-            <span className={!isYearly ? 'font-semibold' : ''}>Monthly</span>
-            <button 
-              onClick={() => setIsYearly(!isYearly)}
-              className="mx-3 relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600"
-            >
-              <span className={\`inline-block h-4 w-4 transform rounded-full bg-white transition \${isYearly ? 'translate-x-6' : 'translate-x-1'}\`} />
-            </button>
-            <span className={isYearly ? 'font-semibold' : ''}>Yearly</span>
-            {isYearly && <span className="ml-2 text-green-600 font-semibold">Save 20%</span>}
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div key={plan.name} className={\`relative bg-white rounded-2xl shadow-lg p-8 \${plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''}\`}>
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-              
-              <div className="text-center">
-                <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
-                <div className="mb-6">
-                  <span className="text-5xl font-bold">\${plan.price}</span>
-                  <span className="text-gray-600 ml-2">/{isYearly ? 'year' : 'month'}</span>
-                </div>
-                
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                
-                <button className={\`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 \${
-                  plan.popular 
-                    ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }\`}>
-                  Get Started
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};`
-        },
-          'contact form': {
-            response: "I'll help you add a contact form! This should include name, email, message fields with validation and a submit handler.",
-            suggestions: ["Add form validation", "Style with Tailwind CSS", "Connect to backend API", "Add success message"],
-            quickActions: [
-              { label: "Generate Component", action: "component" },
-              { label: "Add Database", action: "database" },
-              { label: "Improve Design", action: "design" },
-              { label: "Add Features", action: "features" }
-            ],
-            code: `const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '', email: '', message: ''
-  });
-  
-  return (
-    <form className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <input 
-        type="text" 
-        placeholder="Your Name"
-        value={formData.name}
-        onChange={(e) => setFormData({...formData, name: e.target.value})}
-        className="w-full p-3 border rounded-lg mb-4"
-      />
-      <input 
-        type="email" 
-        placeholder="Your Email"
-        value={formData.email}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
-        className="w-full p-3 border rounded-lg mb-4"
-      />
-      <textarea 
-        placeholder="Your Message"
-        value={formData.message}
-        onChange={(e) => setFormData({...formData, message: e.target.value})}
-        className="w-full p-3 border rounded-lg mb-4 h-32"
-      />
-      <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600">
-        Send Message
-      </button>
-    </form>
-  );
-};`
-          },
-          'dashboard': {
-            response: "A user dashboard is perfect for managing user data! I'll create one with stats, navigation, and user info sections.",
-            suggestions: ["Add user profile section", "Include analytics charts", "Add navigation menu", "Show recent activity"],
-            quickActions: [
-              { label: "Generate Component", action: "component" },
-              { label: "Add Database", action: "database" },
-              { label: "Improve Design", action: "design" },
-              { label: "Add Features", action: "features" }
-            ],
-            code: `const Dashboard = () => {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b px-6 py-4">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-      </nav>
-      <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Total Users</h3>
-          <p className="text-3xl font-bold text-blue-600">1,234</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Revenue</h3>
-          <p className="text-3xl font-bold text-green-600">$12,345</p>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-2">Orders</h3>
-          <p className="text-3xl font-bold text-purple-600">567</p>
-        </div>
-      </div>
-    </div>
-  );
-};`
-          }
+          code: "const PricingSection = () => {\n  return (\n    <div className=\"py-20 bg-gray-50\">\n      {/* Pricing content here */}\n    </div>\n  );\n};"
         };
-
-        // Smart response matching
-        const lowerMessage = message.toLowerCase();
-        let responseData = {
-          response: "I'm here to help! Could you be more specific about what you'd like to build or improve?",
-          suggestions: ["Generate a pricing section", "Add a contact form", "Create a user dashboard", "Build an authentication system"],
+      } else if (lowerMessage.includes('contact') || lowerMessage.includes('form')) {
+        responseData = {
+          response: "I'll help you add a contact form! This should include name, email, message fields with validation and a submit handler.",
+          suggestions: ["Add form validation", "Style with Tailwind CSS", "Connect to backend API", "Add success message"],
+          quickActions: [
+            { label: "Generate Component", action: "component" },
+            { label: "Add Database", action: "database" },
+            { label: "Improve Design", action: "design" },
+            { label: "Add Features", action: "features" }
+          ],
+          code: "const ContactForm = () => {\n  return (\n    <form className=\"max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg\">\n      {/* Form fields here */}\n    </form>\n  );\n};"
+        };
+      } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('admin')) {
+        responseData = {
+          response: "A user dashboard is perfect for managing user data! I'll create one with stats, navigation, and user info sections.",
+          suggestions: ["Add user profile section", "Include analytics charts", "Add navigation menu", "Show recent activity"],
+          quickActions: [
+            { label: "Generate Component", action: "component" },
+            { label: "Add Database", action: "database" },
+            { label: "Improve Design", action: "design" },
+            { label: "Add Features", action: "features" }
+          ],
+          code: "const Dashboard = () => {\n  return (\n    <div className=\"min-h-screen bg-gray-50\">\n      {/* Dashboard content here */}\n    </div>\n  );\n};"
+        };
+      } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+        responseData = {
+          response: "I'm your AI development assistant! I can help you with:\n\n• Generating React components\n• Creating forms and interfaces\n• Building backend APIs\n• Database design\n• Deployment guidance\n• UI/UX improvements\n\nWhat would you like to work on?",
+          suggestions: ["Generate a component", "Improve my design", "Add a feature", "Help with deployment"],
           quickActions: [
             { label: "Generate Component", action: "component" },
             { label: "Add Database", action: "database" },
@@ -560,41 +415,9 @@ Always be helpful, concise, and provide actionable advice. If the user asks for 
             { label: "Add Features", action: "features" }
           ]
         };
-
-        if (lowerMessage.includes('pricing') || lowerMessage.includes('price') || lowerMessage.includes('plan')) {
-          responseData = responses['pricing'];
-        } else if (lowerMessage.includes('contact') || lowerMessage.includes('form')) {
-          responseData = responses['contact form'];
-        } else if (lowerMessage.includes('dashboard') || lowerMessage.includes('admin')) {
-          responseData = responses['dashboard'];
-        } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
-          responseData = {
-            response: "I'm your AI development assistant! I can help you with:\n\n• Generating React components\n• Creating forms and interfaces\n• Building backend APIs\n• Database design\n• Deployment guidance\n• UI/UX improvements\n\nWhat would you like to work on?",
-            suggestions: ["Generate a component", "Improve my design", "Add a feature", "Help with deployment"],
-            quickActions: [
-              { label: "Generate Component", action: "component" },
-              { label: "Add Database", action: "database" },
-              { label: "Improve Design", action: "design" },
-              { label: "Add Features", action: "features" }
-            ]
-          };
-        }
-
-        res.json(responseData);
-      } catch (aiError) {
-        console.error("AI Assistant generation failed:", aiError);
-        // Fallback response
-        res.json({
-          response: "I'm here to help! I can assist with generating components, improving your design, adding features, and answering development questions. What would you like to work on?",
-          suggestions: ["Generate a React component", "Add a contact form", "Improve the design", "Create a dashboard"],
-          quickActions: [
-            { label: "Generate Component", action: "component" },
-            { label: "Add Database", action: "database" },
-            { label: "Improve Design", action: "design" },
-            { label: "Add Features", action: "features" }
-          ]
-        });
       }
+
+      res.json(responseData);
     } catch (error) {
       console.error("Chat assistant error:", error);
       res.status(500).json({ 
@@ -816,7 +639,7 @@ function createFallbackProject(prompt: string, features: string[]): any {
     id: `smart_${Date.now()}`,
     name: projectName,
     description: prompt,
-    files: generateSimpleTodoApp(projectName, prompt),
+    files: generateAppByType(appType, projectName, prompt),
     structure: {
       frontend: ["src/", "src/components/", "src/pages/", "public/"],
       backend: ["server/", "server/routes/", "server/models/"],
@@ -826,6 +649,628 @@ function createFallbackProject(prompt: string, features: string[]): any {
       frontend: ["react", "react-dom", "tailwindcss", "react-router-dom", "lucide-react"],
       backend: ["express", "cors", "dotenv", "jsonwebtoken", "bcryptjs"]
     }
+  };
+}
+
+function generateAppByType(appType: string, projectName: string, prompt: string): Record<string, string> {
+  switch (appType) {
+    case "landing":
+      return generateLandingPage(projectName, prompt);
+    case "ecommerce":
+      return generateEcommerceStore(projectName, prompt);
+    case "portfolio":
+      return generatePortfolio(projectName, prompt);
+    case "dashboard":
+      return generateDashboard(projectName, prompt);
+    case "blog":
+      return generateBlog(projectName, prompt);
+    case "todo":
+    default:
+      return generateSimpleTodoApp(projectName, prompt);
+  }
+}
+
+function generateLandingPage(projectName: string, prompt: string): Record<string, string> {
+  const landingPageCode = `import React from 'react';
+import { ArrowRight, Check, Star, Zap, Shield, Users } from 'lucide-react';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
+        <div className="container mx-auto px-6 text-center">
+          <h1 className="text-5xl font-bold mb-6">
+            ${projectName}
+          </h1>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            ${prompt}
+          </p>
+          <div className="space-x-4">
+            <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center">
+              Get Started Free
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </button>
+            <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+              Learn More
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Why Choose Us?</h2>
+            <p className="text-xl text-gray-600">Everything you need to succeed</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Lightning Fast</h3>
+              <p className="text-gray-600">Optimized for speed and performance</p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Secure & Reliable</h3>
+              <p className="text-gray-600">Enterprise-grade security you can trust</p>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">Easy to Use</h3>
+              <p className="text-gray-600">Intuitive interface designed for everyone</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-4">"This platform has completely transformed how we work. Highly recommended!"</p>
+              <div className="font-semibold">Sarah Johnson, CEO</div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-4">"Amazing results and fantastic customer support. Couldn't be happier!"</p>
+              <div className="font-semibold">Mike Chen, Founder</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-blue-600 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+          <p className="text-xl mb-8">Join thousands of satisfied customers today</p>
+          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+            Start Your Free Trial
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="container mx-auto px-6 text-center">
+          <p>&copy; 2024 ${projectName}. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;`;
+
+  return getBaseProjectFiles(landingPageCode, projectName);
+}
+
+function generateEcommerceStore(projectName: string, prompt: string): Record<string, string> {
+  const ecommerceCode = `import React, { useState } from 'react';
+import { ShoppingCart, Plus, Minus, Star } from 'lucide-react';
+
+const products = [
+  { id: 1, name: "Premium Headphones", price: 299, image: "🎧", rating: 4.5 },
+  { id: 2, name: "Wireless Speaker", price: 149, image: "🔊", rating: 4.8 },
+  { id: 3, name: "Smart Watch", price: 399, image: "⌚", rating: 4.6 },
+  { id: 4, name: "Gaming Mouse", price: 79, image: "🖱️", rating: 4.7 },
+  { id: 5, name: "Mechanical Keyboard", price: 199, image: "⌨️", rating: 4.4 },
+  { id: 6, name: "4K Monitor", price: 599, image: "🖥️", rating: 4.9 }
+];
+
+function App() {
+  const [cart, setCart] = useState<any[]>([]);
+
+  const addToCart = (product: any) => {
+    setCart([...cart, { ...product, quantity: 1 }]);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">${projectName}</h1>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-600">Cart ({cart.length})</span>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              \${getTotalPrice()}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Banner */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-4">Premium Electronics</h2>
+          <p className="text-xl">${prompt}</p>
+        </div>
+      </section>
+
+      {/* Products Grid */}
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <h3 className="text-3xl font-bold text-center mb-12">Featured Products</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <div key={product.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="h-48 bg-gray-100 flex items-center justify-center text-6xl">
+                  {product.image}
+                </div>
+                <div className="p-6">
+                  <h4 className="text-xl font-bold mb-2">{product.name}</h4>
+                  <div className="flex items-center mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={\`h-4 w-4 \${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}\`} />
+                    ))}
+                    <span className="ml-2 text-sm text-gray-600">({product.rating})</span>
+                  </div>
+                  <p className="text-3xl font-bold text-blue-600 mb-4">\${product.price}</p>
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default App;`;
+
+  return getBaseProjectFiles(ecommerceCode, projectName);
+}
+
+function generatePortfolio(projectName: string, prompt: string): Record<string, string> {
+  const portfolioCode = `import React from 'react';
+import { Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
+
+function App() {
+  const projects = [
+    { title: "E-commerce Platform", tech: "React, Node.js", description: "Full-stack shopping platform with payment integration" },
+    { title: "Task Management App", tech: "Vue.js, Firebase", description: "Collaborative productivity tool with real-time updates" },
+    { title: "Data Analytics Dashboard", tech: "React, D3.js", description: "Interactive data visualization for business insights" }
+  ];
+
+  const skills = ["JavaScript", "React", "Node.js", "Python", "TypeScript", "AWS", "Docker", "PostgreSQL"];
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-gray-900 text-white py-20">
+        <div className="container mx-auto px-6 text-center">
+          <div className="w-32 h-32 bg-gray-700 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl">
+            👨‍💻
+          </div>
+          <h1 className="text-4xl font-bold mb-4">${projectName}</h1>
+          <p className="text-xl text-gray-300 mb-6">${prompt}</p>
+          <div className="flex justify-center space-x-4">
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center">
+              <Mail className="h-4 w-4 mr-2" />
+              Contact Me
+            </button>
+            <button className="border border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-gray-900 flex items-center">
+              <Github className="h-4 w-4 mr-2" />
+              GitHub
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* About Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6">About Me</h2>
+            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              I'm a passionate full-stack developer with 5+ years of experience creating 
+              beautiful, functional web applications. I love turning complex problems into 
+              simple, elegant solutions.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {skills.map((skill, index) => (
+                <span key={index} className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <h2 className="text-3xl font-bold text-center mb-12">Featured Projects</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {projects.map((project, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div className="h-40 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-2xl">
+                  📱
+                </div>
+                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                <p className="text-blue-600 font-semibold mb-2">{project.tech}</p>
+                <p className="text-gray-600 mb-4">{project.description}</p>
+                <button className="flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+                  View Project
+                  <ExternalLink className="h-4 w-4 ml-1" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-20 bg-gray-900 text-white">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold mb-6">Let's Work Together</h2>
+          <p className="text-xl text-gray-300 mb-8">Ready to bring your ideas to life?</p>
+          <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-700">
+            Get In Touch
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default App;`;
+
+  return getBaseProjectFiles(portfolioCode, projectName);
+}
+
+function generateDashboard(projectName: string, prompt: string): Record<string, string> {
+  const dashboardCode = `import React, { useState } from 'react';
+import { BarChart3, Users, DollarSign, TrendingUp, Bell, Search } from 'lucide-react';
+
+function App() {
+  const [notifications] = useState(3);
+
+  const stats = [
+    { title: "Total Users", value: "12,345", change: "+12%", icon: Users, color: "text-blue-600" },
+    { title: "Revenue", value: "$98,765", change: "+8%", icon: DollarSign, color: "text-green-600" },
+    { title: "Orders", value: "1,234", change: "+23%", icon: BarChart3, color: "text-purple-600" },
+    { title: "Growth", value: "15.2%", change: "+5%", icon: TrendingUp, color: "text-orange-600" }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b px-6 py-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">${projectName}</h1>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <button className="relative p-2 text-gray-600 hover:text-gray-800">
+              <Bell className="h-5 w-5" />
+              {notifications > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {notifications}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="p-6">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome back!</h2>
+          <p className="text-gray-600">${prompt}</p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className={\`p-2 rounded-lg bg-gray-100\`}>
+                  <stat.icon className={\`h-6 w-6 \${stat.color}\`} />
+                </div>
+                <span className="text-green-600 text-sm font-semibold">{stat.change}</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</h3>
+              <p className="text-gray-600 text-sm">{stat.title}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Revenue Trend</h3>
+            <div className="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+              <div className="text-center text-gray-500">
+                <BarChart3 className="h-12 w-12 mx-auto mb-2" />
+                <p>Chart visualization would go here</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">User Activity</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">New Users</span>
+                <span className="font-semibold">1,234</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Active Sessions</span>
+                <span className="font-semibold">5,678</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Bounce Rate</span>
+                <span className="font-semibold">23.4%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <Users className="h-4 w-4 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-800 font-medium">New user registered</p>
+                <p className="text-gray-600 text-sm">john.doe@example.com joined the platform</p>
+              </div>
+              <span className="text-gray-500 text-sm">2 mins ago</span>
+            </div>
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                <DollarSign className="h-4 w-4 text-green-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-800 font-medium">Payment received</p>
+                <p className="text-gray-600 text-sm">$299 payment from premium subscription</p>
+              </div>
+              <span className="text-gray-500 text-sm">5 mins ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;`;
+
+  return getBaseProjectFiles(dashboardCode, projectName);
+}
+
+function generateBlog(projectName: string, prompt: string): Record<string, string> {
+  const blogCode = `import React, { useState } from 'react';
+import { Calendar, User, Tag, Search } from 'lucide-react';
+
+function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const posts = [
+    {
+      id: 1,
+      title: "Getting Started with React 18",
+      excerpt: "Learn the latest features and improvements in React 18, including concurrent rendering and automatic batching.",
+      author: "Jane Doe",
+      date: "2024-01-15",
+      category: "React",
+      readTime: "5 min read"
+    },
+    {
+      id: 2,
+      title: "Building Scalable Node.js Applications",
+      excerpt: "Best practices for building robust and scalable backend services with Node.js and Express.",
+      author: "John Smith",
+      date: "2024-01-10",
+      category: "Node.js",
+      readTime: "8 min read"
+    },
+    {
+      id: 3,
+      title: "CSS Grid vs Flexbox: When to Use What",
+      excerpt: "A comprehensive guide to choosing between CSS Grid and Flexbox for your layout needs.",
+      author: "Sarah Johnson",
+      date: "2024-01-05",
+      category: "CSS",
+      readTime: "6 min read"
+    }
+  ];
+
+  const filteredPosts = posts.filter(post =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-gray-800">${projectName}</h1>
+            <nav className="space-x-6">
+              <a href="#" className="text-gray-600 hover:text-gray-800">Home</a>
+              <a href="#" className="text-gray-600 hover:text-gray-800">About</a>
+              <a href="#" className="text-gray-600 hover:text-gray-800">Contact</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-4">Welcome to My Blog</h2>
+          <p className="text-xl mb-8">${prompt}</p>
+          <div className="max-w-md mx-auto relative">
+            <Search className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-white"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Posts */}
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <h3 className="text-3xl font-bold text-center mb-12">Latest Articles</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.map((post) => (
+              <article key={post.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="h-48 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+                <div className="p-6">
+                  <div className="flex items-center mb-3">
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                      {post.category}
+                    </span>
+                  </div>
+                  <h4 className="text-xl font-bold mb-3 text-gray-800">{post.title}</h4>
+                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center">
+                        <User className="h-4 w-4 mr-1" />
+                        {post.author}
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        {post.date}
+                      </div>
+                    </div>
+                    <span>{post.readTime}</span>
+                  </div>
+                  <button className="mt-4 text-blue-600 hover:text-blue-700 font-semibold">
+                    Read More →
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="container mx-auto px-6 text-center">
+          <p>&copy; 2024 ${projectName}. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;`;
+
+  return getBaseProjectFiles(blogCode, projectName);
+}
+
+function getBaseProjectFiles(appCode: string, projectName: string): Record<string, string> {
+  return {
+    "package.json": JSON.stringify({
+      name: projectName.toLowerCase().replace(/\s+/g, '-'),
+      version: "1.0.0",
+      dependencies: {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tailwindcss": "^3.4.17",
+        "lucide-react": "^0.263.1"
+      }
+    }, null, 2),
+    "src/App.tsx": appCode,
+    "src/index.tsx": [
+      "import React from 'react';",
+      "import ReactDOM from 'react-dom/client';",
+      "import App from './App';",
+      "import './index.css';",
+      "",
+      "const root = ReactDOM.createRoot(document.getElementById('root')!);",
+      "root.render(<App />);"
+    ].join('\n'),
+    "src/index.css": "@tailwind base;\n@tailwind components;\n@tailwind utilities;",
+    "public/index.html": `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${projectName}</title>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>`
   };
 }
 
