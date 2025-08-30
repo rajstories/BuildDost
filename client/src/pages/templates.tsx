@@ -216,11 +216,11 @@ export default function TemplatesPage() {
                     }`}>
                       <Button 
                         onClick={() => handleCreateFromTemplate(template.id, template.title)}
-                        className="bg-white text-gray-900 hover:bg-gray-100 font-semibold shadow-lg"
+                        className="group/create bg-white/95 backdrop-blur-sm text-gray-900 hover:bg-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 border-2 border-white/50 hover:border-white"
                         data-testid={`create-${template.id}`}
                       >
-                        <Sparkles className="h-4 w-4 mr-2" />
-                        Create Now
+                        <Sparkles className="h-4 w-4 mr-2 transition-transform duration-300 group-hover/create:rotate-12 group-hover/create:scale-110" />
+                        <span>Create Now</span>
                       </Button>
                     </div>
                   </div>
@@ -252,11 +252,12 @@ export default function TemplatesPage() {
                     {/* Action Button */}
                     <Button 
                       onClick={() => handleCreateFromTemplate(template.id, template.title)}
-                      className="w-full group-hover:bg-primary/90 transition-colors"
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 group/btn"
                       data-testid={`button-${template.id}`}
                     >
-                      Start Building
-                      <ArrowRight className="h-4 w-4 ml-2" />
+                      <span className="relative">Start Building</span>
+                      <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:scale-110" />
+                      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                     </Button>
                   </div>
                 </div>
@@ -277,12 +278,13 @@ export default function TemplatesPage() {
                   window.location.href = `/generate?prompt=${encodeURIComponent(customPrompt)}`;
                 }
               }}
-              className="group"
+              className="group relative px-8 py-4 rounded-2xl border-2 border-gray-200/60 bg-white/70 backdrop-blur-xl text-gray-700 font-semibold shadow-lg hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:bg-white hover:border-purple-300/60 active:scale-[0.98] active:translate-y-0"
               data-testid="button-custom-prompt"
             >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Describe Custom App
-              <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-50/50 to-blue-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <Sparkles className="relative h-4 w-4 mr-2 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+              <span className="relative">Describe Custom App</span>
+              <ArrowRight className="relative h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1 group-hover:scale-110" />
             </Button>
           </div>
         </div>

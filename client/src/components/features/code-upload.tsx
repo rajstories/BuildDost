@@ -181,11 +181,12 @@ export default ${componentName || 'ConvertedComponent'};`,
                 <Button 
                   onClick={() => setActiveTab("convert")} 
                   disabled={!uploadedCode.trim()}
-                  className="w-full"
+                  className="group relative w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 disabled:hover:scale-100 disabled:hover:translate-y-0"
                   data-testid="button-next-convert"
                 >
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  Continue to Convert
+                  <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Sparkles className="relative mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative">Continue to Convert</span>
                 </Button>
               </div>
             </TabsContent>

@@ -144,11 +144,13 @@ export default function OneClickDeploy({ project }: { project: any }) {
               <Button 
                 onClick={deployToVercel}
                 size="lg"
-                className="w-full"
+                className="group relative w-full bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 hover:from-green-500 hover:via-blue-500 hover:to-purple-500 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 px-8 py-4"
                 data-testid="button-deploy"
               >
-                <Rocket className="mr-2 h-4 w-4" />
-                Deploy to Production
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Rocket className="relative mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                <span className="relative text-lg">Deploy to Production</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
               </Button>
             </div>
           )}

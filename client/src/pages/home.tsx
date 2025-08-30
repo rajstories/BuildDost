@@ -137,34 +137,38 @@ export default function HomePage() {
                 />
                 <Button
                   onClick={handleStartBuilding}
-                  className="absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                  className="group absolute right-3 top-3 h-14 px-8 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
                   data-testid="button-start-building"
                 >
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Build
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <Sparkles className="relative mr-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative">Build</span>
                 </Button>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-center space-x-4 mb-8">
+            <div className="flex justify-center space-x-6 mb-8">
               <Link href="/templates">
                 <Button 
                   variant="outline" 
-                  className="text-lg px-8 py-4 rounded-2xl border-border/40 bg-white/50 backdrop-blur-md hover:bg-white/80 hover:shadow-lg transition-all duration-300 group"
+                  className="group relative text-lg px-10 py-5 rounded-2xl border-2 border-gray-200/60 bg-white/70 backdrop-blur-xl text-gray-700 font-semibold shadow-lg hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 hover:bg-white hover:border-blue-300/60 active:scale-[0.98] active:translate-y-0"
                   data-testid="button-choose-templates"
                 >
-                  <Grid3X3 className="mr-2 h-5 w-5" />
-                  Choose Templates
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <Grid3X3 className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative">Choose Templates</span>
                 </Button>
               </Link>
               <Link href="/showcase">
                 <Button 
-                  className="text-lg px-8 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="group relative text-lg px-10 py-5 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-600 to-blue-600 hover:from-purple-500 hover:via-purple-500 hover:to-blue-500 text-white font-semibold shadow-xl hover:shadow-2xl transition-all duration-500 ease-out hover:scale-[1.02] hover:-translate-y-1 active:scale-[0.98] active:translate-y-0"
                   data-testid="button-hackathon-demo"
                 >
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  🏆 Hackathon Demo
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <Sparkles className="relative mr-3 h-5 w-5 transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                  <span className="relative">🏆 Hackathon Demo</span>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
                 </Button>
               </Link>
             </div>

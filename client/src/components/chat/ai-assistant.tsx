@@ -146,10 +146,12 @@ export default function AIAssistant({ currentProject, onCodeSuggestion, onCompon
           <Button
             onClick={() => setIsOpen(true)}
             size="lg"
-            className="rounded-full w-14 h-14 bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-300 group"
+            className="group relative rounded-full w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 shadow-xl hover:shadow-2xl transition-all duration-500 ease-out hover:scale-110 hover:-translate-y-2 active:scale-95 active:translate-y-0"
             data-testid="button-open-chat"
           >
-            <MessageCircle className="h-6 w-6 group-hover:scale-110 transition-transform" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <MessageCircle className="relative h-7 w-7 text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 group-hover:animate-pulse"></div>
           </Button>
         )}
       </div>
@@ -277,10 +279,11 @@ export default function AIAssistant({ currentProject, onCodeSuggestion, onCompon
                 onClick={sendMessage}
                 disabled={isLoading || !newMessage.trim()}
                 size="sm"
-                className="px-3"
+                className="group relative px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-400 disabled:to-gray-500 shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:hover:scale-100 disabled:hover:translate-y-0"
                 data-testid="button-send-message"
               >
-                <Send className="h-4 w-4" />
+                <div className="absolute inset-0 rounded-md bg-gradient-to-r from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Send className="relative h-4 w-4 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5" />
               </Button>
             </div>
           </div>
