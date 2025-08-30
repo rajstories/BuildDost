@@ -22,7 +22,24 @@ interface GeneratedProject {
 
 // Component to render the actual generated app
 function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
-  const appContent = project.files['src/App.tsx'];
+  // Try different possible locations for the app file
+  const appContent = project.files['src/App.tsx'] || project.files['app.tsx'] || project.files['App.tsx'];
+  
+  // For educational platforms, show the dashboard even without app content
+  const lowerDescription = project.description.toLowerCase();
+  const lowerName = project.name.toLowerCase();
+  const isEducationApp = appContent?.includes('Course[]') || appContent?.includes('Student[]') || appContent?.includes('enrolledCourses') ||
+                        lowerDescription.includes('education') || lowerDescription.includes('educational') || 
+                        lowerDescription.includes('learning') || lowerDescription.includes('course') ||
+                        lowerDescription.includes('student') || lowerDescription.includes('lms') ||
+                        lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system') ||
+                        lowerDescription.includes('platform');
+
+  // Show educational platform immediately if detected
+  if (isEducationApp) {
+    return <EducationAppPreview project={project} />;
+  }
+  
   if (!appContent) {
     return (
       <div className="flex items-center justify-center h-full bg-gray-50">
@@ -31,9 +48,7 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
     );
   }
 
-  // Detect app type from the generated code and project description
-  const lowerDescription = project.description.toLowerCase();
-  const lowerName = project.name.toLowerCase();
+  // Detect app type from the generated code and project description  
   const isTodoApp = appContent.includes('addTask') || appContent.includes('Task[]') || 
                    lowerDescription.includes('todo') || lowerDescription.includes('task');
   const isBlogApp = appContent.includes('BlogPost[]') || appContent.includes('posts') ||
@@ -42,15 +57,8 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
                         lowerDescription.includes('shop') || lowerDescription.includes('ecommerce') || lowerDescription.includes('store');
   const isPortfolioApp = appContent.includes('activeSection') || appContent.includes('portfolio') ||
                         lowerDescription.includes('portfolio') || lowerDescription.includes('profile');
-  const isEducationApp = appContent.includes('Course[]') || appContent.includes('Student[]') || appContent.includes('enrolledCourses') ||
-                        lowerDescription.includes('education') || lowerDescription.includes('educational') || 
-                        lowerDescription.includes('learning') || lowerDescription.includes('course') ||
-                        lowerDescription.includes('student') || lowerDescription.includes('lms') ||
-                        lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system');
 
-  if (isEducationApp) {
-    return <EducationAppPreview project={project} />;
-  } else if (isTodoApp) {
+  if (isTodoApp) {
     return <TodoAppPreview project={project} />;
   } else if (isBlogApp) {
     return <BlogAppPreview project={project} />;
