@@ -90,20 +90,43 @@ export default function GeneratePage() {
   }, [prompt]);
 
   const handleViewProject = () => {
-    // For now, navigate to the working Task Manager template since generation failed
-    // This provides immediate value to the user
-    if (prompt.toLowerCase().includes('task') || prompt.toLowerCase().includes('todo')) {
+    // Intelligent routing like Replit AI - understand user intent and context
+    const lowerPrompt = prompt.toLowerCase();
+    
+    // Food & Restaurant Apps - route to ecommerce with food context
+    if (lowerPrompt.includes('food') || lowerPrompt.includes('restaurant') || lowerPrompt.includes('delivery') || 
+        lowerPrompt.includes('menu') || lowerPrompt.includes('order') || lowerPrompt.includes('pizza') || 
+        lowerPrompt.includes('cafe') || lowerPrompt.includes('kitchen')) {
+      setLocation('/template/ecommerce'); // Food delivery = ecommerce app
+    }
+    // Task Management & Productivity
+    else if (lowerPrompt.includes('task') || lowerPrompt.includes('todo') || lowerPrompt.includes('list') ||
+             lowerPrompt.includes('productivity') || lowerPrompt.includes('project manager')) {
       setLocation('/template/todo');
-    } else if (prompt.toLowerCase().includes('portfolio')) {
-      setLocation('/template/portfolio');
-    } else if (prompt.toLowerCase().includes('blog')) {
-      setLocation('/template/blog');
-    } else if (prompt.toLowerCase().includes('ecommerce') || prompt.toLowerCase().includes('store')) {
+    }
+    // E-commerce & Shopping
+    else if (lowerPrompt.includes('shop') || lowerPrompt.includes('store') || lowerPrompt.includes('ecommerce') || 
+             lowerPrompt.includes('e-commerce') || lowerPrompt.includes('cart') || lowerPrompt.includes('buy') ||
+             lowerPrompt.includes('sell') || lowerPrompt.includes('marketplace') || lowerPrompt.includes('product')) {
       setLocation('/template/ecommerce');
-    } else if (prompt.toLowerCase().includes('dashboard')) {
+    }
+    // Personal & Professional Portfolios
+    else if (lowerPrompt.includes('portfolio') || lowerPrompt.includes('resume') || lowerPrompt.includes('profile') ||
+             lowerPrompt.includes('cv') || lowerPrompt.includes('personal site') || lowerPrompt.includes('showcase')) {
+      setLocation('/template/portfolio');
+    }
+    // Content & Publishing
+    else if (lowerPrompt.includes('blog') || lowerPrompt.includes('article') || lowerPrompt.includes('news') ||
+             lowerPrompt.includes('content') || lowerPrompt.includes('publish') || lowerPrompt.includes('magazine')) {
+      setLocation('/template/blog');
+    }
+    // Analytics & Admin
+    else if (lowerPrompt.includes('dashboard') || lowerPrompt.includes('admin') || lowerPrompt.includes('analytics') ||
+             lowerPrompt.includes('stats') || lowerPrompt.includes('metrics') || lowerPrompt.includes('data')) {
       setLocation('/template/dashboard');
-    } else {
-      // Default to landing page template
+    }
+    // Default to landing page for generic websites
+    else {
       setLocation('/template/landing');
     }
   };

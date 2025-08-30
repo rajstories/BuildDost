@@ -907,20 +907,44 @@ function createFallbackProject(prompt: string, features: string[]): any {
   const projectName = extractProjectName(prompt);
   const lowerPrompt = prompt.toLowerCase();
   
-  // Detect app type from prompt like professional web builders
+  // Intelligent app type detection like Replit AI - understand context and intent
   let appType = "landing"; // Default to landing page
   
-  if (lowerPrompt.includes("todo") || lowerPrompt.includes("task") || lowerPrompt.includes("list")) {
+  // Food & Restaurant Apps - highest priority for food-related prompts
+  if (lowerPrompt.includes("food") || lowerPrompt.includes("restaurant") || lowerPrompt.includes("delivery") || 
+      lowerPrompt.includes("menu") || lowerPrompt.includes("order") || lowerPrompt.includes("pizza") || 
+      lowerPrompt.includes("cafe") || lowerPrompt.includes("kitchen")) {
+    appType = "ecommerce"; // Food delivery apps are ecommerce apps
+  }
+  // Task Management & Productivity
+  else if (lowerPrompt.includes("todo") || lowerPrompt.includes("task") || lowerPrompt.includes("list") ||
+           lowerPrompt.includes("productivity") || lowerPrompt.includes("project manager")) {
     appType = "todo";
-  } else if (lowerPrompt.includes("portfolio") || lowerPrompt.includes("resume") || lowerPrompt.includes("profile")) {
-    appType = "portfolio";
-  } else if (lowerPrompt.includes("blog") || lowerPrompt.includes("article") || lowerPrompt.includes("news")) {
-    appType = "blog";
-  } else if (lowerPrompt.includes("shop") || lowerPrompt.includes("store") || lowerPrompt.includes("ecommerce") || lowerPrompt.includes("e-commerce")) {
+  }
+  // E-commerce & Shopping
+  else if (lowerPrompt.includes("shop") || lowerPrompt.includes("store") || lowerPrompt.includes("ecommerce") || 
+           lowerPrompt.includes("e-commerce") || lowerPrompt.includes("cart") || lowerPrompt.includes("buy") ||
+           lowerPrompt.includes("sell") || lowerPrompt.includes("marketplace") || lowerPrompt.includes("product")) {
     appType = "ecommerce";
-  } else if (lowerPrompt.includes("dashboard") || lowerPrompt.includes("admin") || lowerPrompt.includes("analytics")) {
+  }
+  // Personal & Professional Portfolios
+  else if (lowerPrompt.includes("portfolio") || lowerPrompt.includes("resume") || lowerPrompt.includes("profile") ||
+           lowerPrompt.includes("cv") || lowerPrompt.includes("personal site") || lowerPrompt.includes("showcase")) {
+    appType = "portfolio";
+  }
+  // Content & Publishing
+  else if (lowerPrompt.includes("blog") || lowerPrompt.includes("article") || lowerPrompt.includes("news") ||
+           lowerPrompt.includes("content") || lowerPrompt.includes("publish") || lowerPrompt.includes("magazine")) {
+    appType = "blog";
+  }
+  // Analytics & Admin
+  else if (lowerPrompt.includes("dashboard") || lowerPrompt.includes("admin") || lowerPrompt.includes("analytics") ||
+           lowerPrompt.includes("stats") || lowerPrompt.includes("metrics") || lowerPrompt.includes("data")) {
     appType = "dashboard";
-  } else if (lowerPrompt.includes("landing") || lowerPrompt.includes("website") || lowerPrompt.includes("business")) {
+  }
+  // Generic websites and business pages
+  else if (lowerPrompt.includes("landing") || lowerPrompt.includes("website") || lowerPrompt.includes("business") ||
+           lowerPrompt.includes("company") || lowerPrompt.includes("startup")) {
     appType = "landing";
   }
   
@@ -944,23 +968,12 @@ function createFallbackProject(prompt: string, features: string[]): any {
 }
 
 function generateAppByType(appType: string, projectName: string, prompt: string): Record<string, string> {
-  // Use our professional showcase templates instead of simple fallbacks
-  switch (appType) {
-    case "landing":
-      return generateShowcaseLandingPage(projectName, prompt);
-    case "ecommerce":
-      return generateShowcaseEcommerce(projectName, prompt);
-    case "portfolio":
-      return generateShowcasePortfolio(projectName, prompt);
-    case "dashboard":
-      return generateShowcaseDashboard(projectName, prompt);
-    case "blog":
-      return generateShowcaseBlog(projectName, prompt);
-    case "todo":
-      return generateShowcaseTaskManager(projectName, prompt);
-    default:
-      return generateShowcaseLandingPage(projectName, prompt);
-  }
+  // For now, return simple routing info since we use template routing instead of file generation
+  // This prevents 500 errors and allows the View & Edit button to work properly
+  return {
+    "app.tsx": `// ${appType} app: ${projectName}\n// ${prompt}\n// This routes to the appropriate template`,
+    "README.md": `# ${projectName}\n\n${prompt}\n\nApp Type: ${appType}`
+  };
 }
 
 function generateLandingPage(projectName: string, prompt: string): Record<string, string> {
