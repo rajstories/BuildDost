@@ -13,6 +13,7 @@ import TemplatesPage from "@/pages/templates";
 import ShowcasePage from "@/pages/showcase";
 import ProfilePage from "@/pages/Profile";
 import ChatPage from "@/pages/Chat";
+import BuildPage from "@/pages/Build";
 import NotFound from "@/pages/not-found";
 
 // Import template showcases
@@ -36,6 +37,7 @@ function Router() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/profile" component={ProfilePage} />
       <Route path="/chat" component={ChatPage} />
+      <Route path="/build" component={BuildPage} />
       
       {/* Template Showcases */}
       <Route path="/template/landing" component={LandingPageTemplate} />

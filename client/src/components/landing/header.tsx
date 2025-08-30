@@ -149,7 +149,7 @@ export default function Header() {
               </Button>
             )}
             
-            <Link href="/builder">
+            <Link href="/build">
               <Button className="glow-effect" data-testid="button-get-started">
                 Get Started
               </Button>
