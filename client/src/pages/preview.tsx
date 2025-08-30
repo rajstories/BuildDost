@@ -35,19 +35,8 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
                         lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system') ||
                         lowerDescription.includes('platform');
 
-  console.log('🔍 Debug educational detection:', {
-    projectName: project.name,
-    projectDescription: project.description, 
-    lowerDescription,
-    lowerName,
-    isEducationApp,
-    hasEducational: lowerDescription.includes('educational'),
-    hasPlatform: lowerDescription.includes('platform')
-  });
-
   // Show educational platform immediately if detected
   if (isEducationApp) {
-    console.log('✅ Showing EducationAppPreview for:', project.name);
     return <EducationAppPreview project={project} />;
   }
   
