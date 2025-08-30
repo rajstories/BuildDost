@@ -45,7 +45,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userData = insertUserSchema.parse(req.body);
       const user = await storage.createUser(userData);
-      res.json({ id: user.id, username: user.username, email: user.email });
+      res.json({ id: user.id, email: user.email });
     } catch (error) {
       res.status(400).json({ message: error instanceof Error ? error.message : "Unknown error" });
     }
@@ -57,7 +57,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json({ id: user.id, username: user.username, email: user.email });
+      res.json({ id: user.id, email: user.email });
     } catch (error) {
       res.status(500).json({ message: error instanceof Error ? error.message : "Unknown error" });
     }
