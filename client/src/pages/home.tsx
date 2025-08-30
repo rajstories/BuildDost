@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Box, Github, FileText, Sparkles, Grid3X3 } from "lucide-react";
 import Footer from "@/components/landing/footer";
+import AIAssistant from "@/components/chat/ai-assistant";
 
 export default function HomePage() {
   const [prompt, setPrompt] = useState("");
@@ -145,8 +146,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Choose Templates Button */}
-            <div className="mb-8">
+            {/* Action Buttons */}
+            <div className="flex justify-center space-x-4 mb-8">
               <Link href="/templates">
                 <Button 
                   variant="outline" 
@@ -155,6 +156,15 @@ export default function HomePage() {
                 >
                   <Grid3X3 className="mr-2 h-5 w-5" />
                   Choose Templates
+                </Button>
+              </Link>
+              <Link href="/showcase">
+                <Button 
+                  className="text-lg px-8 py-4 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                  data-testid="button-hackathon-demo"
+                >
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  🏆 Hackathon Demo
                 </Button>
               </Link>
             </div>
@@ -179,6 +189,9 @@ export default function HomePage() {
 
       {/* Footer */}
       <Footer />
+      
+      {/* AI Assistant - Hackathon Winning Feature */}
+      <AIAssistant />
     </div>
   );
 }

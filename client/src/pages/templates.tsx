@@ -14,6 +14,7 @@ import {
   Star,
   ArrowLeft
 } from "lucide-react";
+import AIAssistant from "@/components/chat/ai-assistant";
 
 const templates = [
   {
@@ -286,6 +287,9 @@ export default function TemplatesPage() {
           </div>
         </div>
       </main>
+      
+      {/* AI Assistant - Available everywhere */}
+      <AIAssistant />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import PreviewPage from "@/pages/preview";
 import BuilderPage from "@/pages/builder";
 import DashboardPage from "@/pages/dashboard";
 import TemplatesPage from "@/pages/templates";
+import ShowcasePage from "@/pages/showcase";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/templates" component={TemplatesPage} />
+      <Route path="/showcase" component={ShowcasePage} />
       <Route path="/generate" component={GeneratePage} />
       <Route path="/preview" component={PreviewPage} />
       <Route path="/builder" component={BuilderPage} />
