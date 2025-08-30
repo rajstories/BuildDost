@@ -33,7 +33,9 @@ function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
                         lowerDescription.includes('learning') || lowerDescription.includes('course') ||
                         lowerDescription.includes('student') || lowerDescription.includes('lms') ||
                         lowerName.includes('academia') || lowerName.includes('edu') || lowerDescription.includes('management system') ||
-                        lowerDescription.includes('platform') || lowerName.includes('edubridge') || lowerDescription.includes('edubridge');
+                        lowerDescription.includes('platform') || lowerName.includes('edubridge') || lowerDescription.includes('edubridge') ||
+                        lowerName.includes('eduhub') || lowerDescription.includes('eduhub') ||
+                        project.appType === 'education' || lowerDescription.includes('learning management');
 
   // Show educational platform immediately if detected
   if (isEducationApp) {
