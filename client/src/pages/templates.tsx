@@ -95,6 +95,11 @@ export default function TemplatesPage() {
     window.location.href = `/generate?prompt=${encodeURIComponent(prompt)}&type=${templateId}`;
   };
 
+  const handleBrowseMoreTemplates = () => {
+    // Open Dribbble in a new tab for more template inspiration
+    window.open('https://dribbble.com/search/website-templates', '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -316,21 +321,36 @@ export default function TemplatesPage() {
             <p className="text-gray-600 mb-6 max-w-lg mx-auto">
               Don't see what you're looking for? Describe your unique app idea and let AI build it for you.
             </p>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                const customPrompt = prompt("Describe your custom app idea:");
-                if (customPrompt) {
-                  window.location.href = `/generate?prompt=${encodeURIComponent(customPrompt)}`;
-                }
-              }}
-              className="group px-8 py-4 rounded-xl border-2 border-blue-600 bg-white text-blue-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-blue-600 hover:text-white"
-              data-testid="button-custom-prompt"
-            >
-              <Sparkles className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
-              <span>Describe Custom App</span>
-              <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  const customPrompt = prompt("Describe your custom app idea:");
+                  if (customPrompt) {
+                    window.location.href = `/generate?prompt=${encodeURIComponent(customPrompt)}`;
+                  }
+                }}
+                className="group px-8 py-4 rounded-xl border-2 border-blue-600 bg-white text-blue-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-blue-600 hover:text-white"
+                data-testid="button-custom-prompt"
+              >
+                <Sparkles className="h-4 w-4 mr-2 transition-transform duration-300 group-hover:rotate-12" />
+                <span>Describe Custom App</span>
+                <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={handleBrowseMoreTemplates}
+                className="group px-8 py-4 rounded-xl border-2 border-purple-600 bg-white text-purple-600 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-purple-600 hover:text-white"
+                data-testid="button-browse-more"
+              >
+                <svg className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 7V9H21ZM3 9V21H21V9H3ZM9 19H5V15H9V19ZM9 13H5V11H9V13ZM15 19H11V15H15V19ZM15 13H11V11H15V13ZM19 19H17V15H19V19ZM19 13H17V11H19V13Z"/>
+                </svg>
+                <span>Browse More Templates</span>
+                <ArrowRight className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
+              </Button>
+            </div>
           </div>
         </div>
       </main>
