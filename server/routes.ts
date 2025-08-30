@@ -634,6 +634,8 @@ function createFallbackProject(prompt: string, features: string[]): any {
   } else if (lowerPrompt.includes("landing") || lowerPrompt.includes("website") || lowerPrompt.includes("business")) {
     appType = "landing";
   }
+  
+  console.log(`Detected app type: ${appType} from prompt: ${prompt}`);
 
   return {
     id: `smart_${Date.now()}`,
