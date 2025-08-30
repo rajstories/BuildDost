@@ -244,11 +244,19 @@ export default function HomePage() {
             <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground/60">
               <span className="font-medium">or import from</span>
               <div className="flex items-center space-x-6">
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-figma">
+                <button 
+                  className="flex items-center space-x-2 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium cursor-pointer hover:scale-105 active:scale-95" 
+                  onClick={() => showToast("Figma Import", "Import your Figma designs and convert them to code! Upload Figma files, extract components, and generate React code automatically.")}
+                  data-testid="import-figma"
+                >
                   <FileText className="h-4 w-4" />
                   <span>Figma</span>
                 </button>
-                <button className="flex items-center space-x-2 hover:text-foreground transition-colors font-medium" data-testid="import-github">
+                <button 
+                  className="flex items-center space-x-2 hover:text-foreground hover:bg-accent/50 px-3 py-2 rounded-md transition-all duration-200 font-medium cursor-pointer hover:scale-105 active:scale-95" 
+                  onClick={() => showToast("GitHub Import", "Import existing GitHub repositories and enhance them with AI! Connect your repo, analyze the code, and get AI-powered improvements.")}
+                  data-testid="import-github"
+                >
                   <Github className="h-4 w-4" />
                   <span>GitHub</span>
                 </button>
