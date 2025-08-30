@@ -191,21 +191,54 @@ Return valid JSON format:
 
         // Clean the response text to extract JSON from markdown code blocks
         let responseText = response.text || "{}";
-        console.log("📄 Raw Gemini response:", responseText.substring(0, 200) + "...");
+        console.log("📄 Raw Gemini response (first 500 chars):", responseText.substring(0, 500));
         
         // Extract JSON from markdown code blocks if present
         const jsonMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)```/);
         if (jsonMatch) {
           responseText = jsonMatch[1].trim();
+          console.log("📋 Extracted JSON from code block (first 200 chars):", responseText.substring(0, 200));
+        } else {
+          console.log("⚠️  No code block found, using raw response");
         }
         
-        // Clean up common JSON parsing issues from AI responses
-        responseText = responseText
-          .replace(/\n/g, '\\n')  // Escape actual newlines in strings
-          .replace(/\t/g, '\\t')  // Escape tabs
-          .replace(/\r/g, '\\r'); // Escape carriage returns
-        
-        const result = JSON.parse(responseText);
+        // More robust JSON parsing with better error handling
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("❌ JSON parsing failed:", parseError.message);
+          console.log("🔍 Response content to parse:", responseText.substring(0, 300));
+          console.log("🔢 Response length:", responseText.length);
+          console.log("🔤 First 10 chars:", JSON.stringify(responseText.substring(0, 10)));
+          
+          // Try different approaches to extract valid JSON
+          let fixedJson = responseText.trim();
+          
+          // Look for JSON-like content starting with { and ending with }
+          const jsonStart = fixedJson.indexOf('{');
+          const jsonEnd = fixedJson.lastIndexOf('}');
+          
+          if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+            fixedJson = fixedJson.substring(jsonStart, jsonEnd + 1);
+            console.log("🎯 Extracted JSON object:", fixedJson.substring(0, 100) + "...");
+          }
+          
+          // Try to fix common JSON issues
+          fixedJson = fixedJson
+            .replace(/,(\s*[}\]])/g, '$1')  // Remove trailing commas
+            .replace(/([{,]\s*)(\w+):/g, '$1"$2":')  // Quote unquoted keys
+            .trim();
+            
+          try {
+            result = JSON.parse(fixedJson);
+            console.log("✅ Fixed JSON parsing successfully");
+          } catch (secondError) {
+            console.error("❌ Failed to parse even after fixes:", secondError.message);
+            console.log("🔧 Final attempted JSON:", fixedJson.substring(0, 200));
+            throw new Error(`Failed to parse JSON: ${parseError.message}`);
+          }
+        }
       
       // Add generated ID if not provided
       if (!result.id) {
