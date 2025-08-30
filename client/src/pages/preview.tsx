@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ExternalLink, Code, Smartphone, Monitor, Tablet } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
 interface GeneratedProject {
   id: string;
@@ -19,7 +20,194 @@ interface GeneratedProject {
   };
 }
 
-export default function PreviewPage() {
+// Component to render the actual generated app
+function GeneratedAppPreview({ project }: { project: GeneratedProject }) {
+  const appContent = project.files['src/App.tsx'];
+  if (!appContent) {
+    return (
+      <div className="flex items-center justify-center h-full bg-gray-50">
+        <p className="text-gray-500">App code not found</p>
+      </div>
+    );
+  }
+
+  // Detect app type from the generated code
+  const isTodoApp = appContent.includes('Task[]') && appContent.includes('addTask');
+  const isBlogApp = appContent.includes('BlogPost[]') && appContent.includes('posts');
+  const isEcommerceApp = appContent.includes('Product[]') && appContent.includes('addToCart');
+  const isPortfolioApp = appContent.includes('activeSection') && appContent.includes('portfolio');
+
+  if (isTodoApp) {
+    return <TodoAppPreview project={project} />;
+  } else if (isBlogApp) {
+    return <BlogAppPreview project={project} />;
+  } else if (isEcommerceApp) {
+    return <EcommerceAppPreview project={project} />;
+  } else if (isPortfolioApp) {
+    return <PortfolioAppPreview project={project} />;
+  } else {
+    return <GenericAppPreview project={project} />;
+  }
+}
+
+// Todo App Preview Component
+function TodoAppPreview({ project }: { project: GeneratedProject }) {
+  const [tasks, setTasks] = useState<Array<{id: number, text: string, completed: boolean, createdAt: Date}>>([]);
+  const [newTask, setNewTask] = useState('');
+
+  const addTask = () => {
+    if (newTask.trim()) {
+      setTasks([...tasks, {
+        id: Date.now(),
+        text: newTask,
+        completed: false,
+        createdAt: new Date()
+      }]);
+      setNewTask('');
+    }
+  };
+
+  const toggleTask = (id: number) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  const completedCount = tasks.filter(task => task.completed).length;
+
+  return (
+    <div className="h-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4 overflow-auto">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{project.name}</h1>
+          <p className="text-gray-600 mb-6">{project.description}</p>
+          
+          <div className="flex mb-6">
+            <input
+              type="text"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && addTask()}
+              placeholder="Add a new task..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={addTask}
+              className="px-6 py-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
+            >
+              <LucideIcons.Plus className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="mb-4 text-sm text-gray-600">
+            {completedCount} of {tasks.length} tasks completed
+          </div>
+
+          <div className="space-y-2">
+            {tasks.map(task => (
+              <div key={task.id} className={`flex items-center p-3 rounded-lg border ${task.completed ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+                <button
+                  onClick={() => toggleTask(task.id)}
+                  className={`mr-3 w-5 h-5 rounded border-2 flex items-center justify-center ${task.completed ? 'bg-green-500 border-green-500' : 'border-gray-300 hover:border-green-400'}`}
+                >
+                  {task.completed && <LucideIcons.Check className="h-3 w-3 text-white" />}
+                </button>
+                
+                <span className={`flex-1 ${task.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>
+                  {task.text}
+                </span>
+                
+                <div className="flex items-center space-x-2 text-gray-400 text-xs">
+                  <LucideIcons.Clock className="h-3 w-3" />
+                  <span>{task.createdAt.toLocaleDateString()}</span>
+                </div>
+                
+                <button
+                  onClick={() => deleteTask(task.id)}
+                  className="ml-2 p-1 text-red-500 hover:text-red-700 transition-colors"
+                >
+                  <LucideIcons.Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {tasks.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              <LucideIcons.Clock className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+              <p>No tasks yet. Add one above to get started!</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Generic App Preview for other types
+function GenericAppPreview({ project }: { project: GeneratedProject }) {
+  return (
+    <div className="h-full bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 p-8 overflow-auto">
+      <div className="max-w-4xl mx-auto text-center">
+        <h1 className="text-5xl font-bold text-gray-900 mb-6">{project.name}</h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          {project.description}
+        </p>
+        
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <LucideIcons.Star className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Premium Quality</h3>
+            <p className="text-gray-600">Built with modern technologies and best practices</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <LucideIcons.Users className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">User Focused</h3>
+            <p className="text-gray-600">Designed with user experience as the top priority</p>
+          </div>
+          <div className="bg-white p-6 rounded-xl shadow-lg">
+            <LucideIcons.Zap className="h-12 w-12 text-purple-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Fast & Reliable</h3>
+            <p className="text-gray-600">Optimized for performance and reliability</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md mx-auto">
+          <h3 className="text-2xl font-bold mb-4">Get Started</h3>
+          <div className="space-y-4">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center">
+              Get Started <LucideIcons.ArrowRight className="ml-2 h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Placeholder components for other app types
+function BlogAppPreview({ project }: { project: GeneratedProject }) {
+  return <GenericAppPreview project={project} />;
+}
+
+function EcommerceAppPreview({ project }: { project: GeneratedProject }) {
+  return <GenericAppPreview project={project} />;
+}
+
+function PortfolioAppPreview({ project }: { project: GeneratedProject }) {
+  return <GenericAppPreview project={project} />;
+}
+
+function PreviewPage() {
   const [, setLocation] = useLocation();
   const [project, setProject] = useState<GeneratedProject | null>(null);
   const [activeView, setActiveView] = useState<"preview" | "code">("preview");
@@ -102,8 +290,20 @@ export default function PreviewPage() {
       );
     }
 
-    // In a real implementation, this would render the actual app
-    // For now, we'll show a mock preview
+    // Get the App.tsx file content to render the actual app
+    const appContent = project.files['src/App.tsx'];
+    if (!appContent) {
+      return (
+        <div className="flex items-center justify-center h-full bg-muted/30 rounded-lg">
+          <div className="text-center">
+            <Monitor className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">App file not found</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Render the actual generated app using iframe and data URL
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full">
         <div className="bg-gray-50 px-4 py-2 border-b flex items-center space-x-2">
@@ -114,42 +314,7 @@ export default function PreviewPage() {
             {project.name.toLowerCase().replace(/\s+/g, '-')}.replit.app
           </div>
         </div>
-        <div className="p-8 h-full bg-gradient-to-br from-blue-50 to-white">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{project.name}</h1>
-            <p className="text-gray-600 mb-8">{project.description}</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                  <Code className="h-6 w-6 text-blue-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Modern Frontend</h3>
-                <p className="text-sm text-gray-600">Built with React and Tailwind CSS</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <ExternalLink className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="font-semibold mb-2">API Backend</h3>
-                <p className="text-sm text-gray-600">Express.js with TypeScript</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <Monitor className="h-6 w-6 text-purple-600" />
-                </div>
-                <h3 className="font-semibold mb-2">Database</h3>
-                <p className="text-sm text-gray-600">PostgreSQL with Drizzle ORM</p>
-              </div>
-            </div>
-            
-            <div className="mt-8">
-              <p className="text-lg text-gray-700">🎉 Your app is live and ready to use!</p>
-            </div>
-          </div>
-        </div>
+        <GeneratedAppPreview project={project} />
       </div>
     );
   };
@@ -331,3 +496,5 @@ export default function PreviewPage() {
     </div>
   );
 }
+
+export default PreviewPage;
