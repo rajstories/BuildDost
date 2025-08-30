@@ -11,36 +11,27 @@ interface TemplateActionsProps {
 export default function TemplateActions({ templateId, templateName }: TemplateActionsProps) {
   return (
     <>
-      {/* Top Action Bar - Compact design */}
-      <div className="fixed top-12 left-2 right-2 z-50">
+      {/* Top Action Bar - Much lower position */}
+      <div className="fixed top-20 left-3 right-3 z-40">
         <div className="flex items-center justify-between">
-          {/* Back Button - Smaller */}
+          {/* Back Button - Icon only */}
           <Link href="/templates">
             <Button 
               variant="outline" 
               size="sm"
-              className="bg-white/95 backdrop-blur-sm border-gray-200 hover:bg-white shadow-md text-xs"
+              className="bg-white backdrop-blur-sm border-gray-300 hover:bg-gray-50 shadow-sm w-8 h-8 p-0"
               data-testid="button-back-templates"
+              title="Back to Templates"
             >
-              <ArrowLeft className="h-3 w-3 mr-1" />
-              Back
+              <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
 
-          {/* Template Info & Actions - Compact */}
-          <div className="flex items-center space-x-2">
-            {/* Template Info - Smaller */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-md px-3 py-1 shadow-md border border-gray-200">
-              <h2 className="font-medium text-gray-900 text-xs">{templateName}</h2>
-              <p className="text-xs text-gray-600">Live Preview</p>
-            </div>
-
-            {/* Code Export Component - Compact */}
-            <CodeExport 
-              templateId={templateId} 
-              templateName={templateName}
-            />
-          </div>
+          {/* Code Export Only - Right side */}
+          <CodeExport 
+            templateId={templateId} 
+            templateName={templateName}
+          />
         </div>
       </div>
 
