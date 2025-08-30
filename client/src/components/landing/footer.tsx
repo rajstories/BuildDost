@@ -26,7 +26,7 @@ const footerSections = [
 const socialLinks = [
   { icon: SiX, href: "https://x.com/rajstories", name: "X" },
   { icon: SiGithub, href: "https://github.com/rajstories", name: "GitHub" },
-  { icon: SiLinkedin, href: "https://linkedin.com/in/rajstories", name: "LinkedIn" },
+  { icon: SiLinkedin, href: "https://linkedin.com/in/rajhub", name: "LinkedIn" },
   { icon: SiDiscord, href: "https://discord.gg/builddost", name: "Discord" },
 ];
 
