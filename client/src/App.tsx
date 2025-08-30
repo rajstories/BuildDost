@@ -11,6 +11,7 @@ import BuilderPage from "@/pages/builder";
 import DashboardPage from "@/pages/dashboard";
 import TemplatesPage from "@/pages/templates";
 import ShowcasePage from "@/pages/showcase";
+import ProfilePage from "@/pages/Profile";
 import NotFound from "@/pages/not-found";
 
 // Import template showcases
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/builder" component={BuilderPage} />
       <Route path="/builder/:id" component={BuilderPage} />
       <Route path="/dashboard" component={DashboardPage} />
+      <Route path="/profile" component={ProfilePage} />
       
       {/* Template Showcases */}
       <Route path="/template/landing" component={LandingPageTemplate} />
