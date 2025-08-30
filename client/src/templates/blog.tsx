@@ -339,7 +339,7 @@ export default function BlogTemplate() {
                 {popularTags.map((tag) => (
                   <button
                     key={tag}
-                    className="px-3 py-1 bg-gray-100 hover:bg-blue-600 hover:text-white text-sm rounded-full transition-colors"
+                    className="px-3 py-1 bg-gray-100 hover:bg-blue-600 text-gray-800 hover:text-white text-sm rounded-full transition-colors font-medium"
                   >
                     <Tag className="h-3 w-3 inline mr-1" />
                     {tag}
