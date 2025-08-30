@@ -31,32 +31,32 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-card/30 py-12">
+    <footer className="relative z-10 border-t border-border/30 bg-background/80 backdrop-blur-sm py-16">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center space-x-3 mb-4">
+        <div className="grid md:grid-cols-4 gap-12">
+          <div className="md:col-span-1">
+            <div className="flex items-center space-x-3 mb-6">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Box className="text-primary-foreground text-sm" size={16} />
               </div>
-              <span className="text-xl font-bold text-foreground" data-testid="footer-logo">BuildDost</span>
+              <span className="text-xl font-bold text-foreground tracking-tight" data-testid="footer-logo">BuildDost</span>
             </div>
-            <p className="text-sm text-muted-foreground" data-testid="footer-description">
+            <p className="text-sm text-muted-foreground/80 font-medium leading-relaxed max-w-xs" data-testid="footer-description">
               AI-powered full-stack builder for non-technical founders.
             </p>
           </div>
           
           {footerSections.map((section, index) => (
             <div key={index} data-testid={`footer-section-${section.title.toLowerCase()}`}>
-              <h4 className="font-semibold text-foreground mb-4" data-testid={`footer-title-${section.title.toLowerCase()}`}>
+              <h4 className="font-semibold text-foreground mb-6 text-sm tracking-wide" data-testid={`footer-title-${section.title.toLowerCase()}`}>
                 {section.title}
               </h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <ul className="space-y-4">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <a 
                       href={link.href} 
-                      className="hover:text-foreground transition-colors"
+                      className="text-sm text-muted-foreground/70 hover:text-foreground transition-colors font-medium"
                       data-testid={`footer-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {link.name}
@@ -68,7 +68,7 @@ export default function Footer() {
           ))}
           
           <div data-testid="footer-social">
-            <h4 className="font-semibold text-foreground mb-4" data-testid="footer-title-connect">Connect</h4>
+            <h4 className="font-semibold text-foreground mb-6 text-sm tracking-wide" data-testid="footer-title-connect">Connect</h4>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
@@ -76,10 +76,10 @@ export default function Footer() {
                   <a 
                     key={index}
                     href={social.href} 
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-muted-foreground/60 hover:text-foreground transition-all duration-200 hover:scale-110 p-2 rounded-lg hover:bg-muted/20"
                     data-testid={`social-link-${social.name.toLowerCase()}`}
                   >
-                    <Icon size={16} />
+                    <Icon size={18} />
                   </a>
                 );
               })}
@@ -87,8 +87,10 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground" data-testid="footer-copyright">
-          © 2024 BuildDost. All rights reserved.
+        <div className="border-t border-border/30 mt-12 pt-8 text-center" data-testid="footer-copyright">
+          <p className="text-sm text-muted-foreground/60 font-medium">
+            © 2025 BuildDost. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
