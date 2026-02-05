@@ -5,12 +5,6 @@
 ## 🌐 Live Preview
 **🔗 [Try BuildDost Live](https://build-dost.replit.app)** - Experience the AI-powered builder in action!
 
-<img width="1277" height="595" alt="image" src="https://github.com/user-attachments/assets/185aa50e-242a-48f6-b394-20af84e99a3e" />
-<img width="1276" height="710" alt="image" src="https://github.com/user-attachments/assets/fa3ee427-5c55-4534-b9e9-1b8b60873300" />
-
-
-
-
 
 <div align="center">
 
@@ -24,6 +18,15 @@
 </p>
 
 </div>
+
+
+
+<img width="1277" height="595" alt="image" src="https://github.com/user-attachments/assets/185aa50e-242a-48f6-b394-20af84e99a3e" />
+<img width="1276" height="710" alt="image" src="https://github.com/user-attachments/assets/fa3ee427-5c55-4534-b9e9-1b8b60873300" />
+
+
+
+
 
 ## ✨ Overview
 
