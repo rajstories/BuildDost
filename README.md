@@ -5,6 +5,11 @@
 ## 🌐 Live Preview
 **🔗 [Try BuildDost Live](https://build-dost.replit.app)** - Experience the AI-powered builder in action!
 
+<img width="1277" height="595" alt="image" src="https://github.com/user-attachments/assets/185aa50e-242a-48f6-b394-20af84e99a3e" />
+<img width="1276" height="710" alt="image" src="https://github.com/user-attachments/assets/fa3ee427-5c55-4534-b9e9-1b8b60873300" />
+
+
+
 <div align="center">
 
 ![BuildDost Banner](https://capsule-render.vercel.app/api?type=waving&color=0:FF6B35,30:FF8E53,60:FFA07A,100:FFB347&height=200&section=header&text=BuildDost&fontSize=70&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=AI-Powered%20Full-Stack%20Website%20Builder%20%7C%20Works%20Like%20Replit%20AI&descAlignY=55&descSize=20)
